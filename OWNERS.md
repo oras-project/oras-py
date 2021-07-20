@@ -1,8 +1,7 @@
 # Owners
 
 Owners:
-  - Avi Deitcher (@deitch)
+  - Vanessasaurus (@vsoch)
   - Josh Dolitsky (@jdolitsky)
-  - Sajay Antony (@sajayantony)
-  - Shiwei Zhang (@shizhMSFT)
   - Steve Lasker (@stevelasker)
+  
