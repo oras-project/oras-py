@@ -2,28 +2,8 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021, Vanessa Sochat"
 __license__ = "MIT"
 
-import opencontainers.digest as digest
 import opencontainers.image.v1 as ocispec
-
-## TODO: these should be updated on release
-# we could also generate them interactively. Thoughts?
-
-# The state of the git tree
-git_tree_state = ""
-
-# Extra build time data
-build_metadata = "unreleased"
-
-# Git sha
-git_commit = ""
-
-# https://github.com/moby/moby/blob/master/registry/config.go#L29
-class registry:
-    index_hostname = "index.docker.io"
-    index_server = "https://index.docker.io/v1/"
-    index_name = "docker.io"
-    default_v2_registry = {"scheme": "https", "host": "registry-1.docker.io"}
-    
+import opencontainers.digest as digest
 
 # DefaultBlobMediaType specifies the default blob media type
 DefaultBlobMediaType = ocispec.MediaTypeImageLayer

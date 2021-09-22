@@ -16,7 +16,9 @@ $ docker run -it --rm -p 5000:5000 registry
 ```
 
 And follow [the instructions here](https://oras.land/implementors/#using-docker-registry-with-authentication)
-to add authentication (recommended).
+to add authentication (recommended). There is a [start-dev-server.sh](start-dev-server.sh) script
+in the root of this repository that will start your registry for you after you generate
+a credential.
 
 ### Login
 

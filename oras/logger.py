@@ -163,6 +163,7 @@ def setup_logger(
     nocolor=False,
     stdout=False,
     debug=False,
+    verbose=False,
     use_threads=False,
     wms_monitor=None,
 ):
@@ -171,8 +172,14 @@ def setup_logger(
         nocolor=nocolor,
         stream=sys.stdout if stdout else sys.stderr,
         use_threads=use_threads,
-    )
+    )   
+    level = _logging.INFO
+    if verbose:
+        level = _logging.VERBOSE
+    elif debug:
+        level = _logging.DEBUG
+        
     logger.set_stream_handler(stream_handler)
-    logger.set_level(_logging.DEBUG if debug else _logging.INFO)
+    logger.set_level(level)
     logger.quiet = quiet
     logger.printshellcmds = printshellcmds

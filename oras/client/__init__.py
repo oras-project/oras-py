@@ -52,19 +52,8 @@ def get_parser():
         description=help.login_help,
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    login.add_argument(
-        "-c",
-        "--config",
-        dest="debug",
-        help="auth config path",
-        default=False,
-        action="store_true",
-    )
-    login.add_argument("hostname", help="hostname", nargs=1)
-    login.add_argument("-u", "--username", dest="username", help="registry username")
-    login.add_argument(
-        "-p", "--password", dest="password", help="registry password or identity token"
-    )
+    logout = subparsers.add_parser("logout", description="logout from a registry")
+
     login.add_argument(
         "--password-stdin",
         dest="password_stdin",
@@ -72,17 +61,13 @@ def get_parser():
         default=False,
         action="store_true",
     )
-    login.add_argument(
-        "-k",
-        "--insecure",
-        dest="insecure",
-        help="allow connections to SSL registry without certs",
-        default=False,
-        action="store_true",
-    )
 
+    # Login and logout share config and hostname arguments
+    for command in [login, logout]:
+        command.add_argument("hostname", help="hostname")
+    
     # Debug is added on the level of the command
-    for command in [login]:
+    for command in [login, logout, push]:
         command.add_argument(
             "--debug",
             dest="debug",
@@ -91,9 +76,50 @@ def get_parser():
             action="store_true",
         )
 
-    logout = subparsers.add_parser("logout", description="logout from a registry")
+    # Copy command
+    copy = subparsers.add_parser("copy", description=help.copy_help)
+    copy.add_argument("--manifest-config", help="manifest config file")
+
+    copy_required = copy.add_argument_group('required arguments for copy')
+    copy_required.add_argument("--from", dest="from_str", help="source type and possible options", required=True)
+    copy_required.add_argument("--to", dest="to_str", help="destination type and possible options", required=True)
+  
     pull = subparsers.add_parser("pull", description="pull a container")
-    push = subparsers.add_parser("push", description="push a container")
+
+    push = subparsers.add_parser("push", description=help.push_help)
+    push.add_argument("target", help="target")
+    push.add_argument("filerefs", help="file references", nargs="*")
+    push.add_argument("--manifest-config", help="manifest config file")
+    push.add_argument("--manifest-path-validation", help="manifest annotation file")
+    push.add_argument("--disable-path-validation", help="skip path validation", default=False, action="store_true")
+    push.add_argument("-v", "--verbose", help="verbose output", default=False, action="store_true")
+
+    for command in [push, copy]:
+        command.add_argument("--manifest-config", help="manifest config file")
+        command.add_argument("--plain-http", help="use plain http and not https", default=False, action="store_true")
+    
+    for command in [login, logout, push, copy]
+        command.add_argument(
+          "-c",
+          "--config",
+          dest="config",
+          help="auth config path",
+      )
+
+    # login and push share username/password, and insecure
+    for command in [login, push, copy]:     
+        command.add_argument("-u", "--username", dest="username", help="registry username")
+        command.add_argument(
+        "-p", "--password", dest="password", help="registry password or identity token")
+        command.add_argument(
+            "-k",
+            "--insecure",
+            dest="insecure",
+            help="allow connections to SSL registry without certs",
+            default=False,
+            action="store_true",
+        )
+
     shell = subparsers.add_parser("shell", description="create an interactive shell")
     return parser
 
@@ -129,11 +155,13 @@ def run():
     if args.debug:
         os.environ["MESSAGELEVEL"] = "DEBUG"
 
-    setup_logger(quiet=args.quiet, debug=args.debug)
+    setup_logger(quiet=args.quiet, debug=args.debug, verbose=getattr(args, "verbose", False))
 
     # Direct to the right parser
     if args.command == "version" or args.version:
         from .version import main
+    elif args.command == "copy":
+        from .copy import main
     elif args.command == "login":
         from .login import main
     elif args.command == "logout":
@@ -147,11 +175,11 @@ def run():
 
     # Pass on to the correct parser
     return_code = 0
-    try:
-        main(args=args, parser=parser, extra=extra, subparser=helper)
-        sys.exit(return_code)
-    except UnboundLocalError:
-        return_code = 1
+    #try:
+    main(args=args, parser=parser, extra=extra, subparser=helper)
+    sys.exit(return_code)
+    #except UnboundLocalError:
+    #    return_code = 1
 
     help(return_code)
 

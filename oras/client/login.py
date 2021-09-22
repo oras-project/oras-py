@@ -25,7 +25,7 @@ def main(args, parser, extra, subparser):
         password = readline()
 
     # No password provided
-    elif not args.password:
+    elif not password:
 
         # No username, try to get from stdin
         if not username:
@@ -40,7 +40,7 @@ def main(args, parser, extra, subparser):
 
         # If we do have a username, we just need a passowrd
         else:
-            password = input("Token: ")
+            password = input("Password: ")
             if not password:
                 logger.exit("password required")
 
@@ -52,6 +52,6 @@ def main(args, parser, extra, subparser):
     # Login
     # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
     result = client.login(
-        username=username, password=password, registry=args.hostname[0]
+        username=username, password=password, registry=args.hostname, dockercfg_path=args.config
     )
     logger.info(result["Status"])

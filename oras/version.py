@@ -17,6 +17,7 @@ LICENSE = "LICENSE"
 INSTALL_REQUIRES = (
     ("jsonschema", {"min_version": None}),
     ("docker", {"min_version": "5.0.0"}),
+    ("opencontainers", {"min_version": None}),
 )
 
 TESTS_REQUIRES = (("pytest", {"min_version": "4.6.2"}),)
