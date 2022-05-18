@@ -1,0 +1,7 @@
+.eggs
+auth.htpasswd
+artifact.txt
+oras.egg-info/
+.env
+env
+__pycache__
