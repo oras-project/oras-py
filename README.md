@@ -126,9 +126,23 @@ Now try a pull! We will first need to delete the file
 ```bash
 $ rm -f artifact.txt # first delete the file
 $ oras-py pull localhost:5000/dinosaur/artifact:v1
+```
 ```bash
 $ cat artifact.txt
 hello dinosaur
+```
+
+### Docker Container
+
+We provide a [Dockerfile](Dockerfile) to build a container with the client.
+
+```bash
+$ docker build -t oras-py .
+```
+```bash
+$ docker run -it oras-py                                                                                                                   
+# which oras-py
+/opt/conda/bin/oras-py
 ```
 
 ## TODO
