@@ -1,5 +1,5 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import errno
@@ -11,10 +11,30 @@ import pathlib
 import re
 import shutil
 import stat
+import tarfile
 import tempfile
-from typing import Generator, TextIO, Union
+from typing import Generator, Optional, TextIO, Union
 
 from oras.logger import logger
+
+
+def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
+    """
+    Make a targz (compressed) archive from a source directory.
+    """
+    dest_name = dest_name or get_tmpfile(suffix=".tar.gz")
+    with tarfile.open(dest_name, "w:gz") as tar:
+        tar.add(source_dir, arcname=os.path.basename(source_dir))
+    return dest_name
+
+
+def extract_targz(targz, outdir):
+    """
+    Extract a .tar.gz to an output directory.
+    """
+    with tarfile.open(targz, "r:gz") as fd:
+        fd.extractall(outdir)
+    return outdir
 
 
 def get_size(path: str) -> int:
@@ -66,7 +86,7 @@ def mkdir_p(path: str):
             logger.exit("Error creating path %s, exiting." % path)
 
 
-def get_tmpfile(tmpdir: str = None, prefix: str = "") -> str:
+def get_tmpfile(tmpdir: str = None, prefix: str = "", suffix: str = "") -> str:
     """
     Get a temporary file with an optional prefix.
 
@@ -82,7 +102,7 @@ def get_tmpfile(tmpdir: str = None, prefix: str = "") -> str:
     if tmpdir:
         prefix = os.path.join(tmpdir, os.path.basename(prefix))
 
-    fd, tmp_file = tempfile.mkstemp(prefix=prefix)
+    fd, tmp_file = tempfile.mkstemp(prefix=prefix, suffix=suffix)
     os.close(fd)
 
     return tmp_file

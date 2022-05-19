@@ -1,9 +1,13 @@
 .PHONY: test
-test: develop
+test:
 	./scripts/test.sh
 
+.PHONY: install
+install:
+	pip install -e .[all]
+
 .PHONY: lint
-lint: testreqs
+lint:
 	./scripts/lint.sh
 
 .PHONY: testreqs

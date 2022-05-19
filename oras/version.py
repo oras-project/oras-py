@@ -1,5 +1,5 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 __version__ = "0.0.1"
@@ -15,8 +15,9 @@ LICENSE = "LICENSE"
 # Global requirements
 
 INSTALL_REQUIRES = (
+    ("jsonschema", {"min_version": None}),
     ("requests", {"min_version": None}),
-    ("docker", {"min_version": "5.0.0"}),
+    ("docker", {"exact_version": "5.0.1"}),
 )
 
 TESTS_REQUIRES = (
