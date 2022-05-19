@@ -2,7 +2,7 @@
 
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021, Vanessa Sochat"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 
 import oras
 from oras.logger import setup_logger
@@ -131,7 +131,7 @@ def get_parser():
     for command in push, copy:
         command.add_argument("--manifest-config", help="manifest config file")
 
-    # TODO this can be a list, we afren't doing anything with it yet
+    # TODO this can be a list, we aren't doing anything with it yet
     for command in login, logout, push, pull, copy:
         command.add_argument(
             "-c",
@@ -166,7 +166,7 @@ def get_parser():
 
 def run():
     """
-    Entrypoint to OCI Python
+    Entrypoint to ORAS Python
     """
     parser = get_parser()
 
@@ -217,11 +217,11 @@ def run():
 
     # Pass on to the correct parser
     return_code = 0
-    # try:
-    main(args=args, parser=parser, extra=extra, subparser=helper)
-    sys.exit(return_code)
-    # except UnboundLocalError:
-    #    return_code = 1
+    try:
+        main(args=args, parser=parser, extra=extra, subparser=helper)
+        sys.exit(return_code)
+    except UnboundLocalError:
+        return_code = 1
 
     help(return_code)
 

@@ -1,11 +1,10 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021, Vanessa Sochat"
-__license__ = "MIT"
+__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__license__ = "Apache-2.0"
 
 
 # Default tag to use
 default_tag = "latest"
-
 
 # https://github.com/moby/moby/blob/master/registry/config.go#L29
 class registry:
@@ -37,8 +36,7 @@ annotation_unpack = "io.deis.oras.content.unpack"
 oci_image_index_file = "index.json"
 
 # DefaultBlocksize default size of each slice of bytes read in each write through in gunzipand untar.
-# Simply uses the same size as io.Copy()
 default_blocksize = 32768
 
-# what you get for a blank digest
+# what you get for a blank digest, so we don't need to save and recalculate
 blank_hash = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"

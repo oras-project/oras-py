@@ -1,3 +1,4 @@
+from .request import iter_localhosts
 from .fileio import (
     copyfile,
     get_size,

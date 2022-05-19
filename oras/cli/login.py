@@ -1,6 +1,6 @@
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 
 import oras.client
 
@@ -11,8 +11,8 @@ def main(args, parser, extra, subparser):
     """
     client = oras.client.OrasClient()
     client.login(
-        args.password,
-        args.username,
+        password=args.password,
+        username=args.username,
         config_path=args.config,
         hostname=args.hostname,
         insecure=args.insecure,
