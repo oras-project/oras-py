@@ -1,8 +1,9 @@
 import os
-import sys
-import re
-import pytest
 import shutil
+import sys
+
+import pytest
+
 import oras.client
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -30,6 +31,7 @@ def test_oras(tmp_path):
     Basic tests for oras (without authentication)
     """
     client = oras.client.OrasClient(insecure=True)
+    assert "Python version" in client.version()
     artifact = os.path.join(here, "artifact.txt")
 
     assert os.path.exists(artifact)

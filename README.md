@@ -133,7 +133,6 @@ hello dinosaur
 
 ## TODO
 
- - isort, mypy, pyflakes black
  - should there be a tags function?
  - add example (custom) GitHub client
  - refactor internals to be more like oras-go (e.g., provider, copy?)

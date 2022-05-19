@@ -3,11 +3,10 @@ __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
 
-from oras.logger import logger
-import oras.defaults
-
 import re
 
+import oras.defaults
+from oras.logger import logger
 
 docker_regex = re.compile(
     "(?:(?P<registry>[^/@]+[.:][^/@]*)/)?"

@@ -2,10 +2,11 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
-import oras.defaults
-import oras.utils
 import copy
 import os
+
+import oras.defaults
+import oras.utils
 
 EmptyManifest = {
     "schemaVersion": 2,

@@ -2,18 +2,18 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
-import pathlib
-import hashlib
 import errno
+import hashlib
+import io
+import json
 import os
+import pathlib
 import re
 import shutil
 import stat
 import tempfile
-from typing import Union, TextIO, Text
-from pathlib import Path
+from typing import Generator, TextIO, Union
 
-import json
 from oras.logger import logger
 
 
@@ -100,7 +100,7 @@ def get_tmpdir(tmpdir: str = None, prefix: str = "", create: bool = True) -> str
     """
     tmpdir = tmpdir or tempfile.gettempdir()
     prefix = prefix or "oras-tmp"
-    prefix = "%s.%s" % (prefix, next(tempfile._get_candidate_names()))
+    prefix = "%s.%s" % (prefix, next(tempfile._get_candidate_names()))  # type: ignore
     tmpdir = os.path.join(tmpdir, prefix)
 
     if not os.path.exists(tmpdir) and create is True:
@@ -109,7 +109,7 @@ def get_tmpdir(tmpdir: str = None, prefix: str = "", create: bool = True) -> str
     return tmpdir
 
 
-def recursive_find(base: str, pattern: str = None) -> list:
+def recursive_find(base: str, pattern: str = None) -> Generator:
     """
     Find filenames that match a particular pattern, and yield them.
 
@@ -174,7 +174,7 @@ def write_file(
     return filename
 
 
-def read_in_chunks(image: Union[Text, Path, TextIO], chunk_size: int = 1024):
+def read_in_chunks(image: Union[TextIO, io.BufferedReader], chunk_size: int = 1024):
     """
     Helper function to read file in chunks, with default size 1k.
 
@@ -230,7 +230,7 @@ def read_file(filename: str, mode: str = "r") -> str:
     return content
 
 
-def read_json(filename: str, mode: str = "r") -> str:
+def read_json(filename: str, mode: str = "r") -> dict:
     """
     Read a json file to a dictionary.
 

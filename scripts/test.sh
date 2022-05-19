@@ -14,3 +14,4 @@ printf "ORAS_REGISTRY: ${ORAS_REGISTRY}\n"
 
 # Client (command line) tests
 /bin/bash oras/tests/test_client.sh
+

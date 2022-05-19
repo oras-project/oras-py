@@ -27,11 +27,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Environment
         run: conda create --quiet --name oras requests
-      - name: Try Pinging Registry Service?
+      - name: Test Oras Python (no auth)
         env:
           registry_host: localhost
           registry_port: ${{ job.services.registry.ports[5000] }}
         run: |
           export PATH="/usr/share/miniconda/bin:$PATH"
           source activate oras
+          pip install --upgrade pip setuptools
           make test

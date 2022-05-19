@@ -9,3 +9,8 @@ for filename in $(find . -name "*.py" -not -path "*__init__.py"); do
     pyflakes $filename
 done
 
+# mypy checks typing
+mypy oras
+
+# isort (import order)
+isort --check-only *.py oras

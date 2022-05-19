@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
 import os
+
+from setuptools import find_packages, setup
 
 
 def get_lookup():
@@ -87,6 +88,7 @@ if __name__ == "__main__":
         tests_require=TESTS_REQUIRES,
         extras_require={
             "all": [INSTALL_REQUIRES_ALL],
+            "tests": [TESTS_REQUIRES],
         },
         classifiers=[
             "Intended Audience :: Science/Research",
