@@ -1,6 +1,6 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021, Vanessa Sochat"
-__license__ = "MIT"
+__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__license__ = "Apache-2.0"
 
 __version__ = "0.0.1"
 AUTHOR = "Vanessa Sochat"

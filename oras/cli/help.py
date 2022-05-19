@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021, Vanessa Sochat"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 
 login_help = """
 Log in to a remote registry
@@ -58,5 +56,4 @@ Example - Push file to the insecure registry:
   oras-py push localhost:5000/hello:latest hi.txt --insecure
 Example - Push file to the HTTP registry:
   oras-py push localhost:5000/hello:latest hi.txt --plain-http
-
 """

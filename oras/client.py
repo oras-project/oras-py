@@ -1,6 +1,6 @@
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 
 
 import oras.version
@@ -23,29 +23,49 @@ class OrasClient:
     oras.
     """
 
-    def __init__(self, hostname=None, registry=None, insecure=False):
+    def __init__(
+        self,
+        hostname: str = None,
+        registry: oras.provider.Registry = None,
+        insecure: bool = False,
+    ):
         """
         Create an ORAS client.
 
         The hostname is the remote registry to ping.
+
+        Arguments
+        ---------
+        hostname : the hostname of the registry to ping
+        registry : if provided, use this custom provider instead of default
+        insecure : use http instead of https
         """
         self.remote = registry or oras.provider.Registry(hostname, insecure)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "[oras-client]"
 
-    def set_basic_auth(self, username, password):
+    def set_basic_auth(self, username: str, password: str):
         """
         Add basic authentication to the request.
+
+        Arguments
+        ---------
+        username : the user account name
+        password : the user account password
         """
         self.remote.set_basic_auth(username, password)
 
-    def version(self, return_items=False):
+    def version(self, return_items: bool = False) -> dict | str:
         """
         Get the version of the client.
+
+        Arguments
+        ---------
+        return_items : return the dict of version info instead of string
         """
         version = oras.version.__version__
         if defaults.build_metadata:
@@ -68,33 +88,35 @@ class OrasClient:
     def push(self, *args, **kwargs):
         """
         Push a container to the remote.
-
-        TODO: a push will eventually be a copy from source to destination.
         """
         return self.remote.push(*args, **kwargs)
 
     def pull(self, *args, **kwargs):
         """
         Pull a container from the remote.
-
-        TODO: a push will eventually be a copy from destination to source.
         """
         return self.remote.pull(*args, **kwargs)
 
     def login(
         self,
-        username,
-        password,
-        password_stdin=False,
-        insecure=False,
-        hostname=None,
-        config_path=None,
+        username: str,
+        password: str,
+        password_stdin: bool = False,
+        insecure: bool = False,
+        hostname: str = None,
+        config_path: list = None,
     ):
         """
         Login to a registry.
 
-        A registry can implement a custom login. Otherwise, we use a standard
-        docker login.
+        Arguments
+        ---------
+        username       : the user account name
+        password       : the user account password
+        password_stdin : get the password from standard input
+        insecure       : use http instead of https
+        hostname       : name of the host to login to
+        config_path    : list of config paths to add
         """
         login_func = main.login
         if hasattr(self.remote, "login"):
@@ -108,11 +130,12 @@ class OrasClient:
             config_path=config_path,
         )
 
-    def logout(self, sif, module_name):
+    def logout(self, hostname: str):
         """
-        Logout from a registry.
-        """
-        print("LOGOUT")
-        import IPython
+        Logout from a registry, meaning removing any auth (if loaded)
 
-        IPython.embed()
+        Arguments
+        ---------
+        hostname       : name of the host to login to
+        """
+        self.remote.logout(hostname)

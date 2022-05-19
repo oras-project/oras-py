@@ -1,6 +1,6 @@
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 
 import pathlib
 import hashlib
@@ -10,21 +10,31 @@ import re
 import shutil
 import stat
 import tempfile
+from typing import Union, TextIO, Text
 
 import json
 from oras.logger import logger
 
 
-def get_size(path):
+def get_size(path: str) -> int:
     """
     Get the size of a blob
+
+    Arguments
+    ---------
+    path : the path to get the size for
     """
     return pathlib.Path(path).stat().st_size
 
 
-def get_file_hash(path, algorithm="sha256"):
+def get_file_hash(path: str, algorithm: str = "sha256") -> str:
     """
     Return an sha256 hash of the file based on an algorithm
+
+    Arguments
+    ---------
+    path      : the path to get the size for
+    algorithm : the algorithm to use
     """
     try:
         hasher = getattr(hashlib, algorithm)()
@@ -38,9 +48,13 @@ def get_file_hash(path, algorithm="sha256"):
     return hasher.hexdigest()
 
 
-def mkdir_p(path):
+def mkdir_p(path: str):
     """
     Make a directory path if it does not exist, akin to mkdir -p
+
+    Arguments
+    ---------
+    path : the path to create
     """
     try:
         os.makedirs(path)
@@ -51,11 +65,15 @@ def mkdir_p(path):
             logger.exit("Error creating path %s, exiting." % path)
 
 
-def get_tmpfile(tmpdir=None, prefix=""):
+def get_tmpfile(tmpdir: str = None, prefix: str = "") -> str:
     """
     Get a temporary file with an optional prefix.
-    """
 
+    Arguments
+    ---------
+    tmpdir : an optional temporary directory
+    prefix : an optional prefix for the temporary path
+    """
     # First priority for the base goes to the user requested.
     tmpdir = get_tmpdir(tmpdir)
 
@@ -69,9 +87,15 @@ def get_tmpfile(tmpdir=None, prefix=""):
     return tmp_file
 
 
-def get_tmpdir(tmpdir=None, prefix="", create=True):
+def get_tmpdir(tmpdir: str = None, prefix: str = "", create: bool = True) -> str:
     """
     Get a temporary directory for an operation.
+
+    Arguments
+    ---------
+    tmpdir : an optional temporary directory
+    prefix : an optional prefix for the temporary path
+    create : create the directory
     """
     tmpdir = tmpdir or tempfile.gettempdir()
     prefix = prefix or "oras-tmp"
@@ -84,9 +108,14 @@ def get_tmpdir(tmpdir=None, prefix="", create=True):
     return tmpdir
 
 
-def recursive_find(base, pattern=None):
+def recursive_find(base: str, pattern: str = None) -> list:
     """
     Find filenames that match a particular pattern, and yield them.
+
+    Arguments
+    ---------
+    base    : the root to search
+    pattern : an optional file pattern to use with fnmatch
     """
     # We can identify modules by finding module.lua
     for root, folders, files in os.walk(base):
@@ -99,9 +128,15 @@ def recursive_find(base, pattern=None):
             yield fullpath
 
 
-def copyfile(source, destination, force=True):
+def copyfile(source: str, destination: str, force: bool = True) -> str:
     """
     Copy a file from a source to its destination.
+
+    Arguments
+    ---------
+    source      : the source to copy from
+    destination : the destination to copy to
+    force       : force copy if destination already exists
     """
     # Case 1: It's already there, we aren't replacing it :)
     if source == destination and force is False:
@@ -115,13 +150,22 @@ def copyfile(source, destination, force=True):
     return destination
 
 
-def write_file(filename, content, mode="w", exec=False):
+def write_file(
+    filename: str, content: str, mode: str = "w", make_exec: bool = False
+) -> str:
     """
     Write content to a filename
+
+    Arguments
+    ---------
+    filename  : filname to write
+    content   : content to write
+    mode      : mode to write
+    make_exec : make executable
     """
     with open(filename, mode) as filey:
         filey.writelines(content)
-    if exec:
+    if make_exec:
         st = os.stat(filename)
 
         # Execute / search permissions for the user and others
@@ -129,9 +173,14 @@ def write_file(filename, content, mode="w", exec=False):
     return filename
 
 
-def read_in_chunks(image, chunk_size=1024):
+def read_in_chunks(image: Union[Text, Path, TextIO], chunk_size: int = 1024):
     """
     Helper function to read file in chunks, with default size 1k.
+
+    Arguments
+    ---------
+    image      : file descriptor
+    chunk_size : size of the chunk
     """
     while True:
         data = image.read(chunk_size)
@@ -140,33 +189,53 @@ def read_in_chunks(image, chunk_size=1024):
         yield data
 
 
-def write_json(json_obj, filename, mode="w"):
+def write_json(json_obj: dict, filename: str, mode: stt = "w") -> str:
     """
     Write json to a filename
+
+    Arguments
+    ---------
+    json_obj : json object to write (dict)
+    filename : json file to write
+    mode     : mode to write
     """
     with open(filename, mode) as filey:
         filey.writelines(print_json(json_obj))
     return filename
 
 
-def print_json(json_obj):
+def print_json(json_obj: dict) -> str:
     """
     Print json pretty
+
+    Arguments
+    ---------
+    json_obj : json object to print (dict)
     """
     return json.dumps(json_obj, indent=4, separators=(",", ": "))
 
 
-def read_file(filename, mode="r"):
+def read_file(filename: str, mode: str = "r") -> str:
     """
     Read a file.
+
+    Arguments
+    ---------
+    filename : json file to write
+    mode     : mode to write
     """
     with open(filename, mode) as filey:
         content = filey.read()
     return content
 
 
-def read_json(filename, mode="r"):
+def read_json(filename: str, mode: str = "r") -> str:
     """
     Read a json file to a dictionary.
+
+    Arguments
+    ---------
+    filename : json file to write
+    mode     : mode to write
     """
     return json.loads(read_file(filename))
