@@ -132,6 +132,19 @@ $ cat artifact.txt
 hello dinosaur
 ```
 
+### Docker Container
+
+We provide a [Dockerfile](Dockerfile) to build a container with the client.
+
+```bash
+$ docker build -t oras-py .
+```
+```bash
+$ docker run -it oras-py                                                                                                                   
+# which oras-py
+/opt/conda/bin/oras-py
+```
+
 ## TODO
 
  - should there be a tags function?
