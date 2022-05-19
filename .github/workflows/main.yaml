@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Environment
         run: conda create --quiet --name oras requests
-      - name: Test Oras Python (no auth)
+      - name: Test Oras Python
         env:
           registry_host: localhost
           registry_port: ${{ job.services.registry.ports[5000] }}
