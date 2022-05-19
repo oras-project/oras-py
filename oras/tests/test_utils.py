@@ -1,3 +1,7 @@
+__author__ = "Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
+__license__ = "Apache-2.0"
+
 import json
 import os
 import shutil

@@ -147,14 +147,11 @@ $ docker run -it oras-py
 
 ## TODO
 
- - should there be a tags function?
  - add example (custom) GitHub client
  - refactor internals to be more like oras-go (e.g., provider, copy?)
- - add schemas for manifest, annotations, etc.
  - need to have git commit, state, added to defaults on install/release. See [here](https://github.com/oras-project/oras/blob/main/Makefile).
  - plain_http, configs, need to be parsed in client
  - todo we haven't added path traversal, or cacheRoot to pull
- - we should have common function to parse errors in json 'errors' -> list -> message
  - environment variables like `ORAS_CACHE` 
 
 ## Code of Conduct

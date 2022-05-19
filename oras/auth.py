@@ -1,13 +1,11 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import base64
 import os
 import re
 from typing import List, Optional
-
-import docker
 
 import oras.utils
 from oras.logger import logger
@@ -21,6 +19,8 @@ def load_configs(configs: List[str] = None):
     ---------
     configs : list of configuration paths to load
     """
+    import docker
+
     configs = configs or []
     default_config = docker.context.config.find_config_file()
 

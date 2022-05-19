@@ -1,28 +1,28 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import sys
+from typing import Optional
 
-import docker
-
+import oras.utils
 from oras.logger import logger
 
 
 def login(
-    username=None,
-    password=None,
-    password_stdin=False,
-    insecure=False,
-    hostname=None,
-    config_path=None,
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+    password_stdin: bool = False,
+    insecure: bool = False,
+    hostname: Optional[str] = None,
+    config_path: Optional[str] = None,
 ):
     """
     Login to an OCI registry.
 
     The username and password can come from stdin.
     """
-    client = docker.DockerClient(tls=not insecure)
+    client = oras.utils.get_docker_client(tls=not insecure)
 
     # Read password from stdin
     if password_stdin:
@@ -63,7 +63,7 @@ def login(
     logger.info(result["Status"])
 
 
-def readline():
+def readline() -> str:
     """
     Read lines from stdin
     """

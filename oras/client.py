@@ -1,10 +1,10 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 
 import sys
-from typing import Union
+from typing import List, Optional, Union
 
 import oras.container
 import oras.main as main
@@ -102,7 +102,7 @@ class OrasClient:
         password_stdin: bool = False,
         insecure: bool = False,
         hostname: str = None,
-        config_path: list = None,
+        config_path: Optional[List[str]] = None,
     ):
         """
         Login to a registry.
@@ -125,7 +125,7 @@ class OrasClient:
             password_stdin=password_stdin,
             insecure=insecure,
             hostname=hostname,
-            config_path=config_path,
+            config_path=config_path,  # type: ignore
         )
 
     def logout(self, hostname: str):
