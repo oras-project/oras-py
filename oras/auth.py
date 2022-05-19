@@ -2,14 +2,18 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
+import base64
 import os
 import re
+from typing import List, Optional
+
 import docker
-import base64
+
 import oras.utils
+from oras.logger import logger
 
 
-def load_configs(configs: list[str] = None):
+def load_configs(configs: List[str] = None):
     """
     Load one or more configs with credentials from the filesystem.
 
@@ -23,7 +27,7 @@ def load_configs(configs: list[str] = None):
     # Add the default docker config
     if default_config:
         configs.append(default_config)
-    configs = set(configs)
+    configs = set(configs)  # type: ignore
 
     # Load configs until we find our registry hostname
     auths = {}
@@ -58,9 +62,9 @@ class authHeader:
         ---------
         lookup : dictionary of key,value pairs to parse into auth header
         """
-        self.service = None
-        self.realm = None
-        self.scope = None
+        self.service: Optional[str] = None
+        self.realm: Optional[str] = None
+        self.scope: Optional[str] = None
         for key in lookup:
             if key in ["realm", "service", "scope"]:
                 setattr(self, key, lookup[key])

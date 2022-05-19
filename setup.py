@@ -1,6 +1,6 @@
-from setuptools import setup, find_packages
-import codecs
 import os
+
+from setuptools import find_packages, setup
 
 
 def get_lookup():
@@ -13,8 +13,10 @@ def get_lookup():
 
 # Read in requirements
 def get_reqs(lookup=None, key="INSTALL_REQUIRES"):
-    """get requirements, mean reading in requirements and versions from
-    the lookup obtained with get_lookup"""
+    """
+    get requirements, mean reading in requirements and versions from
+    the lookup obtained with get_lookup
+    """
 
     if lookup == None:
         lookup = get_lookup()
@@ -86,17 +88,18 @@ if __name__ == "__main__":
         tests_require=TESTS_REQUIRES,
         extras_require={
             "all": [INSTALL_REQUIRES_ALL],
+            "tests": [TESTS_REQUIRES],
         },
         classifiers=[
             "Intended Audience :: Science/Research",
             "Intended Audience :: Developers",
-            "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-            "Programming Language :: C",
+            "License :: OSI Approved :: Apache Software License",
             "Programming Language :: Python",
             "Topic :: Software Development",
             "Topic :: Scientific/Engineering",
             "Operating System :: Unix",
-            "Programming Language :: Python :: 3.3",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.7",
         ],
         entry_points={"console_scripts": ["oras-py=oras.cli:run"]},
     )

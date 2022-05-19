@@ -3,13 +3,13 @@ __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
 
-import oras.version
-import oras.defaults as defaults
-import oras.main as main
-import oras.container
-import oras.provider
-
 import sys
+from typing import Union
+
+import oras.container
+import oras.main as main
+import oras.provider
+import oras.version
 
 
 class OrasClient:
@@ -59,7 +59,7 @@ class OrasClient:
         """
         self.remote.set_basic_auth(username, password)
 
-    def version(self, return_items: bool = False) -> dict | str:
+    def version(self, return_items: bool = False) -> Union[dict, str]:
         """
         Get the version of the client.
 
@@ -68,8 +68,6 @@ class OrasClient:
         return_items : return the dict of version info instead of string
         """
         version = oras.version.__version__
-        if defaults.build_metadata:
-            version = "%s+%s" % (version, defaults.build_metadata)
 
         python_version = "%s.%s.%s" % (
             sys.version_info.major,
@@ -120,7 +118,7 @@ class OrasClient:
         """
         login_func = main.login
         if hasattr(self.remote, "login"):
-            login_func = self.remote.login
+            login_func = self.remote.login  # type: ignore
         return login_func(
             username=username,
             password=password,

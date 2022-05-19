@@ -4,12 +4,13 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
-import oras
-from oras.logger import setup_logger
-import oras.cli.help as help
 import argparse
-import sys
 import os
+import sys
+
+import oras
+import oras.cli.help as help
+from oras.logger import setup_logger
 
 
 def get_parser():
@@ -63,25 +64,8 @@ def get_parser():
     )
 
     # Login and logout share config and hostname arguments
-    for command in [login, logout]:
+    for command in login, logout:
         command.add_argument("hostname", help="hostname")
-
-    # Copy command
-    copy = subparsers.add_parser("copy", description=help.copy_help)
-
-    copy_required = copy.add_argument_group("required arguments for copy")
-    copy_required.add_argument(
-        "--from",
-        dest="from_str",
-        help="source type and possible options",
-        required=True,
-    )
-    copy_required.add_argument(
-        "--to",
-        dest="to_str",
-        help="destination type and possible options",
-        required=True,
-    )
 
     pull = subparsers.add_parser("pull", description="pull a container")
     pull.add_argument(
@@ -105,14 +89,12 @@ def get_parser():
 
     push = subparsers.add_parser("push", description=help.push_help)
     push.add_argument("--manifest-annotations", help="manifest annotation file")
+    push.add_argument("--manifest-config", help="manifest config file")
     push.add_argument(
         "--disable-path-validation",
         help="skip path validation",
         default=False,
         action="store_true",
-    )
-    push.add_argument(
-        "-v", "--verbose", help="verbose output", default=False, action="store_true"
     )
     for command in push, pull:
         command.add_argument("target", help="target")
@@ -128,20 +110,17 @@ def get_parser():
             action="store_true",
         )
 
-    for command in push, copy:
-        command.add_argument("--manifest-config", help="manifest config file")
-
-    # TODO this can be a list, we aren't doing anything with it yet
-    for command in login, logout, push, pull, copy:
+    for command in login, logout, push, pull:
         command.add_argument(
             "-c",
             "--config",
             dest="config",
             help="auth config path",
+            action="append",
         )
 
     # login and push/pull share username/password, and insecure
-    for command in login, push, pull, copy:
+    for command in login, push, pull:
         command.add_argument(
             "-u", "--username", dest="username", help="registry username"
         )
@@ -195,15 +174,11 @@ def run():
     if args.debug:
         os.environ["MESSAGELEVEL"] = "DEBUG"
 
-    setup_logger(
-        quiet=args.quiet, debug=args.debug, verbose=getattr(args, "verbose", False)
-    )
+    setup_logger(quiet=args.quiet, debug=args.debug)
 
     # Direct to the right parser
     if args.command == "version" or args.version:
         from .version import main
-    elif args.command == "copy":
-        from .copy import main
     elif args.command == "login":
         from .login import main
     elif args.command == "logout":
