@@ -14,6 +14,7 @@ jobs:
           export PATH="/usr/share/miniconda/bin:$PATH"
           source activate black
           pip install black
+          make install
           make lint
            
   test-oras-py:
@@ -35,4 +36,5 @@ jobs:
           export PATH="/usr/share/miniconda/bin:$PATH"
           source activate oras
           pip install --upgrade pip setuptools
+          make install
           make test

@@ -1,5 +1,5 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 
@@ -18,3 +18,16 @@ def iter_localhosts(name: str):
         names.append(name.replace("127.0.0.1", "localhost"))
     for name in names:
         yield name
+
+
+def get_docker_client(insecure: bool = False, **kwargs):
+    """
+    Get a docker client.
+
+    Arguments
+    ---------
+    tls : enable tls
+    """
+    import docker
+
+    return docker.DockerClient(tls=not insecure, **kwargs)

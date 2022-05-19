@@ -5,7 +5,7 @@ cd $DIR/../
 
 black --check oras
 
-for filename in $(find . -name "*.py" -not -path "*__init__.py"); do
+for filename in $(find . -name "*.py" -not -path "*__init__.py" -not -path "./env/*"); do
     pyflakes $filename
 done
 

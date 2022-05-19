@@ -1,15 +1,17 @@
 __author__ = "Vanessa Sochat"
-__copyright__ = "Copyright 2021-2022, Vanessa Sochat"
+__copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
 import os
 from typing import List, Optional, Tuple, Union
 
+import jsonschema
 import requests
 
 import oras.auth
 import oras.oci
+import oras.schemas
 import oras.utils
 from oras.logger import logger
 
@@ -178,6 +180,22 @@ class Registry:
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"
         return self.do_request(blob_url, "GET", headers=self.headers, stream=stream)
 
+    def _download_blob(
+        self, container: oras.container.Container, digest: str, outfile: str
+    ) -> str:
+        """
+        Stream download a blob into an output file.
+
+        This function is a wrapper around get_blob.
+        """
+        with self._get_blob(container, digest, stream=True) as r:
+            r.raise_for_status()
+            with open(outfile, "wb") as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+        return outfile
+
     def _put_upload(
         self, blob: str, container: oras.container.Container, layer: dict
     ) -> requests.Response:
@@ -266,7 +284,24 @@ class Registry:
         response       : request response to inspect
         """
         if response.status_code not in [200, 201, 202]:
+            self._parse_response_errors(response)
             logger.exit(f"Issue with {response.request.url}:\n{response.reason}")
+
+    def _parse_response_errors(self, response: requests.Response):
+        """
+        Given a failed request, look for OCI formatted error messages.
+
+        Arguments
+        ---------
+        response : requests.Response that might have an error message.
+        """
+        try:
+            msg = response.json()
+            for error in msg.get("errors", []):
+                if isinstance(error, dict) and "message" in error:
+                    logger.error(error["message"])
+        except:
+            pass
 
     def _upload_manifest(
         self, manifest: dict, container: oras.container.Container
@@ -279,6 +314,7 @@ class Registry:
         manifest   : manifest to upload
         container  : parsed container URI
         """
+        jsonschema.validate(manifest, schema=oras.schemas.manifest)
         headers = {
             "Content-Type": oras.defaults.default_manifest_media_type,
             "Content-Length": str(len(manifest)),
@@ -328,12 +364,19 @@ class Registry:
                         f"Blob {blob} is not in the present working directory context."
                     )
 
+            # Save directory or blob name before compressing
+            blob_name = os.path.basename(blob)
+
+            # If it's a directory, we need to compress
+            cleanup_blob = False
+            if os.path.isdir(blob):
+                blob = oras.utils.make_targz(blob)
+                cleanup_blob = True
+
             # Create a new layer from the blob
-            layer = oras.oci.NewLayer(blob)
+            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob)
             annotations = annotset.get_annotations(blob)
-            layer["annotations"] = {
-                oras.defaults.annotation_title: os.path.basename(blob)
-            }
+            layer["annotations"] = {oras.defaults.annotation_title: blob_name}
             if annotations:
                 layer["annotations"].update(annotations)
 
@@ -343,6 +386,10 @@ class Registry:
             # Upload the blob layer
             response = self._upload_blob(blob, container, layer)
             self._check_200_response(response)
+
+            # Do we need to cleanup a temporary targz?
+            if cleanup_blob and os.path.exists(blob):
+                os.remove(blob)
 
         # Add annotations to the manifest, if provided
         manifest_annots = annotset.get_annotations("$manifest")
@@ -407,14 +454,20 @@ class Registry:
                     f"{outfile} already exists and --keep-old-files set, will not overwrite."
                 )
                 continue
-            with self._get_blob(container, layer["digest"], stream=True) as r:
-                r.raise_for_status()
-                with open(outfile, "wb") as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            f.write(chunk)
-                logger.info(f"Successfully pulled {outfile}.")
-                files.append(outfile)
+
+            # A directory will need to be uncompressed and moved
+            if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
+                targz = oras.utils.get_tmpfile(suffix=".tar.gz")
+                self._download_blob(container, layer["digest"], targz)
+
+                # The artifact will be extracted to the correct name
+                oras.utils.extract_targz(targz, os.path.dirname(outfile))
+
+            # Anything else just extracted directly
+            else:
+                self._download_blob(container, layer["digest"], outfile)
+            logger.info(f"Successfully pulled {outfile}.")
+            files.append(outfile)
         return files
 
     def get_manifest(
@@ -435,7 +488,9 @@ class Registry:
         url = f"{self.prefix}://{container.get_manifest_url()}"
         response = self.do_request(url, "GET", headers=headers)
         self._check_200_response(response)
-        return response.json()
+        manifest = response.json()
+        jsonschema.validate(manifest, schema=oras.schemas.manifest)
+        return manifest
 
     def do_request(
         self,
