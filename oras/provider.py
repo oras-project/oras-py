@@ -7,7 +7,7 @@ import oras.auth
 import oras.oci
 import oras.utils
 
-from typing import Tuple
+from typing import Tuple, List
 import copy
 import os
 import requests
@@ -285,7 +285,7 @@ class Registry:
         put_url = f"{self.prefix}://{container.put_manifest_url()}"
         return self.do_request(put_url, "PUT", headers=headers, json=manifest)
 
-    def push(self, *args, **kwargs):
+    def push(self, *args, **kwargs) -> requests.Response:
         """
         Push a set of files to a target
 
@@ -369,8 +369,9 @@ class Registry:
         manifest["config"] = conf
         self._check_200_response(self._upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
+        return response
 
-    def pull(self, *args, **kwargs):
+    def pull(self, *args, **kwargs) -> List[str]:
         """
         Push an artifact from a target
 
@@ -392,6 +393,7 @@ class Registry:
         outdir = kwargs.get("outdir") or oras.utils.get_tempdir()
         overwrite = kwargs.get("overwrite", True)
 
+        files = []
         for layer in manifest.get("layers", []):
             filename = layer.get("annotations", {}).get(oras.defaults.annotation_title)
 
@@ -411,6 +413,8 @@ class Registry:
                         if chunk:
                             f.write(chunk)
                 logger.info(f"Successfully pulled {outfile}.")
+                files.append(outfile)
+        return files
 
     def get_manifest(
         self, container: oras.container.Container, allowed_media_type: list = None

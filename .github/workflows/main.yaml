@@ -34,6 +34,4 @@ jobs:
         run: |
           export PATH="/usr/share/miniconda/bin:$PATH"
           source activate oras
-          pip install -e .
-          echo "hello dinosaur" > artifact.txt
-          oras-py push localhost:5000/dinosaur/artifact:v1 --insecure --manifest-config /dev/null:application/vnd.acme.rocket.config ./artifact.txt
+          make test

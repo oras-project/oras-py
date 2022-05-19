@@ -133,7 +133,6 @@ hello dinosaur
 
 ## TODO
 
- - add testing (docstring test setup for some)
  - isort, mypy, pyflakes black
  - should there be a tags function?
  - add example (custom) GitHub client

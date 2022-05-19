@@ -91,13 +91,13 @@ if __name__ == "__main__":
         classifiers=[
             "Intended Audience :: Science/Research",
             "Intended Audience :: Developers",
-            "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-            "Programming Language :: C",
+            "License :: OSI Approved :: Apache Software License",
             "Programming Language :: Python",
             "Topic :: Software Development",
             "Topic :: Scientific/Engineering",
             "Operating System :: Unix",
-            "Programming Language :: Python :: 3.3",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.7",
         ],
         entry_points={"console_scripts": ["oras-py=oras.cli:run"]},
     )
