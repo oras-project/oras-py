@@ -11,6 +11,7 @@ import shutil
 import stat
 import tempfile
 from typing import Union, TextIO, Text
+from pathlib import Path
 
 import json
 from oras.logger import logger
@@ -189,7 +190,7 @@ def read_in_chunks(image: Union[Text, Path, TextIO], chunk_size: int = 1024):
         yield data
 
 
-def write_json(json_obj: dict, filename: str, mode: stt = "w") -> str:
+def write_json(json_obj: dict, filename: str, mode: str = "w") -> str:
     """
     Write json to a filename
 

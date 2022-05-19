@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import codecs
 import os
 
 
@@ -13,8 +12,10 @@ def get_lookup():
 
 # Read in requirements
 def get_reqs(lookup=None, key="INSTALL_REQUIRES"):
-    """get requirements, mean reading in requirements and versions from
-    the lookup obtained with get_lookup"""
+    """
+    get requirements, mean reading in requirements and versions from
+    the lookup obtained with get_lookup
+    """
 
     if lookup == None:
         lookup = get_lookup()

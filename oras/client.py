@@ -8,6 +8,7 @@ import oras.defaults as defaults
 import oras.main as main
 import oras.container
 import oras.provider
+from typing import Union
 
 import sys
 
@@ -59,7 +60,7 @@ class OrasClient:
         """
         self.remote.set_basic_auth(username, password)
 
-    def version(self, return_items: bool = False) -> dict | str:
+    def version(self, return_items: bool = False) -> Union[dict, str]:
         """
         Get the version of the client.
 

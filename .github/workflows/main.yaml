@@ -1,0 +1,39 @@
+name: Docker Registry Test
+on:
+  pull_request: []
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup black linter
+        run: conda create --quiet --name black pyflakes
+      - name: Lint Oras Python
+        run: |
+          export PATH="/usr/share/miniconda/bin:$PATH"
+          source activate black
+          pip install black
+          make lint
+           
+  test-oras-py:
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: ghcr.io/oras-project/registry:latest
+        ports:
+          - 5000:5000
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Environment
+        run: conda create --quiet --name oras requests
+      - name: Try Pinging Registry Service?
+        env:
+          registry_host: localhost
+          registry_port: ${{ job.services.registry.ports[5000] }}
+        run: |
+          export PATH="/usr/share/miniconda/bin:$PATH"
+          source activate oras
+          pip install -e .
+          echo "hello dinosaur" > artifact.txt
+          oras-py push localhost:5000/dinosaur/artifact:v1 --insecure --manifest-config /dev/null:application/vnd.acme.rocket.config ./artifact.txt

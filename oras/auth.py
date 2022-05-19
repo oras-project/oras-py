@@ -7,9 +7,11 @@ import re
 import docker
 import base64
 import oras.utils
+from oras.logger import logger
+from typing import List
 
 
-def load_configs(configs: list[str] = None):
+def load_configs(configs: List[str] = None):
     """
     Load one or more configs with credentials from the filesystem.
 
