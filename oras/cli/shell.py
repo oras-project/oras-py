@@ -42,6 +42,7 @@ def ipython(args):
     Generate an IPython shell with the client.
     """
     client = create_client(args)
+    assert client
     from IPython import embed
 
     embed()

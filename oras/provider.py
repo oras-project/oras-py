@@ -2,15 +2,16 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
-from oras.logger import logger
+import copy
+import os
+from typing import List, Optional, Tuple, Union
+
+import requests
+
 import oras.auth
 import oras.oci
 import oras.utils
-
-from typing import Tuple
-import copy
-import os
-import requests
+from oras.logger import logger
 
 
 class Registry:
@@ -21,7 +22,7 @@ class Registry:
     and the registry isn't necessarily the "remote" endpoint.
     """
 
-    def __init__(self, hostname: str, insecure: bool = False):
+    def __init__(self, hostname: Optional[str], insecure: bool = False):
         """
         Create a new registry provider.
 
@@ -30,12 +31,12 @@ class Registry:
         hostname  : the registry hostname
         insecure  : use http instead of https
         """
-        self.hostname = hostname
-        self.headers = {}
-        self.session = requests.Session()
-        self.prefix = "http" if insecure else "https"
-        self.token = None
-        self._auths = None
+        self.hostname: Optional[str] = hostname
+        self.headers: dict = {}
+        self.session: requests.Session = requests.Session()
+        self.prefix: str = "http" if insecure else "https"
+        self.token: Optional[str] = None
+        self._auths: dict = {}
 
     def logout(self, hostname: str):
         """
@@ -121,7 +122,7 @@ class Registry:
 
         return os.getcwd() in os.path.abspath(path)
 
-    def _parse_manifest_ref(self, ref: str) -> Tuple[str, str]:
+    def _parse_manifest_ref(self, ref: str) -> Union[Tuple[str, str], List[str]]:
         """
         Parse an optional manifest config, e.g:
 
@@ -285,7 +286,7 @@ class Registry:
         put_url = f"{self.prefix}://{container.put_manifest_url()}"
         return self.do_request(put_url, "PUT", headers=headers, json=manifest)
 
-    def push(self, *args, **kwargs):
+    def push(self, *args, **kwargs) -> requests.Response:
         """
         Push a set of files to a target
 
@@ -369,8 +370,9 @@ class Registry:
         manifest["config"] = conf
         self._check_200_response(self._upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
+        return response
 
-    def pull(self, *args, **kwargs):
+    def pull(self, *args, **kwargs) -> List[str]:
         """
         Push an artifact from a target
 
@@ -389,9 +391,10 @@ class Registry:
         container = oras.container.Container(kwargs["target"], self.hostname)
         self.load_configs(container, configs=kwargs.get("config_path"))
         manifest = self.get_manifest(container, allowed_media_type)
-        outdir = kwargs.get("outdir") or oras.utils.get_tempdir()
+        outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
         overwrite = kwargs.get("overwrite", True)
 
+        files = []
         for layer in manifest.get("layers", []):
             filename = layer.get("annotations", {}).get(oras.defaults.annotation_title)
 
@@ -411,6 +414,8 @@ class Registry:
                         if chunk:
                             f.write(chunk)
                 logger.info(f"Successfully pulled {outfile}.")
+                files.append(outfile)
+        return files
 
     def get_manifest(
         self, container: oras.container.Container, allowed_media_type: list = None
@@ -436,7 +441,7 @@ class Registry:
         self,
         url: str,
         method: str = "GET",
-        data: dict = None,
+        data: Union[dict, bytes] = None,
         headers: dict = None,
         json: dict = None,
         stream: bool = False,
@@ -512,9 +517,9 @@ class Registry:
             )
 
         # Currently we don't set a scope (it defaults to build)
-        if not h.realm.startswith("http"):
+        if not h.realm.startswith("http"):  # type: ignore
             h.realm = f"{self.prefix}://{h.realm}"
-        authResponse = self.session.get(h.realm, headers=headers)
+        authResponse = self.session.get(h.realm, headers=headers)  # type: ignore
         if authResponse.status_code != 200:
             return False
 

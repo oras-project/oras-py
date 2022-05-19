@@ -2,9 +2,11 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2021-2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
-from oras.logger import logger
-import docker
 import sys
+
+import docker
+
+from oras.logger import logger
 
 
 def login(

@@ -2,14 +2,14 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright 2022, Vanessa Sochat"
 __license__ = "Apache-2.0"
 
+import inspect
 import logging as _logging
+import os
 import platform
 import sys
-import os
 import threading
-from typing import Union, TextIO, Text
 from pathlib import Path
-import inspect
+from typing import Optional, Text, TextIO, Union
 
 
 class ColorizingStreamHandler(_logging.StreamHandler):
@@ -59,7 +59,7 @@ class ColorizingStreamHandler(_logging.StreamHandler):
         Determine if we have a tty environment
         """
         isatty = getattr(self.stream, "isatty", None)
-        return isatty and isatty()
+        return isatty and isatty()  # type: ignore
 
     def emit(self, record):
         """
@@ -122,7 +122,7 @@ class Logger:
             self.logfile_handler.close()
         self.log_handler = [self.text_handler]
 
-    def handler(self, msg: str):
+    def handler(self, msg: dict):
         """
         Handle a log message.
 
@@ -233,7 +233,7 @@ class Logger:
         """
         self.handler({"level": "progress", "done": done, "total": total})
 
-    def shellcmd(self, msg: str):
+    def shellcmd(self, msg: Optional[str]):
         """
         Shellcmd message
 
@@ -242,8 +242,7 @@ class Logger:
         msg : the error message
         """
         if msg is not None:
-            msg = {"level": "shellcmd", "msg": msg}
-            self.handler(msg)
+            self.handler({"level": "shellcmd", "msg": msg})
 
     def text_handler(self, msg: dict):
         """
@@ -284,7 +283,6 @@ def setup_logger(
     nocolor: bool = False,
     stdout: bool = False,
     debug: bool = False,
-    verbose: bool = False,
     use_threads: bool = False,
 ):
     """
@@ -297,7 +295,6 @@ def setup_logger(
     nocolor        : do not use color
     stdout         : standard output for the logger
     debug          : debug level logging
-    verbose        : verbose level logging
     use_threads    : use threads!
     """
     # console output only if no custom logger was specified
@@ -307,9 +304,7 @@ def setup_logger(
         use_threads=use_threads,
     )
     level = _logging.INFO
-    if verbose:
-        level = _logging.VERBOSE
-    elif debug:
+    if debug:
         level = _logging.DEBUG
 
     logger.set_stream_handler(stream_handler)
