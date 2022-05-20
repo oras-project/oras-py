@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 import jsonschema
 
@@ -44,22 +44,43 @@ class Annotations:
         return {}
 
 
-def NewLayer(blob, media_type: str = None, is_dir: bool = False) -> dict:
+class Layer:
+    def __init__(
+        self, blob: str, media_type: Optional[str] = None, is_dir: bool = False
+    ):
+        """
+        Create a new Layer
+        """
+        self.blob = blob
+        self.set_media_type(media_type, is_dir)
+
+    def set_media_type(self, media_type: Optional[str] = None, is_dir: bool = False):
+        """
+        Vary the media type to be directory or default layer
+        """
+        if is_dir and not media_type:
+            self.media_type = oras.defaults.default_blob_dir_media_type
+        elif not is_dir and not media_type:
+            self.media_type = oras.defaults.default_blob_media_type
+
+    def to_dict(self):
+        """
+        Return a dictionary representation of the layer
+        """
+        layer = {
+            "mediaType": self.media_type,
+            "size": oras.utils.get_size(self.blob),
+            "digest": "sha256:" + oras.utils.get_file_hash(self.blob),
+        }
+        jsonschema.validate(layer, schema=oras.schemas.layer)
+        return layer
+
+
+def NewLayer(blob: str, media_type: Optional[str] = None, is_dir: bool = False) -> dict:
     """
-    Create a new Layer (todo, validate structure)
+    Courtesy function to create and retrieve a layer as dict
     """
-    # Vary the media type to be directory or default layer
-    if is_dir and not media_type:
-        media_type = oras.defaults.default_blob_dir_media_type
-    elif not is_dir and not media_type:
-        media_type = oras.defaults.default_blob_media_type
-    layer = {
-        "mediaType": media_type,
-        "size": oras.utils.get_size(blob),
-        "digest": "sha256:" + oras.utils.get_file_hash(blob),
-    }
-    jsonschema.validate(layer, schema=oras.schemas.layer)
-    return layer
+    return Layer(blob=blob, media_type=media_type, is_dir=is_dir).to_dict()
 
 
 def ManifestConfig(

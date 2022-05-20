@@ -22,6 +22,7 @@ layerProperties = {
         "mediaType": {"type": "string"},
         "size": {"type": "number"},
         "digest": {"type": "string"},
+        "annotations": annotations,
     },
 }
 
@@ -56,7 +57,6 @@ manifest = {
     "type": "object",
     "required": [
         "schemaVersion",
-        "mediaType",
         "config",
         "layers",
     ],

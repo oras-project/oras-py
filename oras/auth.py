@@ -11,7 +11,7 @@ import oras.utils
 from oras.logger import logger
 
 
-def load_configs(configs: List[str] = None):
+def load_configs(configs: Optional[List[str]] = None):
     """
     Load one or more configs with credentials from the filesystem.
 

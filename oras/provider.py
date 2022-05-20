@@ -10,9 +10,11 @@ import jsonschema
 import requests
 
 import oras.auth
+import oras.container
 import oras.oci
 import oras.schemas
 import oras.utils
+from oras.decorator import ensure_container
 from oras.logger import logger
 
 
@@ -24,7 +26,7 @@ class Registry:
     and the registry isn't necessarily the "remote" endpoint.
     """
 
-    def __init__(self, hostname: Optional[str], insecure: bool = False):
+    def __init__(self, hostname: Optional[str] = None, insecure: bool = False):
         """
         Create a new registry provider.
 
@@ -59,7 +61,10 @@ class Registry:
                 return
         logger.info(f"You are not logged in to {hostname}")
 
-    def load_configs(self, container: oras.container.Container, configs: list = None):
+    @ensure_container
+    def load_configs(
+        self, container: Union[str, oras.container.Container], configs: list = None
+    ):
         """
         Load configs to discover credentials for a specific container.
 
@@ -73,7 +78,7 @@ class Registry:
         """
         if not self._auths:
             self._auths = oras.auth.load_configs(configs)
-        for registry in oras.utils.iter_localhosts(container.registry):
+        for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
             if self._load_auth(registry):
                 return
 
@@ -121,7 +126,6 @@ class Registry:
         ---------
         path : the path to validate
         """
-
         return os.getcwd() in os.path.abspath(path)
 
     def _parse_manifest_ref(self, ref: str) -> Union[Tuple[str, str], List[str]]:
@@ -143,7 +147,7 @@ class Registry:
         return ref.split(":", 1)
 
     def _upload_blob(
-        self, blob: str, container: oras.container.Container, layer: dict
+        self, blob: str, container: Union[str, oras.container.Container], layer: dict
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -158,6 +162,7 @@ class Registry:
         layer      : dict from oras.oci.NewLayer
         """
         blob = os.path.abspath(blob)
+        container = self.get_container(container)
         size = layer["size"]
 
         # Chunked for large, otherwise POST and PUT
@@ -165,30 +170,68 @@ class Registry:
             return self._put_upload(blob, container, layer)
         return self._chunked_upload(blob, container, layer)
 
-    def _get_blob(
-        self, container: oras.container.Container, digest: str, stream: bool = False
+    @ensure_container
+    def get_tags(
+        self, container: Union[str, oras.container.Container], N: int = 10_000
+    ) -> List[str]:
+        """
+        Retrieve tags for a package.
+
+        Arguments
+        ---------
+        container  : parsed container URI or name
+        N          : number of tags
+        """
+        tags_url = f"{self.prefix}://{container.tags_url(N)}"  # type: ignore
+        return self.do_request(tags_url, "GET", headers=self.headers)
+
+    @ensure_container
+    def get_blob(
+        self,
+        container: Union[str, oras.container.Container],
+        digest: str,
+        stream: bool = False,
     ) -> requests.Response:
         """
         Retrieve a blob for a package.
 
         Arguments
         ---------
-        container  : parsed container URI
+        container  : parsed container URI or name
         digest     : sha256 digest of the blob to retrieve
         stream     : stream the response (or not)
         """
-        blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"
+        blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
         return self.do_request(blob_url, "GET", headers=self.headers, stream=stream)
 
+    def get_container(
+        self, name: Union[str, oras.container.Container]
+    ) -> oras.container.Container:
+        """
+        Courtesy function to get a container from a URI.
+
+        Arguments
+        ---------
+        name : unique resource identifier to parse
+        """
+        if isinstance(name, oras.container.Container):
+            return name
+        return oras.container.Container(name, registry=self.hostname)
+
+    @ensure_container
     def _download_blob(
-        self, container: oras.container.Container, digest: str, outfile: str
+        self, container: Union[str, oras.container.Container], digest: str, outfile: str
     ) -> str:
         """
         Stream download a blob into an output file.
 
         This function is a wrapper around get_blob.
+
+        Arguments
+        ---------
+        container : container or name to parse
         """
-        with self._get_blob(container, digest, stream=True) as r:
+        with self.get_blob(container, digest, stream=True) as r:
             r.raise_for_status()
             with open(outfile, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
@@ -338,7 +381,7 @@ class Registry:
         password                  (str) : password for basic auth
         target                    (str) : target location to push to
         """
-        container = oras.container.Container(kwargs["target"], registry=self.hostname)
+        container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
 
         # Hold state of request for http/https
@@ -435,7 +478,7 @@ class Registry:
         target                      (str) : target location to pull from
         """
         allowed_media_type = kwargs.get("allowed_media_type")
-        container = oras.container.Container(kwargs["target"], self.hostname)
+        container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
@@ -470,8 +513,11 @@ class Registry:
             files.append(outfile)
         return files
 
+    @ensure_container
     def get_manifest(
-        self, container: oras.container.Container, allowed_media_type: list = None
+        self,
+        container: Union[str, oras.container.Container],
+        allowed_media_type: list = None,
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -485,7 +531,7 @@ class Registry:
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
-        url = f"{self.prefix}://{container.get_manifest_url()}"
+        url = f"{self.prefix}://{container.get_manifest_url()}"  # type: ignore
         response = self.do_request(url, "GET", headers=headers)
         self._check_200_response(response)
         manifest = response.json()

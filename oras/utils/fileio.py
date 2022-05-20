@@ -28,7 +28,7 @@ def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     return dest_name
 
 
-def extract_targz(targz, outdir):
+def extract_targz(targz: str, outdir: str) -> str:
     """
     Extract a .tar.gz to an output directory.
     """
