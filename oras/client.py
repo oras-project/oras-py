@@ -25,8 +25,8 @@ class OrasClient:
 
     def __init__(
         self,
-        hostname: str = None,
-        registry: oras.provider.Registry = None,
+        hostname: Optional[str] = None,
+        registry: Optional[oras.provider.Registry] = None,
         insecure: bool = False,
     ):
         """
@@ -83,6 +83,17 @@ class OrasClient:
         # Otherwise return a string that can be printed
         return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
 
+    def get_tags(self, name: str, N: int = 10_000) -> List[str]:
+        """
+        Retrieve tags for a package.
+
+        Arguments
+        ---------
+        name  : container URI to parse
+        N     : number of tags
+        """
+        return self.remote.get_tags(name, N=N).json()
+
     def push(self, *args, **kwargs):
         """
         Push a container to the remote.
@@ -101,7 +112,7 @@ class OrasClient:
         password: str,
         password_stdin: bool = False,
         insecure: bool = False,
-        hostname: str = None,
+        hostname: Optional[str] = None,
         config_path: Optional[List[str]] = None,
     ):
         """

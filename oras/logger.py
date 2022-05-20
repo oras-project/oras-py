@@ -61,7 +61,7 @@ class ColorizingStreamHandler(_logging.StreamHandler):
         isatty = getattr(self.stream, "isatty", None)
         return isatty and isatty()  # type: ignore
 
-    def emit(self, record):
+    def emit(self, record: _logging.LogRecord):
         """
         Emit a log record
 
@@ -133,7 +133,7 @@ class Logger:
         for handler in self.log_handler:
             handler(msg)
 
-    def set_stream_handler(self, stream_handler):
+    def set_stream_handler(self, stream_handler: _logging.Handler):
         """
         Set a stream handler.
 

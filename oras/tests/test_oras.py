@@ -30,8 +30,6 @@ registry = f"{registry_host}:{registry_port}"
 target = f"{registry}/dinosaur/artifact:v1"
 target_dir = f"{registry}/dinosaur/directory:v1"
 
-# TODO test oras auth...
-
 
 def test_basic_oras(tmp_path):
     """
@@ -51,6 +49,12 @@ def test_basic_push_pull(tmp_path):
     assert os.path.exists(artifact)
     res = client.push(files=[artifact], target=target)
     assert res.status_code == 201
+
+    # Test getting tags
+    tags = client.get_tags(target)
+    for key in ["name", "tags"]:
+        assert key in tags
+    assert "v1" in tags["tags"]
 
     # Test pulling elsewhere
     files = client.pull(target=target, outdir=tmp_path)

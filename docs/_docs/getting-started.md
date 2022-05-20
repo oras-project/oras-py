@@ -135,6 +135,14 @@ $ cat artifact.txt
 hello dinosaur
 ```
 
+### Custom Registry
+
+The benefit of Oras Python is that you can create a subclass that easily implements
+a registry, and then allows you to do custom interactions. We provide a few examples:
+
+ - [Conda Mirror](https://github.com/oras-project/oras-py/blob/main/examples/conda-mirror.py): an example to parse custom layers to retrieve metadata index.jsons (and archive) along with a binary to download.
+
+
 ### Docker Container
 
 We provide a [Dockerfile](https://github.com/oras-project/oras-py/blob/main/Dockerfile) to build a container with the client.

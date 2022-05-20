@@ -10,7 +10,7 @@ for filename in $(find . -name "*.py" -not -path "*__init__.py" -not -path "./en
 done
 
 # mypy checks typing
-mypy oras
+mypy oras examples
 
 # isort (import order)
-isort --check-only *.py oras
+isort --check-only *.py oras examples
