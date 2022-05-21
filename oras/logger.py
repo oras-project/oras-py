@@ -35,11 +35,12 @@ class ColorizingStreamHandler(_logging.StreamHandler):
         """
         Create a new ColorizingStreamHandler
 
-        Arguments
-        ---------
-        nocolor     : do not use color
-        stream      : stream list to this output
-        use_threads : use threads! lol
+        :param nocolor: do not use color
+        :type nocolor: bool
+        :param stream: stream list to this output
+        :type stream: bool
+        :param use_threads: use threads! lol
+        :type use_threads: bool
         """
         super().__init__(stream=stream)
         self._output_lock = threading.Lock()
@@ -65,9 +66,8 @@ class ColorizingStreamHandler(_logging.StreamHandler):
         """
         Emit a log record
 
-        Arguments
-        ---------
-        record : the record to emit
+        :param record: the record to emit
+        :type record: logging.LogRecord
         """
         with self._output_lock:
             try:
@@ -87,9 +87,7 @@ class ColorizingStreamHandler(_logging.StreamHandler):
         """
         Decorate a log record
 
-        Arguments
-        ---------
-        record : the record to decorate
+        :param record: the record to emit
         """
         message = record.message
         message = [message]
@@ -126,9 +124,8 @@ class Logger:
         """
         Handle a log message.
 
-        Arguments
-        ---------
-        msg : the message to handle
+        :param msg: the message to handle
+        :type msg: dict
         """
         for handler in self.log_handler:
             handler(msg)
@@ -137,22 +134,20 @@ class Logger:
         """
         Set a stream handler.
 
-        Arguments
-        ---------
-        stream_handler : the stream handler
+        :param stream_handler : the stream handler
+        :type stream_handler: logging.Handler
         """
         if self.stream_handler is not None:
             self.logger.removeHandler(self.stream_handler)
         self.stream_handler = stream_handler
         self.logger.addHandler(stream_handler)
 
-    def set_level(self, level):
+    def set_level(self, level: int):
         """
         Set the logging level.
 
-        Arguments
-        ---------
-        level : the logging level to set
+        :param level: the logging level to set
+        :type level: int
         """
         self.logger.setLevel(level)
 
@@ -160,9 +155,8 @@ class Logger:
         """
         Debug level message with location info.
 
-        Arguments
-        ---------
-        msg : the logging message
+        :param msg: the logging message
+        :type msg: dict
         """
         callerframerecord = inspect.stack()[1]
         frame = callerframerecord[0]
@@ -175,19 +169,17 @@ class Logger:
         """
         Info level message
 
-        Arguments
-        ---------
-        msg : the informational message
+        :param msg: the informational message
+        :type msg: str
         """
-        self.handler(dict(level="info", msg=msg))
+        self.handler({"level": "info", "msg": msg})
 
     def warning(self, msg: str):
         """
         Warning level message
 
-        Arguments
-        ---------
-        msg : the warning message
+        :param msg: the warning message
+        :type msg: str
         """
         self.handler({"level": "warning", "msg": msg})
 
@@ -195,9 +187,8 @@ class Logger:
         """
         Debug level message
 
-        Arguments
-        ---------
-        msg : the debug message
+        :param msg: the debug message
+        :type msg: str
         """
         self.handler({"level": "debug", "msg": msg})
 
@@ -205,9 +196,8 @@ class Logger:
         """
         Error level message
 
-        Arguments
-        ---------
-        msg : the error message
+        :param msg: the error message
+        :type msg: str
         """
         self.handler({"level": "error", "msg": msg})
 
@@ -215,9 +205,10 @@ class Logger:
         """
         Error level message and exit with error code
 
-        Arguments
-        ---------
-        msg : the informational message
+        :param msg: the exiting (error) message
+        :type msg: str
+        :param return_code: return code to exit on
+        :type return_code: int
         """
         self.handler({"level": "error", "msg": msg})
         sys.exit(return_code)
@@ -226,10 +217,10 @@ class Logger:
         """
         Show piece of a progress bar
 
-        Arguments
-        ---------
-        done : count of total that is complete
-        total : count of total
+        :param done: count of total that is complete
+        :type done: int
+        :param total: count of total
+        :type total: int
         """
         self.handler({"level": "progress", "done": done, "total": total})
 
@@ -237,9 +228,8 @@ class Logger:
         """
         Shellcmd message
 
-        Arguments
-        ---------
-        msg : the error message
+        :param msg: the message
+        :type msg: str
         """
         if msg is not None:
             self.handler({"level": "shellcmd", "msg": msg})
@@ -248,9 +238,8 @@ class Logger:
         """
         The default log handler that prints to the console.
 
-        Arguments
-        ---------
-        msg : the log message dictionary
+        :param msg: the log message dict
+        :type msg: dict
         """
         level = msg["level"]
         if level == "info" and not self.quiet:
@@ -288,14 +277,18 @@ def setup_logger(
     """
     Setup the logger. This should be called from an init or client.
 
-    Arguments
-    ---------
-    quiet          : set logging level to quiet
-    printshellcmds : a special level to print shell commands
-    nocolor        : do not use color
-    stdout         : standard output for the logger
-    debug          : debug level logging
-    use_threads    : use threads!
+    :param quiet: set logging level to quiet
+    :type quiet: bool
+    :param printshellcmds: a special level to print shell commands
+    :type printshellcmds: bool
+    :param nocolor: do not use color
+    :type nocolor: bool
+    :param stdout: print to standard output for the logger
+    :type stdout: bool
+    :param debug: debug level logging
+    :type debug: bool
+    :param use_threads: use threads!
+    :type use_threads: bool
     """
     # console output only if no custom logger was specified
     stream_handler = ColorizingStreamHandler(

@@ -30,10 +30,10 @@ class Registry:
         """
         Create a new registry provider.
 
-        Arguments
-        ---------
-        hostname  : the registry hostname
-        insecure  : use http instead of https
+        :param hostname: the registry hostname (optional)
+        :type hostname: str
+        :param insecure: use http instead of https
+        :type insecure: bool
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
@@ -46,9 +46,8 @@ class Registry:
         """
         If auths are loaded, remove a hostname.
 
-        Arguments
-        ---------
-        hostname : the registry hostname to remove
+        :param hostname: the registry hostname to remove
+        :type hostname: str
         """
         if not self._auths:
             logger.info(f"You are not logged in to {hostname}")
@@ -63,7 +62,9 @@ class Registry:
 
     @ensure_container
     def load_configs(
-        self, container: Union[str, oras.container.Container], configs: list = None
+        self,
+        container: Union[str, oras.container.Container],
+        configs: Optional[list] = None,
     ):
         """
         Load configs to discover credentials for a specific container.
@@ -71,10 +72,10 @@ class Registry:
         This is typically just called once. We always add the default Docker
         config to the set.s
 
-        Arguments
-        ---------
-        container : the parsed container URI with components
-        configs   : list of configs to read
+        :param container: the parsed container URI with components
+        :type container: oras.container.Container
+        :param configs: list of configs to read (optional)
+        :type configs: list
         """
         if not self._auths:
             self._auths = oras.auth.load_configs(configs)
@@ -86,9 +87,8 @@ class Registry:
         """
         Look for and load a named authentication token.
 
-        Arguments
-        ---------
-        hostname : the registry hostname to look for
+        :param hostname: the registry hostname to look for
+        :type hostname: str
         """
         if hostname in self._auths:
             self.token = self._auths[hostname]["auth"]
@@ -99,10 +99,10 @@ class Registry:
         """
         Set basic authentication.
 
-        Arguments
-        ---------
-        username : the user account name
-        password : the user account password
+        :param username: the user account name
+        :type username: str
+        :param password: the user account password
+        :type password: str
         """
         basic_auth = oras.auth.get_basic_auth(username, password)
         self.set_header("Authorization", "Basic %s" % basic_auth)
@@ -111,10 +111,10 @@ class Registry:
         """
         Courtesy function to set a header
 
-        Arguments
-        ---------
-        name : header name to set
-        value : header value to set
+        :param name: header name to set
+        :type name: str
+        :param value: header value to set
+        :type value: str
         """
         self.headers.update({name: value})
 
@@ -122,9 +122,8 @@ class Registry:
         """
         Ensure a blob path is in the present working directory or below.
 
-        Arguments
-        ---------
-        path : the path to validate
+        :param path: the path to validate
+        :type path: str
         """
         return os.getcwd() in os.path.abspath(path)
 
@@ -138,9 +137,8 @@ class Registry:
         path/to/config:application/vnd.oci.image.config.v1+json
         /dev/null:application/vnd.oci.image.config.v1+json
 
-        Arguments
-        ---------
-        ref : the manifest reference to parse (examples above)
+        :param ref: the manifest reference to parse (examples above)
+        :type ref: str
         """
         if ":" not in ref:
             return ref, oras.defaults.unknown_config_media_type
@@ -155,11 +153,12 @@ class Registry:
         Sizes > 1024 are uploaded via a chunked approach (post, patch+, put)
         and <= 1024 is a single post then put.
 
-        Arguments
-        ---------
-        blob       : path to blob to upload
-        container  : parsed container URI
-        layer      : dict from oras.oci.NewLayer
+        :param blob: path to blob to upload
+        :type blob: str
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param layer: dict from oras.oci.NewLayer
+        :type layer: dict
         """
         blob = os.path.abspath(blob)
         container = self.get_container(container)
@@ -177,10 +176,10 @@ class Registry:
         """
         Retrieve tags for a package.
 
-        Arguments
-        ---------
-        container  : parsed container URI or name
-        N          : number of tags
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param N: number of tags
+        :type N: int
         """
         tags_url = f"{self.prefix}://{container.tags_url(N)}"  # type: ignore
         return self.do_request(tags_url, "GET", headers=self.headers)
@@ -195,11 +194,12 @@ class Registry:
         """
         Retrieve a blob for a package.
 
-        Arguments
-        ---------
-        container  : parsed container URI or name
-        digest     : sha256 digest of the blob to retrieve
-        stream     : stream the response (or not)
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param digest: sha256 digest of the blob to retrieve
+        :type digest: str
+        :param stream: stream the response (or not)
+        :type stream: bool
         """
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
         return self.do_request(blob_url, "GET", headers=self.headers, stream=stream)
@@ -210,9 +210,8 @@ class Registry:
         """
         Courtesy function to get a container from a URI.
 
-        Arguments
-        ---------
-        name : unique resource identifier to parse
+        :param name: unique resource identifier to parse
+        :type name: oras.container.Container or str
         """
         if isinstance(name, oras.container.Container):
             return name
@@ -227,9 +226,8 @@ class Registry:
 
         This function is a wrapper around get_blob.
 
-        Arguments
-        ---------
-        container : container or name to parse
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
         """
         with self.get_blob(container, digest, stream=True) as r:
             r.raise_for_status()
@@ -245,11 +243,12 @@ class Registry:
         """
         Upload to a registry via put.
 
-        Arguments
-        ---------
-        blob       : path to blob to upload
-        container  : parsed container URI
-        layer      : dict from oras.oci.NewLayer
+        :param blob: path to blob to upload
+        :type blob: str
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param layer: dict from oras.oci.NewLayer
+        :type layer: dict
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream"}
@@ -280,11 +279,12 @@ class Registry:
         """
         Upload via a chunked upload.
 
-        Arguments
-        ---------
-        blob       : path to blob to upload
-        container  : parsed container URI
-        layer      : dict from oras.oci.NewLayer
+        :param blob: path to blob to upload
+        :type blob: str
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param layer: dict from oras.oci.NewLayer
+        :type layer: dict
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": 0}
@@ -322,9 +322,8 @@ class Registry:
         """
         Helper function to ensure some flavor of 200
 
-        Arguments
-        ---------
-        response       : request response to inspect
+        :param response: request response to inspect
+        :type response: requests.Response
         """
         if response.status_code not in [200, 201, 202]:
             self._parse_response_errors(response)
@@ -334,9 +333,8 @@ class Registry:
         """
         Given a failed request, look for OCI formatted error messages.
 
-        Arguments
-        ---------
-        response : requests.Response that might have an error message.
+        :param response: request response to inspect
+        :type response: requests.Response
         """
         try:
             msg = response.json()
@@ -352,10 +350,10 @@ class Registry:
         """
         Read a manifest file and upload it.
 
-        Arguments
-        ---------
-        manifest   : manifest to upload
-        container  : parsed container URI
+        :param manifest: manifest to upload
+        :type manifest: dict
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
         """
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         headers = {
@@ -369,17 +367,24 @@ class Registry:
         """
         Push a set of files to a target
 
-        Arguments
-        ---------
-        config_path               (str) : path to a config file
-        disable_path_validation  (bool) : ensure paths are relative to the running directory.
-        files                    (list) : list of files to push
-        insecure                 (bool) : allow registry to use http
-        manifest_config           (str) : content type
-        manifest_annotations      (str) : manifest annotations file
-        username                  (str) : username for basic auth
-        password                  (str) : password for basic auth
-        target                    (str) : target location to push to
+        :param config_path: path to a config file
+        :type config_path: str
+        :param disable_path_validation: ensure paths are relative to the running directory.
+        :type disable_path_validation: bool
+        :param files: list of files to push
+        :type files: list
+        :param insecure: allow registry to use http
+        :type insecure: bool
+        :param manifest_config: content type
+        :type manifest_config: str
+        :param manifest_annotations: manifest annotations file
+        :type manifest_annotations: str
+        :param username: username for basic auth
+        :type username: str
+        :param password: password for basic auth
+        :type password: str
+        :param target: target location to push to
+        :type target: str
         """
         container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
@@ -464,18 +469,24 @@ class Registry:
 
     def pull(self, *args, **kwargs) -> List[str]:
         """
-        Push an artifact from a target
+        Pull an artifact from a target
 
-        Arguments
-        ---------
-        config_path                 (str) : path to a config file
-        allowed_media_type (list or None) : list of allowed media types
-        overwrite                  (bool) : if output file exists, overwrite
-        manifest_config_ref         (str) : save manifest config to this file
-        outdir                      (str) : output directory path
-        username                    (str) : username for basic auth
-        password                    (str) : password for basic auth
-        target                      (str) : target location to pull from
+        :param config_path: path to a config file
+        :type config_path: str
+        :param allowed_media_type: list of allowed media types
+        :type allowed_media_type: list or None
+        :param overwrite: if output file exists, overwrite
+        :type overwrite: bool
+        :param manifest_config_ref: sav manifest config to this file
+        :type manifest_config_ref: str
+        :param outdir: output directory path
+        :type outdir: str
+        :param username: username for basic auth
+        :type username: str
+        :param password: password for basic auth
+        :type password: str
+        :param target: target location to pull from
+        :type target: str
         """
         allowed_media_type = kwargs.get("allowed_media_type")
         container = self.get_container(kwargs["target"])
@@ -522,11 +533,10 @@ class Registry:
         """
         Retrieve a manifest for a package.
 
-
-        Arguments
-        ---------
-        container          : parsed container URI
-        allowed_media_type : one or more allowed media types
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param allowed_media_type: one or more allowed media types
+        :type allowed_media_type: str
         """
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
@@ -550,14 +560,18 @@ class Registry:
         """
         Do a request. This is a wrapper around requests to handle retry auth.
 
-        Arguments
-        ---------
-        url     : the URL to issue the request to
-        method  : the method to use (GET, DELETE, POST, PUT, PATCH)
-        data    : data for requests
-        headers : headers for the request
-        json    : json data for requests
-        stream : stream the responses
+        :param url: the URL to issue the request to
+        :type url: str
+        :param method: the method to use (GET, DELETE, POST, PUT, PATCH)
+        :type method: str
+        :param data: data for requests
+        :type data: dict or bytes
+        :param headers: headers for the request
+        :type headers: dict
+        :param json: json data for requests
+        :type json: dict
+        :param stream: stream the responses
+        :type stream: bool
         """
         headers = headers or {}
 
@@ -585,9 +599,8 @@ class Registry:
 
         We return True/False to indicate if the request should be retried.
 
-        Arguments
-        ---------
-        originalResponse : original response to get the Www-Authenticate header
+        :param originalResponse: original response to get the Www-Authenticate header
+        :type originalResponse: requests.Response
         """
         authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
         if not authHeaderRaw:

@@ -7,9 +7,8 @@ def iter_localhosts(name: str):
     """
     Given a url with localhost, always resolve to 127.0.0.1.
 
-    Arguments
-    ---------
-    name : the name of the original host string
+    :param name : the name of the original host string
+    :type name: str
     """
     names = [name]
     if "localhost" in name:
@@ -24,9 +23,8 @@ def get_docker_client(insecure: bool = False, **kwargs):
     """
     Get a docker client.
 
-    Arguments
-    ---------
-    tls : enable tls
+    :param tls : enable tls
+    :type tls: bool
     """
     import docker
 

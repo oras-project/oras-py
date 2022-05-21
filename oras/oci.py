@@ -50,6 +50,13 @@ class Layer:
     ):
         """
         Create a new Layer
+
+        :param blob_path: the path of the blob for the layer
+        :type blob_path: str
+        :param media_type: media type for the blob (optional)
+        :type media_type: str
+        :param is_dir: is the blob a directory?
+        :type is_dir: bool
         """
         self.blob_path = blob_path
         self.set_media_type(media_type, is_dir)
@@ -57,6 +64,11 @@ class Layer:
     def set_media_type(self, media_type: Optional[str] = None, is_dir: bool = False):
         """
         Vary the media type to be directory or default layer
+
+        :param media_type: media type for the blob (optional)
+        :type media_type: str
+        :param is_dir: is the blob a directory?
+        :type is_dir: bool
         """
         if is_dir and not media_type:
             self.media_type = oras.defaults.default_blob_dir_media_type
@@ -81,6 +93,13 @@ def NewLayer(
 ) -> dict:
     """
     Courtesy function to create and retrieve a layer as dict
+
+    :param blob_path: the path of the blob for the layer
+    :type blob_path: str
+    :param media_type: media type for the blob (optional)
+    :type media_type: str
+    :param is_dir: is the blob a directory?
+    :type is_dir: bool
     """
     return Layer(blob_path=blob_path, media_type=media_type, is_dir=is_dir).to_dict()
 
@@ -90,6 +109,11 @@ def ManifestConfig(
 ) -> Tuple[Dict[str, object], str]:
     """
     Write an empty config, if one is not provided
+
+    :param path: the path of the manifest config, if exists.
+    :type path: str
+    :param media_type: media type for the manifest config (optional)
+    :type media_type: str
     """
     # Create an empty config if we don't have one
     if not path or not os.path.exists(path):
