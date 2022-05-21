@@ -1,0 +1,35 @@
+{# Import the theme's layout. #}
+{% extends '!layout.html' %}
+
+{%- block extrahead %}
+{# Extra custom things to the head HTML tag #}
+
+<!-- Social: Facebook / Open Graph -->
+<title>River Visualizations</title>
+<link rel="canonical" href="https://online-ml.github.io/viz/"/>
+<meta property="og:type" content="website">
+
+<meta property="og:url" content="https://online-ml.github.io/viz/">
+<meta property="og:title" content="River Visualizations">
+<meta property="og:image" content="https://online-ml.github.io/viz/images/river_square.png">
+<meta property="og:description" content="River Visualization Examples">
+<meta property="og:site_name" content="River Visualizations">
+<meta property="og:locale" content="en_US">
+
+<!-- Social: Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@MaxHalford">
+<meta name="twitter:title" content="Max Halford">
+<meta name="twitter:description" content="River Online Machine Learning">
+<meta name="twitter:image" content="https://online-ml.github.io/viz/images/river_square.png">
+
+<!-- Social: Google+ / Schema.org  -->
+<meta itemprop="name" content="River Visualizations">
+<meta itemprop="description" content="River Visualization Examples">
+<meta itemprop="image" content="https://online-ml.github.io/viz/images/river_square.png">
+<script type="application/ld+json">
+  {"@type":"WebSite","headline":"River Visualizations","url":"https://online-ml.github.io/viz","description":"River Visualization Examples","name":"River Visualizations","@context":"https://schema.org"}
+</script>
+{# Call the parent block #}
+{{ super() }}
+{%- endblock %}

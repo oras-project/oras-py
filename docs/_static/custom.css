@@ -1,0 +1,19 @@
+.o-tooltip--left:after{
+    font-size: 0.8rem;
+}
+
+.md-hero__inner {
+  padding: 0px !important;  
+}
+
+/* Fix ugly mustard buttons! */
+div.sphx-glr-download a {
+  background-color: #FFF;
+  background-image: linear-gradient(to bottom, #FFF, #FFF);
+  border: 1px solid #cccc;
+}
+
+
+div.sphx-glr-download a:hover {
+  background-color: gold !important;
+}

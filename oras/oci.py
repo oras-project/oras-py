@@ -46,12 +46,12 @@ class Annotations:
 
 class Layer:
     def __init__(
-        self, blob: str, media_type: Optional[str] = None, is_dir: bool = False
+        self, blob_path: str, media_type: Optional[str] = None, is_dir: bool = False
     ):
         """
         Create a new Layer
         """
-        self.blob = blob
+        self.blob_path = blob_path
         self.set_media_type(media_type, is_dir)
 
     def set_media_type(self, media_type: Optional[str] = None, is_dir: bool = False):
@@ -69,18 +69,20 @@ class Layer:
         """
         layer = {
             "mediaType": self.media_type,
-            "size": oras.utils.get_size(self.blob),
-            "digest": "sha256:" + oras.utils.get_file_hash(self.blob),
+            "size": oras.utils.get_size(self.blob_path),
+            "digest": "sha256:" + oras.utils.get_file_hash(self.blob_path),
         }
         jsonschema.validate(layer, schema=oras.schemas.layer)
         return layer
 
 
-def NewLayer(blob: str, media_type: Optional[str] = None, is_dir: bool = False) -> dict:
+def NewLayer(
+    blob_path: str, media_type: Optional[str] = None, is_dir: bool = False
+) -> dict:
     """
     Courtesy function to create and retrieve a layer as dict
     """
-    return Layer(blob=blob, media_type=media_type, is_dir=is_dir).to_dict()
+    return Layer(blob_path=blob_path, media_type=media_type, is_dir=is_dir).to_dict()
 
 
 def ManifestConfig(

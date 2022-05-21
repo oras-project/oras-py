@@ -5,7 +5,7 @@ cd $DIR/../
 
 black --check oras
 
-for filename in $(find . -name "*.py" -not -path "*__init__.py" -not -path "./env/*"); do
+for filename in $(find . -name "*.py" -not -path "./docs/*" -not -path "*__init__.py" -not -path "./env/*"); do
     pyflakes $filename
 done
 
@@ -13,4 +13,4 @@ done
 mypy oras examples
 
 # isort (import order)
-isort --check-only *.py oras examples
+isort --skip oras/utils/__init__.py --check-only *.py oras examples
