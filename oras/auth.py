@@ -15,9 +15,8 @@ def load_configs(configs: Optional[List[str]] = None):
     """
     Load one or more configs with credentials from the filesystem.
 
-    Arguments
-    ---------
-    configs : list of configuration paths to load
+    :param configs: list of configuration paths to load, defaults to None
+    :type configs: optional list
     """
     import docker
 
@@ -44,10 +43,10 @@ def get_basic_auth(username: str, password: str):
     """
     Prepare basic auth from a username and password.
 
-    Arguments
-    ---------
-    username : the user account name
-    password : the user account password
+    :param username: the user account name
+    :type username: str
+    :param password: the user account password
+    :type password: str
     """
     auth_str = "%s:%s" % (username, password)
     return base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
@@ -58,9 +57,8 @@ class authHeader:
         """
         Given a dictionary of values, match them to class attributes
 
-        Arguments
-        ---------
-        lookup : dictionary of key,value pairs to parse into auth header
+        :param lookup : dictionary of key,value pairs to parse into auth header
+        :type lookup: dict
         """
         self.service: Optional[str] = None
         self.realm: Optional[str] = None
@@ -74,10 +72,10 @@ def parse_auth_header(authHeaderRaw: str) -> authHeader:
     """
     Parse authentication header into pieces
 
-    Arguments
-    ---------
-    username : the user account name
-    password : the user account password
+    :param username: the user account name
+    :type username: str
+    :param password: the user account password
+    :type password: str
     """
     regex = re.compile('([a-zA-z]+)="(.+?)"')
     matches = regex.findall(authHeaderRaw)

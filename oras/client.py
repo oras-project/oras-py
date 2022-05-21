@@ -34,11 +34,12 @@ class OrasClient:
 
         The hostname is the remote registry to ping.
 
-        Arguments
-        ---------
-        hostname : the hostname of the registry to ping
-        registry : if provided, use this custom provider instead of default
-        insecure : use http instead of https
+        :param hostname: the hostname of the registry to ping
+        :type hostname: str
+        :param registry: if provided, use this custom provider instead of default
+        :type registry: oras.provider.Registry or None
+        :param insecure: use http instead of https
+        :type insecure: bool
         """
         self.remote = registry or oras.provider.Registry(hostname, insecure)
 
@@ -52,10 +53,10 @@ class OrasClient:
         """
         Add basic authentication to the request.
 
-        Arguments
-        ---------
-        username : the user account name
-        password : the user account password
+        :param username: the user account name
+        :type username: str
+        :param password: the user account password
+        :type password: str
         """
         self.remote.set_basic_auth(username, password)
 
@@ -63,9 +64,8 @@ class OrasClient:
         """
         Get the version of the client.
 
-        Arguments
-        ---------
-        return_items : return the dict of version info instead of string
+        :param return_items : return the dict of version info instead of string
+        :type return_items: bool
         """
         version = oras.version.__version__
 
@@ -87,10 +87,10 @@ class OrasClient:
         """
         Retrieve tags for a package.
 
-        Arguments
-        ---------
-        name  : container URI to parse
-        N     : number of tags
+        :param name: container URI to parse
+        :type name: str
+        :param N: number of tags
+        :type N: int
         """
         return self.remote.get_tags(name, N=N).json()
 
@@ -118,14 +118,22 @@ class OrasClient:
         """
         Login to a registry.
 
-        Arguments
-        ---------
-        username       : the user account name
-        password       : the user account password
-        password_stdin : get the password from standard input
-        insecure       : use http instead of https
-        hostname       : name of the host to login to
-        config_path    : list of config paths to add
+
+        :param registry: if provided, use this custom provider instead of default
+        :type registry: oras.provider.Registry or None
+
+        :param username: the user account name
+        :type username: str
+        :param password: the user account password
+        :type password: str
+        :param password_stdin: get the password from standard input
+        :type password_stdin: bool
+        :param insecure: use http instead of https
+        :type insecure: bool
+        :param hostname: the hostname to login to
+        :type hostname: str
+        :param config_path: list of config paths to add
+        :type config_path: list
         """
         login_func = main.login
         if hasattr(self.remote, "login"):
@@ -143,8 +151,7 @@ class OrasClient:
         """
         Logout from a registry, meaning removing any auth (if loaded)
 
-        Arguments
-        ---------
-        hostname       : name of the host to login to
+        :param hostname: the hostname to login to
+        :type hostname: str
         """
         self.remote.logout(hostname)

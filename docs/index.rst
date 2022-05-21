@@ -8,7 +8,7 @@ Oras Python
 
 Welcome to Oras Python!
 
-OCI Registry as Storage enables client libraries to push OCI Artifacts to [OCI Conformant](https://github.com/opencontainers/oci-conformance) registries. This is a Python client for that.
+OCI Registry as Storage enables client libraries to push OCI Artifacts to `OCI Conformant <https://github.com/opencontainers/oci-conformance>`_ registries. This is a Python client for that.
 
 .. code-block:: console
 
@@ -33,7 +33,7 @@ OCI Registry as Storage enables client libraries to push OCI Artifacts to [OCI C
 
  
 To get started, see the :ref:`getting-started` page. Would you like to request a feature or contribute?
-`Open an issue <https://github.com/oras-project/oras-py/ssues>`_.
+`Open an issue <https://github.com/oras-project/oras-py/issues>`_.
 
 .. toctree::
     :caption: Getting Started
@@ -48,4 +48,3 @@ To get started, see the :ref:`getting-started` page. Would you like to request a
     :maxdepth: 1
 
     source/modules.rst
-

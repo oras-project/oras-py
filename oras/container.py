@@ -24,10 +24,10 @@ class Container:
         """
         Parse a container name and easily get urls for registry interactions.
 
-        Arguments
-        ---------
-        name     : the full name of the container to parse (with any components)
-        registry : a custom registry name, if not provided with URI
+        :param name: the full name of the container to parse (with any components)
+        :type name: str
+        :param registry: a custom registry name, if not provided with URI
+        :type registry: str
         """
         self.registry = registry or oras.defaults.registry.index_name
 
@@ -38,9 +38,8 @@ class Container:
         """
         Get the URL to download a blob
 
-        Arguments
-        ---------
-        digest  : the digest to download
+        :param digest: the digest to download
+        :type digest: str
         """
         return f"{self.registry}/v2/{self.namespace}/{self.repository}/blobs/{digest}"
 
@@ -79,9 +78,8 @@ class Container:
         """
         Parse the container name into registry, repository, and tag.
 
-        Arguments
-        ---------
-        name     : the full name of the container to parse (with any components)
+        :param name: the full name of the container to parse (with any components)
+        :type name: str
         """
         match = re.search(docker_regex, name)
         if not match:

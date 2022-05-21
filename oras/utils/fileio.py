@@ -41,9 +41,8 @@ def get_size(path: str) -> int:
     """
     Get the size of a blob
 
-    Arguments
-    ---------
-    path : the path to get the size for
+    :param path : the path to get the size for
+    :type path: str
     """
     return pathlib.Path(path).stat().st_size
 
@@ -52,10 +51,10 @@ def get_file_hash(path: str, algorithm: str = "sha256") -> str:
     """
     Return an sha256 hash of the file based on an algorithm
 
-    Arguments
-    ---------
-    path      : the path to get the size for
-    algorithm : the algorithm to use
+    :param path: the path to get the size for
+    :type path: str
+    :param algorithm: the algorithm to use
+    :type algorithm: str
     """
     try:
         hasher = getattr(hashlib, algorithm)()
@@ -73,9 +72,8 @@ def mkdir_p(path: str):
     """
     Make a directory path if it does not exist, akin to mkdir -p
 
-    Arguments
-    ---------
-    path : the path to create
+    :param path : the path to create
+    :type path: str
     """
     try:
         os.makedirs(path)
@@ -86,14 +84,18 @@ def mkdir_p(path: str):
             logger.exit("Error creating path %s, exiting." % path)
 
 
-def get_tmpfile(tmpdir: str = None, prefix: str = "", suffix: str = "") -> str:
+def get_tmpfile(
+    tmpdir: Optional[str] = None, prefix: str = "", suffix: str = ""
+) -> str:
     """
     Get a temporary file with an optional prefix.
 
-    Arguments
-    ---------
-    tmpdir : an optional temporary directory
-    prefix : an optional prefix for the temporary path
+    :param tmpdir : an optional temporary directory
+    :type tmpdir: str
+    :param prefix: an optional prefix for the temporary path
+    :type prefix: str
+    :param suffix: an optional suffix (extension)
+    :type suffix: str
     """
     # First priority for the base goes to the user requested.
     tmpdir = get_tmpdir(tmpdir)
@@ -108,15 +110,18 @@ def get_tmpfile(tmpdir: str = None, prefix: str = "", suffix: str = "") -> str:
     return tmp_file
 
 
-def get_tmpdir(tmpdir: str = None, prefix: str = "", create: bool = True) -> str:
+def get_tmpdir(
+    tmpdir: Optional[str] = None, prefix: Optional[str] = "", create: bool = True
+) -> str:
     """
     Get a temporary directory for an operation.
 
-    Arguments
-    ---------
-    tmpdir : an optional temporary directory
-    prefix : an optional prefix for the temporary path
-    create : create the directory
+    :param tmpdir: an optional temporary directory
+    :type tmpdir: str
+    :param prefix: an optional prefix for the temporary path
+    :type prefix: str
+    :param create: create the directory
+    :type create: bool
     """
     tmpdir = tmpdir or tempfile.gettempdir()
     prefix = prefix or "oras-tmp"
@@ -133,10 +138,10 @@ def recursive_find(base: str, pattern: str = None) -> Generator:
     """
     Find filenames that match a particular pattern, and yield them.
 
-    Arguments
-    ---------
-    base    : the root to search
-    pattern : an optional file pattern to use with fnmatch
+    :param base    : the root to search
+    :type base: str
+    :param pattern: an optional file pattern to use with fnmatch
+    :type pattern: str
     """
     # We can identify modules by finding module.lua
     for root, folders, files in os.walk(base):
@@ -153,11 +158,12 @@ def copyfile(source: str, destination: str, force: bool = True) -> str:
     """
     Copy a file from a source to its destination.
 
-    Arguments
-    ---------
-    source      : the source to copy from
-    destination : the destination to copy to
-    force       : force copy if destination already exists
+    :param source: the source to copy from
+    :type source: str
+    :param destination: the destination to copy to
+    :type destination: str
+    :param force: force copy if destination already exists
+    :type force: bool
     """
     # Case 1: It's already there, we aren't replacing it :)
     if source == destination and force is False:
@@ -177,12 +183,14 @@ def write_file(
     """
     Write content to a filename
 
-    Arguments
-    ---------
-    filename  : filname to write
-    content   : content to write
-    mode      : mode to write
-    make_exec : make executable
+    :param filename: filname to write
+    :type filename: str
+    :param content: content to write
+    :type content: str
+    :param mode: mode to write
+    :type mode: str
+    :param make_exec: make executable
+    :type make_exec: bool
     """
     with open(filename, mode) as filey:
         filey.writelines(content)
@@ -198,10 +206,10 @@ def read_in_chunks(image: Union[TextIO, io.BufferedReader], chunk_size: int = 10
     """
     Helper function to read file in chunks, with default size 1k.
 
-    Arguments
-    ---------
-    image      : file descriptor
-    chunk_size : size of the chunk
+    :param image: file descriptor
+    :type image; TextIO or io.BufferedReader
+    :param chunk_size: size of the chunk
+    :type chunk_size: int
     """
     while True:
         data = image.read(chunk_size)
@@ -214,11 +222,12 @@ def write_json(json_obj: dict, filename: str, mode: str = "w") -> str:
     """
     Write json to a filename
 
-    Arguments
-    ---------
-    json_obj : json object to write (dict)
-    filename : json file to write
-    mode     : mode to write
+    :param json_obj: json object to write
+    :type json_obj: dict
+    :param filename: filename to write
+    :type filename: str
+    :param mode: mode to write
+    :type mode: str
     """
     with open(filename, mode) as filey:
         filey.writelines(print_json(json_obj))
@@ -227,11 +236,10 @@ def write_json(json_obj: dict, filename: str, mode: str = "w") -> str:
 
 def print_json(json_obj: dict) -> str:
     """
-    Print json pretty
+    Pretty print json.
 
-    Arguments
-    ---------
-    json_obj : json object to print (dict)
+    :param json_obj: json object to print
+    :type json_obj: dict
     """
     return json.dumps(json_obj, indent=4, separators=(",", ": "))
 
@@ -240,10 +248,10 @@ def read_file(filename: str, mode: str = "r") -> str:
     """
     Read a file.
 
-    Arguments
-    ---------
-    filename : json file to write
-    mode     : mode to write
+    :param filename: filename to read
+    :type filename: str
+    :param mode: mode to read
+    :type mode: str
     """
     with open(filename, mode) as filey:
         content = filey.read()
@@ -254,9 +262,9 @@ def read_json(filename: str, mode: str = "r") -> dict:
     """
     Read a json file to a dictionary.
 
-    Arguments
-    ---------
-    filename : json file to write
-    mode     : mode to write
+    :param filename: filename to read
+    :type filename: str
+    :param mode: mode to read
+    :type mode: str
     """
     return json.loads(read_file(filename))
