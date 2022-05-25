@@ -14,6 +14,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 registry_host = os.environ.get("ORAS_HOST")
 registry_port = os.environ.get("ORAS_PORT")
+with_auth = os.environ.get("ORAS_AUTH") == "true"
+oras_user = os.environ.get("ORAS_USER", "myuser")
+oras_pass = os.environ.get("ORAS_PASS", "mypass")
 
 
 def setup_module(module):
@@ -24,6 +27,8 @@ def setup_module(module):
         sys.exit(
             "You must export ORAS_HOST and ORAS_PORT for a running registry before running tests."
         )
+    if with_auth and not oras_user or not oras_pass:
+        sys.exit("To test auth you need to export ORAS_USER and ORAS_PASS")
 
 
 registry = f"{registry_host}:{registry_port}"
@@ -31,22 +36,37 @@ target = f"{registry}/dinosaur/artifact:v1"
 target_dir = f"{registry}/dinosaur/directory:v1"
 
 
-def test_basic_oras(tmp_path):
+def test_basic_oras():
     """
     Basic tests for oras (without authentication)
     """
-    client = oras.client.OrasClient(insecure=True)
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
     assert "Python version" in client.version()
 
 
+@pytest.mark.skipif(not with_auth, reason="basic auth is needed for login/logout")
+def test_login_logout():
+    """
+    Login and logout are all we can test with basic auth!
+    """
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    res = client.login(
+        hostname=registry, username=oras_user, password=oras_pass, insecure=True
+    )
+    assert res["Status"] == "Login Succeeded"
+    client.logout(registry)
+
+
+@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
 def test_basic_push_pull(tmp_path):
     """
     Basic tests for oras (without authentication)
     """
-    client = oras.client.OrasClient(insecure=True)
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
     artifact = os.path.join(here, "artifact.txt")
 
     assert os.path.exists(artifact)
+
     res = client.push(files=[artifact], target=target)
     assert res.status_code == 201
 
@@ -74,11 +94,12 @@ def test_basic_push_pull(tmp_path):
     assert res.status_code == 201
 
 
+@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
 def test_directory_push_pull(tmp_path):
     """
     Test push and pull for directory
     """
-    client = oras.client.OrasClient(insecure=True)
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
 
     # Test upload of a directory
     upload_dir = os.path.join(here, "upload_data")

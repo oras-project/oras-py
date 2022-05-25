@@ -16,13 +16,13 @@ def login(
     insecure: bool = False,
     hostname: Optional[str] = None,
     config_path: Optional[str] = None,
-):
+) -> dict:
     """
     Login to an OCI registry.
 
     The username and password can come from stdin.
     """
-    client = oras.utils.get_docker_client(tls=not insecure)
+    client = oras.utils.get_docker_client(insecure=insecure)
 
     # Read password from stdin
     if password_stdin:
@@ -54,13 +54,12 @@ def login(
 
     # Login
     # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
-    result = client.login(
+    return client.login(
         username=username,
         password=password,
         registry=hostname,
         dockercfg_path=config_path,
     )
-    logger.info(result["Status"])
 
 
 def readline() -> str:

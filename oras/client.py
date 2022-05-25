@@ -114,7 +114,7 @@ class OrasClient:
         insecure: bool = False,
         hostname: Optional[str] = None,
         config_path: Optional[List[str]] = None,
-    ):
+    ) -> dict:
         """
         Login to a registry.
 
