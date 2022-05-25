@@ -22,7 +22,7 @@ class DockerClient:
         password: str,
         registry: str,
         dockercfg_path: Optional[str] = None,
-    ):
+    ) -> dict:
         """
         Manual login means loading and checking the config file
 
@@ -50,6 +50,8 @@ class DockerClient:
             cfg["auths"][registry] = {
                 "auth": oras.auth.get_basic_auth(username, password)
             }
+        oras.utils.write_json(cfg, dockercfg_path)
+        return {"Status": "Login Succeeded"}
 
 
 def login(
@@ -65,10 +67,7 @@ def login(
 
     The username and password can come from stdin.
     """
-    try:
-        client = oras.utils.get_docker_client(insecure=insecure)
-    except:
-        client = DockerClient()
+    client = oras.utils.get_docker_client(insecure=insecure)
 
     # Read password from stdin
     if password_stdin:
@@ -100,12 +99,22 @@ def login(
 
     # Login
     # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
-    return client.login(
-        username=username,
-        password=password,
-        registry=hostname,
-        dockercfg_path=config_path,
-    )
+    try:
+        return client.login(
+            username=username,
+            password=password,
+            registry=hostname,
+            dockercfg_path=config_path,
+        )
+
+    # Fallback to manual login
+    except:
+        return DockerClient().login(
+            username=username,  # type: ignore
+            password=password,  # type: ignore
+            registry=hostname,  # type: ignore
+            dockercfg_path=config_path,
+        )
 
 
 def readline() -> str:
