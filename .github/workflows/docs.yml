@@ -21,7 +21,7 @@ jobs:
           root=$PWD
           source activate oraspy
           cd /tmp
-          git clone https://github.com/oras-python/oras-py
+          git clone https://github.com/oras-project/oras-py
           cd oras-py
           pip install -e .
           cd docs/
