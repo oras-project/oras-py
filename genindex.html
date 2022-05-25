@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
+  <meta content="Copied to clipboard" name="lang:clipboard.copied"/>
+  <meta content="en" name="lang:search.language"/>
+  <meta content="True" name="lang:search.pipeline.stopwords"/>
+  <meta content="True" name="lang:search.pipeline.trimmer"/>
+  <meta content="No matching documents" name="lang:search.result.none"/>
+  <meta content="1 matching document" name="lang:search.result.one"/>
+  <meta content="# matching documents" name="lang:search.result.other"/>
+  <meta content="[\s\-]+" name="lang:search.tokenizer"/>
+  <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&amp;display=fallback" rel="stylesheet"/>
+  <style>
+   body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+  </style>
+  <link href="_static/stylesheets/application.css" rel="stylesheet"/>
+  <link href="_static/stylesheets/application-palette.css" rel="stylesheet"/>
+  <link href="_static/stylesheets/application-fixes.css" rel="stylesheet"/>
+  <link href="_static/fonts/material-icons.css" rel="stylesheet"/>
+  <meta content="#4051b5" name="theme-color"/>
+  <script src="_static/javascripts/modernizr.js">
+  </script>
+  <link href="_static/images/oras.png" rel="apple-touch-icon"/>
+  <title>
+   Index — Oras Python
+  </title>
+  <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="_static/material.css" rel="stylesheet" type="text/css"/>
+  <link href="_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
+  <link href="_static/custom.css" rel="stylesheet" type="text/css"/>
+  <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js">
+  </script>
+  <script src="_static/jquery.js">
+  </script>
+  <script src="_static/underscore.js">
+  </script>
+  <script src="_static/doctools.js">
+  </script>
+  <script src="_static/clipboard.min.js">
+  </script>
+  <script src="_static/copybutton.js">
+  </script>
+  <script src="_static/js/rtd_sphinx_search.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js">
+  </script>
+  <link href="_static/favicon.ico" rel="shortcut icon"/>
+  <link href="#" rel="index" title="Index"/>
+  <link href="search.html" rel="search" title="Search"/>
+  <!-- Social: Facebook / Open Graph -->
+  <title>
+   River Visualizations
+  </title>
+  <link href="https://online-ml.github.io/viz/" rel="canonical"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://online-ml.github.io/viz/" property="og:url"/>
+  <meta content="River Visualizations" property="og:title"/>
+  <meta content="https://online-ml.github.io/viz/images/river_square.png" property="og:image"/>
+  <meta content="River Visualization Examples" property="og:description"/>
+  <meta content="River Visualizations" property="og:site_name"/>
+  <meta content="en_US" property="og:locale"/>
+  <!-- Social: Twitter -->
+  <meta content="summary" name="twitter:card"/>
+  <meta content="@MaxHalford" name="twitter:site"/>
+  <meta content="Max Halford" name="twitter:title"/>
+  <meta content="River Online Machine Learning" name="twitter:description"/>
+  <meta content="https://online-ml.github.io/viz/images/river_square.png" name="twitter:image"/>
+  <!-- Social: Google+ / Schema.org  -->
+  <meta content="River Visualizations" itemprop="name"/>
+  <meta content="River Visualization Examples" itemprop="description"/>
+  <meta content="https://online-ml.github.io/viz/images/river_square.png" itemprop="image"/>
+  <script type="application/ld+json">
+   {"@type":"WebSite","headline":"River Visualizations","url":"https://online-ml.github.io/viz","description":"River Visualization Examples","name":"River Visualizations","@context":"https://schema.org"}
+  </script>
+  <link href="_static/images/oras.png" rel="apple-touch-icon"/>
+ </head>
+ <body data-md-color-accent="cyan" data-md-color-primary="indigo" dir="ltr">
+  <svg class="md-svg">
+   <defs data-children-count="0">
+    <svg height="448" id="__github" viewbox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg">
+     <path d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z" fill="currentColor">
+     </path>
+    </svg>
+   </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+  <input class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+  <label class="md-overlay" data-md-component="overlay" for="__drawer">
+  </label>
+  <a class="md-skip" href="#genindex" tabindex="1">
+   Skip to content
+  </a>
+  <header class="md-header" data-md-component="header">
+   <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <a class="md-header-nav__button md-logo" href="index.html" title="Oras Python">
+       <i class="md-icon">
+        
+       </i>
+      </a>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer">
+      </label>
+     </div>
+     <div class="md-flex__cell md-flex__cell--stretch">
+      <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+       <span class="md-header-nav__topic">
+        Oras Python
+       </span>
+       <span class="md-header-nav__topic">
+        Index
+       </span>
+      </div>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <label class="md-icon md-icon--search md-header-nav__button" for="__search">
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+       <label class="md-search__overlay" for="__search">
+       </label>
+       <div class="md-search__inner" role="search">
+        <form action="search.html" class="md-search__form" method="get" name="search">
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <label class="md-icon md-search__icon" for="__search">
+         </label>
+         <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+          
+         </button>
+        </form>
+        <div class="md-search__output">
+         <div class="md-search__scrollwrap" data-md-scrollfix="">
+          <div class="md-search-result" data-md-component="result">
+           <div class="md-search-result__meta">
+            Type to start searching
+           </div>
+           <ol class="md-search-result__list">
+           </ol>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <div class="md-header-nav__source">
+       <a class="md-source" data-md-source="github" href="https://github.com/oras-project/oras-py/" title="Go to repository">
+        <div class="md-source__icon">
+         <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>-->
+         <!-- updated to match riverml.xml site-->
+         <svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+          <path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z" fill="#ffffff">
+          </path>
+         </svg>
+        </div>
+        <div class="md-source__repository">
+         Oras Python
+        </div>
+       </a>
+      </div>
+     </div>
+    </div>
+   </nav>
+  </header>
+  <div class="md-container">
+   <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+     <ul class="md-tabs__list">
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://oras.land">
+        oras.land
+       </a>
+      </li>
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://github.com/oras-project">
+        Oras on GitHub
+       </a>
+      </li>
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://github.com/oras-project/oras-py">
+        Oras Python on GitHub
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+   <main class="md-main">
+    <div class="md-main__inner md-grid" data-md-component="container">
+     <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+      <div class="md-sidebar__scrollwrap">
+       <div class="md-sidebar__inner">
+        <nav class="md-nav md-nav--primary" data-md-level="0">
+         <label class="md-nav__title md-nav__title--site" for="__drawer">
+          <a class="md-nav__button md-logo" href="index.html" title="Oras Python">
+           <i class="md-icon">
+            
+           </i>
+          </a>
+          <a href="index.html" title="Oras Python">
+           Oras Python
+          </a>
+         </label>
+         <div class="md-nav__source">
+          <a class="md-source" data-md-source="github" href="https://github.com/oras-project/oras-py/" title="Go to repository">
+           <div class="md-source__icon">
+            <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>-->
+            <!-- updated to match riverml.xml site-->
+            <svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+             <path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z" fill="#ffffff">
+             </path>
+            </svg>
+           </div>
+           <div class="md-source__repository">
+            Oras Python
+           </div>
+          </a>
+         </div>
+         <ul class="md-nav__list">
+          <li class="md-nav__item">
+           <span class="md-nav__link caption">
+            <span class="caption-text">
+             Getting Started
+            </span>
+           </span>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="getting_started/index.html">
+            Getting Started
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="contributing.html">
+            Contributing
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="about/license.html">
+            Apache License
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <span class="md-nav__link caption">
+            <span class="caption-text">
+             API
+            </span>
+           </span>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="source/modules.html">
+            oras
+           </a>
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+       <div class="md-sidebar__inner">
+        <nav class="md-nav md-nav--secondary">
+         <ul class="md-nav__list" data-md-scrollfix="">
+          <li class="md-nav__item" id="searchbox">
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="md-content">
+      <article class="md-content__inner md-typeset" role="main">
+       <h1 id="index">
+        Index
+       </h1>
+       <div class="genindex-jumpbox">
+        <a href="#A">
+         <strong>
+          A
+         </strong>
+        </a>
+        |
+        <a href="#B">
+         <strong>
+          B
+         </strong>
+        </a>
+        |
+        <a href="#C">
+         <strong>
+          C
+         </strong>
+        </a>
+        |
+        <a href="#D">
+         <strong>
+          D
+         </strong>
+        </a>
+        |
+        <a href="#E">
+         <strong>
+          E
+         </strong>
+        </a>
+        |
+        <a href="#G">
+         <strong>
+          G
+         </strong>
+        </a>
+        |
+        <a href="#H">
+         <strong>
+          H
+         </strong>
+        </a>
+        |
+        <a href="#I">
+         <strong>
+          I
+         </strong>
+        </a>
+        |
+        <a href="#L">
+         <strong>
+          L
+         </strong>
+        </a>
+        |
+        <a href="#M">
+         <strong>
+          M
+         </strong>
+        </a>
+        |
+        <a href="#N">
+         <strong>
+          N
+         </strong>
+        </a>
+        |
+        <a href="#O">
+         <strong>
+          O
+         </strong>
+        </a>
+        |
+        <a href="#P">
+         <strong>
+          P
+         </strong>
+        </a>
+        |
+        <a href="#R">
+         <strong>
+          R
+         </strong>
+        </a>
+        |
+        <a href="#S">
+         <strong>
+          S
+         </strong>
+        </a>
+        |
+        <a href="#T">
+         <strong>
+          T
+         </strong>
+        </a>
+        |
+        <a href="#U">
+         <strong>
+          U
+         </strong>
+        </a>
+        |
+        <a href="#V">
+         <strong>
+          V
+         </strong>
+        </a>
+        |
+        <a href="#W">
+         <strong>
+          W
+         </strong>
+        </a>
+        |
+        <a href="#Y">
+         <strong>
+          Y
+         </strong>
+        </a>
+       </div>
+       <h2 id="A">
+        A
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.Annotations">
+             Annotations (class in oras.oci)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.authenticate_request">
+             authenticate_request() (oras.provider.Registry method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.auth.authHeader">
+             authHeader (class in oras.auth)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="B">
+        B
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.BLACK">
+             BLACK (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.BLUE">
+             BLUE (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.BOLD_SEQ">
+             BOLD_SEQ (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.shell.bpython">
+             bpython() (in module oras.cli.shell)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="C">
+        C
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.can_color_tty">
+             can_color_tty() (oras.logger.ColorizingStreamHandler method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.cleanup">
+             cleanup() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.COLOR_SEQ">
+             COLOR_SEQ (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler">
+             ColorizingStreamHandler (class in oras.logger)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.colors">
+             colors (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.container.Container">
+             Container (class in oras.container)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.copyfile">
+             copyfile() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.shell.create_client">
+             create_client() (in module oras.cli.shell)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.CYAN">
+             CYAN (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="D">
+        D
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.debug">
+             debug() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.decorate">
+             decorate() (oras.logger.ColorizingStreamHandler method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.defaults.registry.default_v2_registry">
+             default_v2_registry (oras.defaults.registry attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.do_request">
+             do_request() (oras.provider.Registry method)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="E">
+        E
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.emit">
+             emit() (oras.logger.ColorizingStreamHandler method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.decorator.ensure_container">
+             ensure_container (class in oras.decorator)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.error">
+             error() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.exit">
+             exit() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.extract_targz">
+             extract_targz() (in module oras.utils.fileio)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="G">
+        G
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.Annotations.get_annotations">
+             get_annotations() (oras.oci.Annotations method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.auth.get_basic_auth">
+             get_basic_auth() (in module oras.auth)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.get_blob">
+             get_blob() (oras.provider.Registry method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.container.Container.get_blob_url">
+             get_blob_url() (oras.container.Container method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.get_container">
+             get_container() (oras.provider.Registry method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.request.get_docker_client">
+             get_docker_client() (in module oras.utils.request)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.get_file_hash">
+             get_file_hash() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.get_manifest">
+             get_manifest() (oras.provider.Registry method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.container.Container.get_manifest_url">
+             get_manifest_url() (oras.container.Container method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.get_parser">
+             get_parser() (in module oras.cli)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.get_size">
+             get_size() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.get_tags">
+             get_tags() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.get_tags">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.get_tmpdir">
+             get_tmpdir() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.get_tmpfile">
+             get_tmpfile() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.GREEN">
+             GREEN (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="H">
+        H
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.handler">
+             handler() (oras.logger.Logger method)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="I">
+        I
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.defaults.registry.index_hostname">
+             index_hostname (oras.defaults.registry attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.defaults.registry.index_name">
+             index_name (oras.defaults.registry attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.defaults.registry.index_server">
+             index_server (oras.defaults.registry attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.info">
+             info() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.shell.ipython">
+             ipython() (in module oras.cli.shell)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.is_tty">
+             is_tty (oras.logger.ColorizingStreamHandler property)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.request.iter_localhosts">
+             iter_localhosts() (in module oras.utils.request)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="L">
+        L
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.Layer">
+             Layer (class in oras.oci)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.oci.Annotations.load">
+             load() (oras.oci.Annotations method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.auth.load_configs">
+             load_configs() (in module oras.auth)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.load_configs">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.location">
+             location() (oras.logger.Logger method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger">
+             Logger (class in oras.logger)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.main.html#oras.main.login.login">
+             login() (in module oras.main.login)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.client.OrasClient.login">
+               (oras.client.OrasClient method)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.logout">
+             logout() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.logout">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="M">
+        M
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.MAGENTA">
+             MAGENTA (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.login.main">
+             main() (in module oras.cli.login)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#oras.cli.logout.main">
+               (in module oras.cli.logout)
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#oras.cli.pull.main">
+               (in module oras.cli.pull)
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#oras.cli.push.main">
+               (in module oras.cli.push)
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#oras.cli.shell.main">
+               (in module oras.cli.shell)
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#oras.cli.version.main">
+               (in module oras.cli.version)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.make_targz">
+             make_targz() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.oci.ManifestConfig">
+             ManifestConfig() (in module oras.oci)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.mkdir_p">
+             mkdir_p() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            module
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras">
+               oras
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.auth">
+               oras.auth
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli">
+               oras.cli
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.help">
+               oras.cli.help
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.login">
+               oras.cli.login
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.logout">
+               oras.cli.logout
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.pull">
+               oras.cli.pull
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.push">
+               oras.cli.push
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.shell">
+               oras.cli.shell
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.version">
+               oras.cli.version
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.client">
+               oras.client
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.container">
+               oras.container
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.decorator">
+               oras.decorator
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.defaults">
+               oras.defaults
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.logger">
+               oras.logger
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.main.html#module-oras.main">
+               oras.main
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.main.html#module-oras.main.login">
+               oras.main.login
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.oci">
+               oras.oci
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.provider">
+               oras.provider
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.schemas">
+               oras.schemas
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.tests.html#module-oras.tests">
+               oras.tests
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils">
+               oras.utils
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils.fileio">
+               oras.utils.fileio
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils.request">
+               oras.utils.request
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.version">
+               oras.version
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="N">
+        N
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.NewLayer">
+             NewLayer() (in module oras.oci)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.NewManifest">
+             NewManifest() (in module oras.oci)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="O">
+        O
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            oras
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.auth
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.auth">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.help
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.help">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.login
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.login">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.logout
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.logout">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.pull
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.pull">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.push
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.push">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.shell
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.shell">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.cli.version
+            <ul>
+             <li>
+              <a href="source/oras.cli.html#module-oras.cli.version">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.client
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.client">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.container
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.container">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.decorator
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.decorator">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            oras.defaults
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.defaults">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.logger
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.logger">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.main
+            <ul>
+             <li>
+              <a href="source/oras.main.html#module-oras.main">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.main.login
+            <ul>
+             <li>
+              <a href="source/oras.main.html#module-oras.main.login">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.oci
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.oci">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.provider
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.provider">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.schemas
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.schemas">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.tests
+            <ul>
+             <li>
+              <a href="source/oras.tests.html#module-oras.tests">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.utils
+            <ul>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.utils.fileio
+            <ul>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils.fileio">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.utils.request
+            <ul>
+             <li>
+              <a href="source/oras.utils.html#module-oras.utils.request">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            oras.version
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.version">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient">
+             OrasClient (class in oras.client)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="P">
+        P
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.container.Container.parse">
+             parse() (oras.container.Container method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.auth.parse_auth_header">
+             parse_auth_header() (in module oras.auth)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.print_json">
+             print_json() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.progress">
+             progress() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.pull">
+             pull() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.pull">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.push">
+             push() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.push">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.container.Container.put_manifest_url">
+             put_manifest_url() (oras.container.Container method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.shell.python">
+             python() (in module oras.cli.shell)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="R">
+        R
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.read_file">
+             read_file() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.read_in_chunks">
+             read_in_chunks() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.read_json">
+             read_json() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.main.html#oras.main.login.readline">
+             readline() (in module oras.main.login)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.recursive_find">
+             recursive_find() (in module oras.utils.fileio)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.RED">
+             RED (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.defaults.registry">
+             registry (class in oras.defaults)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry">
+             Registry (class in oras.provider)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.RESET_SEQ">
+             RESET_SEQ (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.cli.html#oras.cli.run">
+             run() (in module oras.cli)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="S">
+        S
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.set_basic_auth">
+             set_basic_auth() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.set_basic_auth">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.provider.Registry.set_header">
+             set_header() (oras.provider.Registry method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.set_level">
+             set_level() (oras.logger.Logger method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.oci.Layer.set_media_type">
+             set_media_type() (oras.oci.Layer method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.set_stream_handler">
+             set_stream_handler() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.setup_logger">
+             setup_logger() (in module oras.logger)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.shellcmd">
+             shellcmd() (oras.logger.Logger method)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="T">
+        T
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.container.Container.tags_url">
+             tags_url() (oras.container.Container method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.text_handler">
+             text_handler() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.oci.Layer.to_dict">
+             to_dict() (oras.oci.Layer method)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="U">
+        U
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.container.Container.upload_blob_url">
+             upload_blob_url() (oras.container.Container method)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.container.Container.uri">
+             uri (oras.container.Container property)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="V">
+        V
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.version">
+             version() (oras.client.OrasClient method)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="W">
+        W
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.Logger.warning">
+             warning() (oras.logger.Logger method)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.WHITE">
+             WHITE (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.write_file">
+             write_file() (in module oras.utils.fileio)
+            </a>
+           </li>
+           <li>
+            <a href="source/oras.utils.html#oras.utils.fileio.write_json">
+             write_json() (in module oras.utils.fileio)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="Y">
+        Y
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.logger.ColorizingStreamHandler.YELLOW">
+             YELLOW (oras.logger.ColorizingStreamHandler attribute)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+      </article>
+     </div>
+    </div>
+   </main>
+  </div>
+  <footer class="md-footer">
+   <div class="md-footer-nav">
+    <nav class="md-footer-nav__inner md-grid">
+    </nav>
+   </div>
+   <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+     <div class="md-footer-copyright">
+      <div class="md-footer-copyright__highlight">
+       © Copyright 2022, Oras Python Developers.
+      </div>
+      Last updated on
+              May 25, 2022.
+      <br/>
+      Created using
+      <a href="http://www.sphinx-doc.org/">
+       Sphinx
+      </a>
+      4.5.0.
+             and
+      <a href="https://github.com/bashtage/sphinx-material/">
+       Material for
+              Sphinx
+      </a>
+     </div>
+    </div>
+   </div>
+  </footer>
+  <script src="_static/javascripts/application.js">
+  </script>
+  <script>
+   app.initialize({version: "1.0.4", url: {base: ".."}})
+  </script>
+ </body>
+</html>
