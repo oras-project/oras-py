@@ -1,6 +1,6 @@
 .PHONY: test
 test:
-	./scripts/test.sh
+	/bin/bash scripts/test.sh
 
 .PHONY: install
 install:
@@ -8,7 +8,7 @@ install:
 
 .PHONY: lint
 lint:
-	./scripts/lint.sh
+	/bin/bash scripts/lint.sh
 
 .PHONY: testreqs
 testreqs:

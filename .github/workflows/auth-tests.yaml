@@ -5,37 +5,25 @@ on:
 jobs:
   test-auth:
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: ghcr.io/oras-project/registry:latest
-        env:
-          REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
-        ports:
-          - 5000:5000
-        volumes:
-          - auth.htpasswd:/etc/docker/registry/auth.htpasswd
-        options: --name registry
-
+    container: ghcr.io/oras-project/registry:latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Authentication
+      - name: Install Python
         run: |
-           rm -rf auth.htpasswd
-           htpasswd -cB -b auth.htpasswd myuser mypass
-      - name: Restart registry
-        uses: docker://docker
-        with:
-          args: docker restart registry
-      - name: Setup Environment
-        run: conda create --quiet --name oras requests
+           apk update && apk add python3 make apache2-utils bash
+           wget https://bootstrap.pypa.io/get-pip.py
+           python3 get-pip.py
+           pip install --upgrade pip setuptools
+           make install
+
       - name: Test Oras Python with Auth
         env:
           registry_host: localhost
-          registry_port: ${{ job.services.registry.ports[5000] }}
+          registry_port: 5000
           with_auth: true
+          REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
         run: |
-          export PATH="/usr/share/miniconda/bin:$PATH"
-          source activate oras
-          pip install --upgrade pip setuptools
-          make install
-          make test
+           htpasswd -cB -b auth.htpasswd myuser mypass
+           cp auth.htpasswd /etc/docker/registry/auth.htpasswd 
+           registry serve /etc/docker/registry/config.yml & sleep 5
+           echo $PWD && ls $PWD && make test
