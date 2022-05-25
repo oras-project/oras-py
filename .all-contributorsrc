@@ -20,6 +20,50 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/814322?v=4"
             ]
+        },
+        {
+            "login": "jdolitsky",
+            "name": "Josh Dolitsky",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://dolit.ski",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/393494?v=4"
+            ]
+        },
+        {
+            "login": "SteveLasker",
+            "name": "Steve Lasker",
+            "contributions": [
+                "code"
+            ],
+            "profile": "http://SteveLasker.blog",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/7647382?v=4"
+            ]
+        },
+        {
+            "login": "lachie83",
+            "name": "Lachlan Evenson",
+            "contributions": [
+                "code"
+            ],
+            "profile": "youtube.com/lachlanevenson",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/6912984?v=4"
+            ]
+        },
+        {
+            "login": "bridgetkromhout",
+            "name": "Bridget Kromhout",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/bridgetkromhout",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/2104453?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
