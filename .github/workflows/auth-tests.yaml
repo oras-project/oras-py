@@ -1,0 +1,30 @@
+name: Oras Auth Tests
+on:
+  pull_request: []
+
+jobs:
+  test-auth:
+    runs-on: ubuntu-latest
+    container: ghcr.io/oras-project/registry:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Python
+        run: |
+           apk update && apk add python3 make apache2-utils bash
+           wget https://bootstrap.pypa.io/get-pip.py
+           python3 get-pip.py
+           rm get-pip.py
+           pip install --upgrade pip setuptools
+           make install
+
+      - name: Test Oras Python with Auth
+        env:
+          registry_host: localhost
+          registry_port: 5000
+          with_auth: true
+          REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
+        run: |
+           htpasswd -cB -b auth.htpasswd myuser mypass
+           cp auth.htpasswd /etc/docker/registry/auth.htpasswd 
+           registry serve /etc/docker/registry/config.yml & sleep 5
+           echo $PWD && ls $PWD && make test

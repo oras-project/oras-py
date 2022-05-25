@@ -114,14 +114,12 @@ class OrasClient:
         insecure: bool = False,
         hostname: Optional[str] = None,
         config_path: Optional[List[str]] = None,
-    ):
+    ) -> dict:
         """
         Login to a registry.
 
-
         :param registry: if provided, use this custom provider instead of default
         :type registry: oras.provider.Registry or None
-
         :param username: the user account name
         :type username: str
         :param password: the user account password

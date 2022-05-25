@@ -44,8 +44,11 @@ or just use an actual registry. The most we can do here is set up an example tha
         ghcr.io/oras-project/registry:latest
 
 
+Command Line
+============
+
 Login
-=====
+-----
 
 Once you create (or already have) a registry, you will want to login. You can do:
 
@@ -86,8 +89,9 @@ and have configs loaded, then you can do:
 
     $ cli.logout(hostname)
 
+
 Push
-====
+----
 
 Let's first push a container. Let's follow `the example here <https://oras.land/cli/1_pushing/>`_.
 
@@ -112,7 +116,7 @@ And if you aren't using https, add ``--insecure``
 
 
 Pull
-====
+----
 
 Now try a pull! We will first need to delete the file
 
@@ -124,8 +128,56 @@ Now try a pull! We will first need to delete the file
     hello dinosaur
 
 
-Custom Registry
-===============
+Within Python
+=============
+
+If you want to use the library from within Python, here is how to do that.
+You'll still need a running registry as shown above. As a trick, if you want
+more detail than is available in these docs, you can peek into the
+`Python client code <https://github.com/oras-project/oras-py/tree/main/oras/cli>`_.
+
+Login and Logout
+----------------
+
+.. code-block:: python
+
+    import oras.client
+    client = oras.client.OrasClient()
+    client.login(password="myuser", username="myuser", insecure=True)
+
+
+And logout!
+        
+.. code-block:: console
+
+    client.logout("localhost:5000")   
+
+
+Push and Pull
+-------------
+
+We are again following `the example here <https://oras.land/cli/1_pushing/>`_.
+We are assuming an ``artifact.txt`` in the present working directory.
+
+.. code-block:: console
+    
+    client = oras.client.OrasClient(insecure=True)
+    client.push(files=["artifact.txt"], target="localhost:5000/dinosaur/artifact:v1")
+    Successfully pushed localhost:5000/dinosaur/artifact:v1
+    Out[4]: <Response [201]>
+
+
+And then pull!
+
+.. code-block:: console
+
+    res = client.pull(target="localhost:5000/dinosaur/artifact:v1")
+    ['/tmp/oras-tmp.e5itvzfi/artifact.txt']
+
+
+
+Custom Clients
+==============
 
 The benefit of Oras Python is that you can create a subclass that easily implements
 a registry, and then allows you to do custom interactions. We provide a few examples:
