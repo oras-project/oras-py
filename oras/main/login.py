@@ -2,11 +2,54 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import os
 import sys
 from typing import Optional
 
+import oras.auth
 import oras.utils
 from oras.logger import logger
+
+
+class DockerClient:
+    """
+    If running inside a container (or similar without docker) do a manual login
+    """
+
+    def login(
+        self,
+        username: str,
+        password: str,
+        registry: str,
+        dockercfg_path: Optional[str] = None,
+    ):
+        """
+        Manual login means loading and checking the config file
+
+        :param registry: if provided, use this custom provider instead of default
+        :type registry: oras.provider.Registry or None
+        :param username: the user account name
+        :type username: str
+        :param password: the user account password
+        :type password: str
+        :param dockercfg_str: docker config path
+        :type dockercfg_str: list
+        """
+        if not dockercfg_path:
+            dockercfg_path = os.path.expanduser("~/.docker/config.json")
+        if os.path.exists(dockercfg_path):
+            cfg = oras.utils.read_json(dockercfg_path)
+        else:
+            oras.utils.mkdir_p(os.path.dirname(dockercfg_path))
+            cfg = {"auths": {}}
+        if registry in cfg["auths"]:
+            cfg["auths"][registry]["auth"] = oras.auth.get_basic_auth(
+                username, password
+            )
+        else:
+            cfg["auths"][registry] = {
+                "auth": oras.auth.get_basic_auth(username, password)
+            }
 
 
 def login(
@@ -22,7 +65,10 @@ def login(
 
     The username and password can come from stdin.
     """
-    client = oras.utils.get_docker_client(insecure=insecure)
+    try:
+        client = oras.utils.get_docker_client(insecure=insecure)
+    except:
+        client = DockerClient()
 
     # Read password from stdin
     if password_stdin:

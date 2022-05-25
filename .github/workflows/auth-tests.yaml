@@ -13,6 +13,7 @@ jobs:
            apk update && apk add python3 make apache2-utils bash
            wget https://bootstrap.pypa.io/get-pip.py
            python3 get-pip.py
+           rm get-pip.py
            pip install --upgrade pip setuptools
            make install
 

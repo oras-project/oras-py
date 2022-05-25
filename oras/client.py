@@ -118,10 +118,8 @@ class OrasClient:
         """
         Login to a registry.
 
-
         :param registry: if provided, use this custom provider instead of default
         :type registry: oras.provider.Registry or None
-
         :param username: the user account name
         :type username: str
         :param password: the user account password
