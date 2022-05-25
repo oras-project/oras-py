@@ -416,14 +416,12 @@
         <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Login to a registry.</span>
 
-
 <span class="sd">        :param registry: if provided, use this custom provider instead of default</span>
 <span class="sd">        :type registry: oras.provider.Registry or None</span>
-
 <span class="sd">        :param username: the user account name</span>
 <span class="sd">        :type username: str</span>
 <span class="sd">        :param password: the user account password</span>
