@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - Removing runtime dependency pytest-runner (0.0.12)
  - Adding authenticated login tests, fixing bugs with login/logout (0.0.11)
  - First draft release with basic functionality (0.0.1)
  - Initial skeleton of project (0.0.0)
