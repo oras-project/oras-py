@@ -1,9 +1,10 @@
 name: Update Contributors
 
 on:
+  pull_request: []
   push:
     branches:
-      - doesnotexist
+      - main
 
 jobs:
   Update:
@@ -41,6 +42,7 @@ jobs:
           fi
           git branch
           git checkout -b "${BRANCH_FROM}" || git checkout "${BRANCH_FROM}"
+          git fetch --unshallow origin
           git branch
 
           git config --global user.name "github-actions"
@@ -53,7 +55,11 @@ jobs:
           else
              export OPEN_PULL_REQUEST=1
              printf "Changes\n"
-             git commit -a -m "Automated deployment to update contributors $(date '+%Y-%m-%d')"
+             today=$(date '+%Y-%m-%d')
+             git add .tributors
+             git add .all-contributorsrc
+             git add README.md
+             git commit -a -m "Automated deployment to update contributors ${today}" -m "Signed-off-by: github-actions <github-actions@users.noreply.github.com>"
              git push origin "${BRANCH_FROM}"
           fi
 
