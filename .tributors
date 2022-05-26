@@ -1,0 +1,26 @@
+{
+    "SteveLasker": {
+        "name": "Steve Lasker",
+        "bio": "OCI TOB Member, PM Architect for Azure Container Registry, balancing tech and the great outdoors",
+        "blog": "http://SteveLasker.blog"
+    },
+    "vsoch": {
+        "name": "Vanessasaurus",
+        "bio": "I'm the Vanessasaurus!",
+        "blog": "https://vsoch.github.io"
+    },
+    "jdolitsky": {
+        "name": "Josh Dolitsky",
+        "blog": "https://dolit.ski"
+    },
+    "bridgetkromhout": {
+        "name": "Bridget Kromhout",
+        "bio": "bridgetkromhout.com",
+        "blog": "https://github.com/bridgetkromhout"
+    },
+    "lachie83": {
+        "name": "Lachlan Evenson",
+        "bio": "Cloud builder",
+        "blog": "youtube.com/lachlanevenson"
+    }
+}
