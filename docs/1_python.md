@@ -110,8 +110,8 @@ Note that oras-py will not remove content from your docker config files, so
 there is no concept of a "logout" unless you are using the client interactively,
 and have configs loaded, then you can do:
 
-```bash
-$ cli.logout(hostname)
+```python
+cli.logout(hostname)
 ```
 
 ### Push
