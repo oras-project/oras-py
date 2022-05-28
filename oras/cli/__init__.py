@@ -78,6 +78,7 @@ def get_parser():
         action="store_true",
     )
     pull.add_argument(
+        "-k",
         "--keep-old-files",
         help="do not overwrite existing files.",
         default=False,
@@ -131,7 +132,7 @@ def get_parser():
             help="registry password or identity token",
         )
         command.add_argument(
-            "-k",
+            "-i",
             "--insecure",
             dest="insecure",
             help="allow connections to SSL registry without certs",
