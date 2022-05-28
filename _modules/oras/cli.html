@@ -380,6 +380,7 @@
         <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pull</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-k"</span><span class="p">,</span>
         <span class="s2">"--keep-old-files"</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">"do not overwrite existing files."</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -433,7 +434,7 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">"registry password or identity token"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">command</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">"-k"</span><span class="p">,</span>
+            <span class="s2">"-i"</span><span class="p">,</span>
             <span class="s2">"--insecure"</span><span class="p">,</span>
             <span class="n">dest</span><span class="o">=</span><span class="s2">"insecure"</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">"allow connections to SSL registry without certs"</span><span class="p">,</span>
@@ -524,7 +525,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              May 26, 2022.
+              May 28, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
