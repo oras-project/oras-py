@@ -294,6 +294,11 @@ class Registry:
         # Location should be in the header
         session_url = r.headers.get("location")
 
+        # Some registries do not return the full registry hostname
+        prefix = f"{self.prefix}://{container.registry}"
+        if not session_url.startswith(prefix):
+            session_url = f"{prefix}{session_url}"
+
         # Read the blob in chunks, for each do a patch
         start = 0
         with open(blob, "rb") as fd:
