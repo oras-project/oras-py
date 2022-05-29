@@ -287,7 +287,7 @@ class Registry:
         :type layer: dict
         """
         # Start an upload session
-        headers = {"Content-Type": "application/octet-stream", "Content-Length": 0}
+        headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
 
