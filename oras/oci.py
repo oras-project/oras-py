@@ -70,6 +70,7 @@ class Layer:
         :param is_dir: is the blob a directory?
         :type is_dir: bool
         """
+        self.media_type = media_type
         if is_dir and not media_type:
             self.media_type = oras.defaults.default_blob_dir_media_type
         elif not is_dir and not media_type:
