@@ -41,6 +41,7 @@ class Registry:
         self.prefix: str = "http" if insecure else "https"
         self.token: Optional[str] = None
         self._auths: dict = {}
+        self._basic_auth = None
 
     def logout(self, hostname: str):
         """
@@ -104,8 +105,17 @@ class Registry:
         :param password: the user account password
         :type password: str
         """
-        basic_auth = oras.auth.get_basic_auth(username, password)
-        self.set_header("Authorization", "Basic %s" % basic_auth)
+        self._basic_auth = oras.auth.get_basic_auth(username, password)
+        self.set_header("Authorization", "Basic %s" % self._basic_auth)
+
+    def reset_basic_auth(self):
+        """
+        Given we have basic auth, reset it.
+        """
+        if "Authorization" in self.headers:
+            del self.headers["Authorization"]
+        if self._basic_auth:
+            self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
     def set_header(self, name: str, value: str):
         """
@@ -162,12 +172,24 @@ class Registry:
         """
         blob = os.path.abspath(blob)
         container = self.get_container(container)
-        size = layer["size"]
+
+        # Always reset headers between uploads
+        self.reset_basic_auth()
 
         # Chunked for large, otherwise POST and PUT
-        if size < 1024:
-            return self._put_upload(blob, container, layer)
-        return self._chunked_upload(blob, container, layer)
+        if layer["size"] < 1024:
+            response = self._put_upload(blob, container, layer)
+        else:
+            response = self._chunked_upload(blob, container, layer)
+
+        # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
+        if (
+            response.status_code not in [200, 201, 202]
+            and layer["digest"] == oras.defaults.blank_hash
+        ):
+            response = requests.Response()
+            response.status_code = 200
+        return response
 
     @ensure_container
     def get_tags(
@@ -190,6 +212,7 @@ class Registry:
         container: Union[str, oras.container.Container],
         digest: str,
         stream: bool = False,
+        head: bool = False,
     ) -> requests.Response:
         """
         Retrieve a blob for a package.
@@ -200,9 +223,12 @@ class Registry:
         :type digest: str
         :param stream: stream the response (or not)
         :type stream: bool
+        :param head: use head to determine if blob exists
+        :type head: bool
         """
+        method = "GET" if not head else "HEAD"
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
-        return self.do_request(blob_url, "GET", headers=self.headers, stream=stream)
+        return self.do_request(blob_url, method, headers=self.headers, stream=stream)
 
     def get_container(
         self, name: Union[str, oras.container.Container]
@@ -229,12 +255,19 @@ class Registry:
         :param container:  parsed container URI
         :type container: oras.container.Container or str
         """
-        with self.get_blob(container, digest, stream=True) as r:
-            r.raise_for_status()
-            with open(outfile, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
+        try:
+            with self.get_blob(container, digest, stream=True) as r:
+                r.raise_for_status()
+                with open(outfile, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+
+        # Allow an empty layer to fail and return /dev/null
+        except Exception as e:
+            if digest == oras.defaults.blank_hash:
+                return "/dev/null"
+            raise e
         return outfile
 
     def _put_upload(
@@ -256,22 +289,48 @@ class Registry:
         r = self.do_request(upload_url, "POST", headers=headers)
 
         # Location should be in the header
-        session_url = r.headers.get("location")
+        session_url = self._get_location(r, container)
 
         # PUT to upload blob url
         headers = {
             "Content-Length": str(layer["size"]),
             "Content-Type": "application/octet-stream",
         }
-
-        # headers.update(auth_headers)
-        digest = layer["digest"]
-        blob_url = f"{session_url}&digest={digest}"
+        headers.update(self.headers)
+        blob_url = oras.utils.append_url_params(
+            session_url, {"digest": layer["digest"]}
+        )
         with open(blob, "rb") as fd:
             response = self.do_request(
-                blob_url, method="PUT", data=fd.read(), headers=headers
+                blob_url,
+                method="PUT",
+                data=fd.read(),
+                headers=headers,
             )
         return response
+
+    def _get_location(
+        self, r: requests.Response, container: oras.container.Container
+    ) -> str:
+        """
+        Parse the location header and ensure it includes a hostname.
+        This currently assumes if there isn't a hostname, we are pushing to
+        the same registry hostname of the original request.
+
+        :param r: requests response with headers
+        :type r: requests.Response
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        """
+        session_url = r.headers.get("location", "")
+        if not session_url:
+            return session_url
+
+        # Some registries do not return the full registry hostname
+        prefix = f"{self.prefix}://{container.registry}"
+        if not session_url.startswith(prefix):
+            session_url = f"{prefix}{session_url}"
+        return session_url
 
     def _chunked_upload(
         self, blob: str, container: oras.container.Container, layer: dict
@@ -292,12 +351,7 @@ class Registry:
         r = self.do_request(upload_url, "POST", headers=headers)
 
         # Location should be in the header
-        session_url = r.headers.get("location")
-
-        # Some registries do not return the full registry hostname
-        prefix = f"{self.prefix}://{container.registry}"
-        if not session_url.startswith(prefix):
-            session_url = f"{prefix}{session_url}"
+        session_url = self._get_location(r, container)
 
         # Read the blob in chunks, for each do a patch
         start = 0
@@ -313,15 +367,19 @@ class Registry:
                     "Content-Length": str(len(chunk)),
                     "Content-Type": "application/octet-stream",
                 }
-                # headers.update(auth_headers)
+
+                # Important to update with auth token if acquired
+                headers.update(self.headers)
                 start = end + 1
                 self._check_200_response(
                     self.do_request(session_url, "PATCH", data=chunk, headers=headers)
                 )
 
         # Finally, issue a PUT request to close blob
-        session_url = "%s&digest=%s" % (session_url, layer["digest"])
-        return self.do_request(session_url, "PUT")
+        session_url = oras.utils.append_url_params(
+            session_url, {"digest": layer["digest"]}
+        )
+        return self.do_request(session_url, "PUT", headers=self.headers)
 
     def _check_200_response(self, response: requests.Response):
         """
@@ -360,6 +418,7 @@ class Registry:
         :param container:  parsed container URI
         :type container: oras.container.Container or str
         """
+        self.reset_basic_auth()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         headers = {
             "Content-Type": oras.defaults.default_manifest_media_type,
@@ -582,7 +641,12 @@ class Registry:
 
         # Make the request and return to calling function, unless requires auth
         response = self.session.request(
-            method, url, data=data, json=json, headers=headers, stream=stream
+            method,
+            url,
+            data=data,
+            json=json,
+            headers=headers,
+            stream=stream,
         )
 
         # A 401 response is a request for authentication
@@ -593,7 +657,12 @@ class Registry:
         if self.authenticate_request(response):
             headers.update(self.headers)
             return self.session.request(
-                method, url, data=data, json=json, headers=headers, stream=stream
+                method,
+                url,
+                data=data,
+                json=json,
+                headers=headers,
+                stream=stream,
             )
         return response
 
@@ -635,10 +704,16 @@ class Registry:
                 }
             )
 
-        # Currently we don't set a scope (it defaults to build)
+        # Ensure the realm starts with http
         if not h.realm.startswith("http"):  # type: ignore
             h.realm = f"{self.prefix}://{h.realm}"
-        authResponse = self.session.get(h.realm, headers=headers)  # type: ignore
+
+        # If the www-authenticate included a scope, honor it!
+        params = {}
+        if h.scope:
+            params["scope"] = h.scope
+
+        authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
         if authResponse.status_code != 200:
             return False
 

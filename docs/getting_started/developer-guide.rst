@@ -92,7 +92,7 @@ default "push" function.
 
     class Registry(oras.provider.Registry):
         @ensure_container
-        def push(self, target, archives: dict, annotations=None):
+        def push(self, container, archives: dict, annotations=None):
             """
             Given a dict of layers (paths and corresponding mediaType) push.
             """
@@ -107,7 +107,7 @@ default "push" function.
 
                 # Must exist
                 if not os.path.exists(blob):
-                    sys.exit(f"{blob} does not exist.")
+                    logger.exit(f"{blob} does not exist.")
 
                 # Save directory or blob name before compressing
                 blob_name = os.path.basename(blob)
@@ -152,7 +152,7 @@ default "push" function.
             # Config is just another layer blob!
             response = self._upload_blob(config_file, container, conf)
             self._check_200_response(response)
-
+    
             # Final upload of the manifest
             manifest["config"] = conf
             self._check_200_response(self._upload_manifest(manifest, container))
