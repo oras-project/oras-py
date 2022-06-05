@@ -62,12 +62,14 @@ Push Interactions
 -----------------
 
 You might instead want to have a custom lookup of archive paths and media types.
-Let's say we start with this:
+Let's say we start with this lookup, ``archives``:
 
 .. code-block:: python
 
-    {"/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
-     "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"}
+    archives = {
+        "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
+        "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"
+    }
 
 Note that since paths are unique (and media types are not) we use that as the dictionary key.
 Here is how we might then create a custom Registry provider to handle:
@@ -182,7 +184,9 @@ First, some registries may require authentiation:
         sys.exit("GITHUB_TOKEN and GITHUB_USER are required in the environment.")
 
 
-And then you can run your custom functions after doing that.
+And then you can run your custom functions after doing that, either inspecting
+a particular unique resource identifier or using your lookup of archives (paths
+and media types) to push:
 
 
 .. code-block:: python
@@ -197,4 +201,7 @@ And then you can run your custom functions after doing that.
         # Push Example
         reg = Registry()
         reg.set_basic_auth(user, token)
+        archives = {
+            "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
+            "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"}
         reg.push("ghcr.io/vsoch/excellent-dinosaur:latest", archives)
