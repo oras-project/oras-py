@@ -18,10 +18,8 @@ def load_configs(configs: Optional[List[str]] = None):
     :param configs: list of configuration paths to load, defaults to None
     :type configs: optional list
     """
-    import docker
-
     configs = configs or []
-    default_config = docker.context.config.find_config_file()
+    default_config = oras.utils.find_docker_config()
 
     # Add the default docker config
     if default_config:

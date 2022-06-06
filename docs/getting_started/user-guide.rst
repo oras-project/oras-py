@@ -73,7 +73,7 @@ You can also provide them interactively
     Login Succeeded
 
 
-or use `--password-stdin`
+or use ``--password-stdin``
 
 .. code-block:: console
 

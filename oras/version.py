@@ -2,7 +2,7 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
 AUTHOR = "Vanessa Sochat"
 EMAIL = "vsoch@users.noreply.github.com"
 NAME = "oras"
@@ -17,7 +17,6 @@ LICENSE = "LICENSE"
 INSTALL_REQUIRES = (
     ("jsonschema", {"min_version": None}),
     ("requests", {"min_version": None}),
-    ("docker", {"exact_version": "5.0.1"}),
 )
 
 TESTS_REQUIRES = (
@@ -28,4 +27,7 @@ TESTS_REQUIRES = (
     ("types-requests", {"min_version": None}),
     ("isort", {"min_version": None}),
 )
-INSTALL_REQUIRES_ALL = INSTALL_REQUIRES + TESTS_REQUIRES
+
+DOCKER_REQUIRES = (("docker", {"exact_version": "5.0.1"}),)
+
+INSTALL_REQUIRES_ALL = INSTALL_REQUIRES + TESTS_REQUIRES + DOCKER_REQUIRES
