@@ -67,8 +67,6 @@ def login(
 
     The username and password can come from stdin.
     """
-    client = oras.utils.get_docker_client(insecure=insecure)
-
     # Read password from stdin
     if password_stdin:
         password = readline()
@@ -100,6 +98,7 @@ def login(
     # Login
     # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
     try:
+        client = oras.utils.get_docker_client(insecure=insecure)
         return client.login(
             username=username,
             password=password,
