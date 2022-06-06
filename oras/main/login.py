@@ -37,8 +37,8 @@ class DockerClient:
         """
         if not dockercfg_path:
             dockercfg_path = oras.utils.find_docker_config(exists=False)
-        if os.path.exists(dockercfg_path): # type: ignore
-            cfg = oras.utils.read_json(dockercfg_path) # type: ignore
+        if os.path.exists(dockercfg_path):  # type: ignore
+            cfg = oras.utils.read_json(dockercfg_path)  # type: ignore
         else:
             oras.utils.mkdir_p(os.path.dirname(dockercfg_path))  # type: ignore
             cfg = {"auths": {}}

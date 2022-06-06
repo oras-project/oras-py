@@ -16,6 +16,7 @@ The versions coincide with releases on pip. Only major versions will be released
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
  - docker is an optional dependency, to minimize dependencies (0.0.12)
    - Removing runtime dependency pytest-runner
+   - bug fixes for GitHub packages
  - Adding authenticated login tests, fixing bugs with login/logout (0.0.11)
  - First draft release with basic functionality (0.0.1)
  - Initial skeleton of project (0.0.0)
