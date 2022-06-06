@@ -21,8 +21,22 @@ You can also clone the repository and install locally:
     $ git clone https://github.com/oras-project/oras-py
     $ cd oras-py
     $ pip install .
+
+Note that we have several extra modes for installation:
+
+.. code:: console
+
+    # interactions are done via the docker client instead of manual
+    $ pip install oras[docker]
+
+    # Install dependencies for linting and tests
+    $ pip install oras[tests]
+    
+    # install everything
+    $ pip install oras[all]
+
  
-Or in development mode:
+Or in development mode, add ``-e``:
 
 .. code:: console
 

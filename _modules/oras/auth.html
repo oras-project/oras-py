@@ -322,10 +322,8 @@
 <span class="sd">    :param configs: list of configuration paths to load, defaults to None</span>
 <span class="sd">    :type configs: optional list</span>
 <span class="sd">    """</span>
-    <span class="kn">import</span> <span class="nn">docker</span>
-
     <span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">default_config</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">find_config_file</span><span class="p">()</span>
+    <span class="n">default_config</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">find_docker_config</span><span class="p">()</span>
 
     <span class="c1"># Add the default docker config</span>
     <span class="k">if</span> <span class="n">default_config</span><span class="p">:</span>
