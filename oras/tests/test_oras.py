@@ -68,7 +68,7 @@ def test_basic_push_pull(tmp_path):
     assert os.path.exists(artifact)
 
     res = client.push(files=[artifact], target=target)
-    assert res.status_code == 201
+    assert res.status_code in [200, 201]
 
     # Test getting tags
     tags = client.get_tags(target)
