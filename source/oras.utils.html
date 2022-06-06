@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="ie=edge" http-equiv="x-ua-compatible"/>
   <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
@@ -50,6 +50,8 @@
   <script src="../_static/jquery.js">
   </script>
   <script src="../_static/underscore.js">
+  </script>
+  <script src="../_static/_sphinx_javascript_frameworks_compat.js">
   </script>
   <script src="../_static/doctools.js">
   </script>
@@ -349,14 +351,14 @@
        <section id="oras-utils-package">
         <h1 id="source-oras-utils--page-root">
          oras.utils package
-         <a class="headerlink" href="#source-oras-utils--page-root" title="Permalink to this headline">
+         <a class="headerlink" href="#source-oras-utils--page-root" title="Permalink to this heading">
           ¶
          </a>
         </h1>
         <section id="submodules">
          <h2 id="submodules">
           Submodules
-          <a class="headerlink" href="#submodules" title="Permalink to this headline">
+          <a class="headerlink" href="#submodules" title="Permalink to this heading">
            ¶
           </a>
          </h2>
@@ -366,7 +368,7 @@
          </span>
          <h2 id="module-oras.utils.fileio">
           oras.utils.fileio module
-          <a class="headerlink" href="#module-oras.utils.fileio" title="Permalink to this headline">
+          <a class="headerlink" href="#module-oras.utils.fileio" title="Permalink to this heading">
            ¶
           </a>
          </h2>
@@ -489,6 +491,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -716,6 +721,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -989,6 +997,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -1434,6 +1445,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <p>
@@ -1549,6 +1563,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -1629,7 +1646,7 @@
              <span class="w">
              </span>
              <span class="pre">
-              _io.BufferedReader
+              BufferedReader
              </span>
              <span class="p">
               <span class="pre">
@@ -1693,6 +1710,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <p>
@@ -1809,6 +1829,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -2111,6 +2134,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -2286,6 +2312,9 @@
            <dl class="field-list simple">
             <dt class="field-odd">
              Parameters
+             <span class="colon">
+              :
+             </span>
             </dt>
             <dd class="field-odd">
              <ul class="simple">
@@ -2336,10 +2365,130 @@
          </span>
          <h2 id="module-oras.utils.request">
           oras.utils.request module
-          <a class="headerlink" href="#module-oras.utils.request" title="Permalink to this headline">
+          <a class="headerlink" href="#module-oras.utils.request" title="Permalink to this heading">
            ¶
           </a>
          </h2>
+         <dl class="py function">
+          <dt class="sig sig-object py" id="oras.utils.request.append_url_params">
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.utils.request.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             append_url_params
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              url
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              params
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              dict
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <span class="sig-return">
+            <span class="sig-return-icon">
+             →
+            </span>
+            <span class="sig-return-typehint">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </span>
+           <a class="reference internal" href="../_modules/oras/utils/request.html#append_url_params">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.utils.request.append_url_params" title="Permalink to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Given a dictionary of params and a url, parse the url and add extra params.
+           </p>
+           <dl class="field-list simple">
+            <dt class="field-odd">
+             Parameters
+             <span class="colon">
+              :
+             </span>
+            </dt>
+            <dd class="field-odd">
+             <ul class="simple">
+              <li>
+               <p>
+                <strong>
+                 url
+                </strong>
+                (
+                <em>
+                 str
+                </em>
+                ) – the url string to parse
+               </p>
+              </li>
+              <li>
+               <p>
+                <strong>
+                 params
+                </strong>
+                (
+                <em>
+                 dict
+                </em>
+                ) – parameters to add
+               </p>
+              </li>
+             </ul>
+            </dd>
+           </dl>
+          </dd>
+         </dl>
          <dl class="py function">
           <dt class="sig sig-object py" id="oras.utils.request.get_docker_client">
            <span class="sig-prename descclassname">
@@ -2489,7 +2638,7 @@
          </span>
          <h2 id="module-oras.utils">
           Module contents
-          <a class="headerlink" href="#module-oras.utils" title="Permalink to this headline">
+          <a class="headerlink" href="#module-oras.utils" title="Permalink to this heading">
            ¶
           </a>
          </h2>
@@ -2526,13 +2675,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              May 28, 2022.
+              Jun 06, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      4.5.0.
+      5.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

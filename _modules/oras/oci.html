@@ -50,6 +50,8 @@
   </script>
   <script src="../../_static/underscore.js">
   </script>
+  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
   <script src="../../_static/doctools.js">
   </script>
   <script src="../../_static/clipboard.min.js">
@@ -372,6 +374,7 @@
 <span class="sd">        :param is_dir: is the blob a directory?</span>
 <span class="sd">        :type is_dir: bool</span>
 <span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">media_type</span> <span class="o">=</span> <span class="n">media_type</span>
         <span class="k">if</span> <span class="n">is_dir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">media_type</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">media_type</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_blob_dir_media_type</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_dir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">media_type</span><span class="p">:</span>
@@ -461,13 +464,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              May 28, 2022.
+              Jun 06, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      4.5.0.
+      5.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

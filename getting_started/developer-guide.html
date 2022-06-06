@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="ie=edge" http-equiv="x-ua-compatible"/>
   <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
@@ -50,6 +50,8 @@
   <script src="../_static/jquery.js">
   </script>
   <script src="../_static/underscore.js">
+  </script>
+  <script src="../_static/_sphinx_javascript_frameworks_compat.js">
   </script>
   <script src="../_static/doctools.js">
   </script>
@@ -298,8 +300,13 @@
                       </a>
                      </li>
                      <li class="md-nav__item">
-                      <a class="md-nav__link" href="#interactions">
-                       Interactions
+                      <a class="md-nav__link" href="#pull-interactions">
+                       Pull Interactions
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#push-interactions">
+                       Push Interactions
                       </a>
                      </li>
                      <li class="md-nav__item">
@@ -376,8 +383,13 @@
                  </a>
                 </li>
                 <li class="md-nav__item">
-                 <a class="md-nav__link" href="#interactions">
-                  Interactions
+                 <a class="md-nav__link" href="#pull-interactions">
+                  Pull Interactions
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#push-interactions">
+                  Push Interactions
                  </a>
                 </li>
                 <li class="md-nav__item">
@@ -410,7 +422,7 @@
         </span>
         <h1 id="getting-started-developer-guide--page-root">
          Developer Guide
-         <a class="headerlink" href="#getting-started-developer-guide--page-root" title="Permalink to this headline">
+         <a class="headerlink" href="#getting-started-developer-guide--page-root" title="Permalink to this heading">
           ¶
          </a>
         </h1>
@@ -427,7 +439,7 @@ registry entries and building containers. If you haven’t read
         <section id="creating-a-custom-client">
          <h2 id="creating-a-custom-client">
           Creating a Custom Client
-          <a class="headerlink" href="#creating-a-custom-client" title="Permalink to this headline">
+          <a class="headerlink" href="#creating-a-custom-client" title="Permalink to this heading">
            ¶
           </a>
          </h2>
@@ -460,7 +472,7 @@ registry entries and building containers. If you haven’t read
          <section id="the-registry-client">
           <h3 id="the-registry-client">
            The Registry Client
-           <a class="headerlink" href="#the-registry-client" title="Permalink to this headline">
+           <a class="headerlink" href="#the-registry-client" title="Permalink to this heading">
             ¶
            </a>
           </h3>
@@ -477,10 +489,10 @@ registry entries and building containers. If you haven’t read
            </div>
           </div>
          </section>
-         <section id="interactions">
-          <h3 id="interactions">
-           Interactions
-           <a class="headerlink" href="#interactions" title="Permalink to this headline">
+         <section id="pull-interactions">
+          <h3 id="pull-interactions">
+           Pull Interactions
+           <a class="headerlink" href="#pull-interactions" title="Permalink to this heading">
             ¶
            </a>
           </h3>
@@ -516,15 +528,168 @@ and do custom operations on it.
            will allow you to do that.
           </p>
          </section>
-         <section id="instantiate">
-          <h3 id="instantiate">
-           Instantiate
-           <a class="headerlink" href="#instantiate" title="Permalink to this headline">
+         <section id="push-interactions">
+          <h3 id="push-interactions">
+           Push Interactions
+           <a class="headerlink" href="#push-interactions" title="Permalink to this heading">
             ¶
            </a>
           </h3>
           <p>
-           Some registries may require authentiation:
+           You might instead want to have a custom lookup of archive paths and media types.
+Let’s say we start with this lookup,
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             archives
+            </span>
+           </code>
+           :
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="n">archives</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz"</span><span class="p">:</span> <span class="s2">"application/vnd.oci.image.layer.v1.tar+gzip"</span><span class="p">,</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/sbom.json"</span><span class="p">:</span> <span class="s2">"application/vnd.cyclonedx"</span>
+<span class="p">}</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           Note that since paths are unique (and media types are not) we use that as the dictionary key.
+Here is how we might then create a custom Registry provider to handle:
+          </p>
+          <ol class="arabic simple">
+           <li>
+            <p>
+             Creating layers from the blobs and media types
+            </p>
+           </li>
+           <li>
+            <p>
+             Creating a manifest with the layers, and a config
+            </p>
+           </li>
+           <li>
+            <p>
+             Uploading all of them
+            </p>
+           </li>
+          </ol>
+          <p>
+           This example is similar to what the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             oras.provider.Registry
+            </span>
+           </code>
+           provides,
+but we are allowing better customization of content types and overriding the
+default “push” function.
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">import</span> <span class="nn">oras.oci</span>
+<span class="kn">import</span> <span class="nn">oras.defaults</span>
+<span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
+    <span class="nd">@ensure_container</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">archives</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Given a dict of layers (paths and corresponding mediaType) push.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Prepare a new manifest</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
+
+        <span class="c1"># A lookup of annotations we can add</span>
+        <span class="n">annotset</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Annotations</span><span class="p">(</span><span class="n">annotations</span> <span class="ow">or</span> <span class="p">{})</span>
+
+        <span class="c1"># Upload files as blobs</span>
+        <span class="k">for</span> <span class="n">blob</span><span class="p">,</span> <span class="n">mediaType</span> <span class="ow">in</span> <span class="n">archives</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="c1"># Must exist</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+
+            <span class="c1"># Save directory or blob name before compressing</span>
+            <span class="n">blob_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+            <span class="c1"># If it's a directory, we need to compress</span>
+            <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">blob</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+                <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Create a new layer from the blob</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">mediaType</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">)</span>
+            <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
+
+            <span class="c1"># update the manifest with the new layer</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+            <span class="c1"># Upload the blob layer</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+            <span class="c1"># Do we need to cleanup a temporary targz?</span>
+            <span class="k">if</span> <span class="n">cleanup_blob</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+        <span class="c1"># Add annotations to the manifest, if provided</span>
+        <span class="n">manifest_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$manifest"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">manifest_annots</span><span class="p">:</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">manifest_annots</span>
+
+        <span class="c1"># Prepare the manifest config (temporary or one provided)</span>
+        <span class="n">config_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$config"</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">()</span>
+
+        <span class="c1"># Config annotations?</span>
+        <span class="k">if</span> <span class="n">config_annots</span><span class="p">:</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_annots</span>
+
+        <span class="c1"># Config is just another layer blob!</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="c1"># Final upload of the manifest</span>
+        <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           The only difference between the above and the provided provider is that we are allowing
+more customization of the layers. The default oras client just assumes you have either
+a single layer or a compressed layer. Note that the decorator
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             ensure_container
+            </span>
+           </code>
+           simply ensures that the target you provide as the first argument is properly parsed
+for the remainder of the function.
+          </p>
+         </section>
+         <section id="instantiate">
+          <h3 id="instantiate">
+           Instantiate
+           <a class="headerlink" href="#instantiate" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           For both of the examples above, you might do the following.
+First, some registries may require authentiation:
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -538,14 +703,26 @@ and do custom operations on it.
            </div>
           </div>
           <p>
-           And then you can run your custom functions after doing that.
+           And then you can run your custom functions after doing that, either inspecting
+a particular unique resource identifier or using your lookup of archives (paths
+and media types) to push:
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
             <pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="c1"># Pull Example</span>
     <span class="n">reg</span> <span class="o">=</span> <span class="n">MyProvider</span><span class="p">()</span>
     <span class="n">reg</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
     <span class="n">reg</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="s2">"ghcr.io/wolfv/conda-forge/linux-64/xtensor:0.9.0-0"</span><span class="p">)</span>
+
+    <span class="c1"># Push Example</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="n">Registry</span><span class="p">()</span>
+    <span class="n">reg</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz"</span><span class="p">:</span> <span class="s2">"application/vnd.oci.image.layer.v1.tar+gzip"</span><span class="p">,</span>
+        <span class="s2">"/tmp/pakages-tmp.q6amnrkq/sbom.json"</span><span class="p">:</span> <span class="s2">"application/vnd.cyclonedx"</span><span class="p">}</span>
+    <span class="n">reg</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s2">"ghcr.io/vsoch/excellent-dinosaur:latest"</span><span class="p">,</span> <span class="n">archives</span><span class="p">)</span>
 </pre>
            </div>
           </div>
@@ -597,13 +774,13 @@ and do custom operations on it.
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              May 28, 2022.
+              Jun 06, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      4.5.0.
+      5.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

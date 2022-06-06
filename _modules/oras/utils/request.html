@@ -50,6 +50,8 @@
   </script>
   <script src="../../../_static/underscore.js">
   </script>
+  <script src="../../../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
   <script src="../../../_static/doctools.js">
   </script>
   <script src="../../../_static/clipboard.min.js">
@@ -305,6 +307,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urlparse</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
+
+
 <div class="viewcode-block" id="iter_localhosts"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.iter_localhosts">[docs]</a><span class="k">def</span> <span class="nf">iter_localhosts</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Given a url with localhost, always resolve to 127.0.0.1.</span>
@@ -319,6 +325,23 @@
         <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"127.0.0.1"</span><span class="p">,</span> <span class="s2">"localhost"</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="append_url_params"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.append_url_params">[docs]</a><span class="k">def</span> <span class="nf">append_url_params</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Given a dictionary of params and a url, parse the url and add extra params.</span>
+
+<span class="sd">    :param url: the url string to parse</span>
+<span class="sd">    :type url: str</span>
+<span class="sd">    :param params: parameters to add</span>
+<span class="sd">    :type params: dict</span>
+<span class="sd">    """</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">urlparse</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">query</span><span class="p">))</span>
+    <span class="n">query</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+    <span class="n">updated</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_docker_client"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.get_docker_client">[docs]</a><span class="k">def</span> <span class="nf">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -350,13 +373,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              May 28, 2022.
+              Jun 06, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      4.5.0.
+      5.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
