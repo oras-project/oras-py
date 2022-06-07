@@ -5,7 +5,7 @@ on:
 
 jobs:
   test-action:
-    if: github.repository_owner == 'oras-project'
+    if: github.event.pull_request.head.repo.full_name == 'oras-project/oras-py'
     name: Test Github Packages Deploy
     runs-on: ubuntu-latest
     steps:
