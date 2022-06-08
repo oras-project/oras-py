@@ -371,8 +371,6 @@
 
 <span class="sd">    The username and password can come from stdin.</span>
 <span class="sd">    """</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="n">insecure</span><span class="p">)</span>
-
     <span class="c1"># Read password from stdin</span>
     <span class="k">if</span> <span class="n">password_stdin</span><span class="p">:</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">readline</span><span class="p">()</span>
@@ -404,6 +402,7 @@
     <span class="c1"># Login</span>
     <span class="c1"># https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="n">insecure</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
             <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
             <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
@@ -446,7 +445,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Jun 06, 2022.
+              Jun 08, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
