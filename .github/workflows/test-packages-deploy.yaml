@@ -1,0 +1,33 @@
+name: test-github-packages-deploy
+
+on:
+  schedule:
+    - cron: 0 2 * * *
+
+  pull_request: []
+
+jobs:
+  test-action:
+    if: github.event.pull_request.head.repo.full_name == 'oras-project/oras-py'
+    name: Test Github Packages Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Oras Python
+        run: pip install -e .
+      - name: Test GitHub Packages Push/Pull
+        env:
+          user: ${{ github.actor }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          uri: ghcr.io/oras-project/oras-py/oras-py-test:latest
+        run: |
+          python setup.py sdist
+          artifact=$(ls dist/*.tar.gz)
+          echo ${token} | oras-py login -u ${user} ghcr.io --password-stdin
+          echo "Preparing to push ${artifact} to ${uri}"
+          oras-py push ${uri} ${artifact}
+          echo "Preparing to pull ${artifact}"
+          oras-py pull -a ${uri}
+          ls
