@@ -290,6 +290,8 @@ class Registry:
 
         # Location should be in the header
         session_url = self._get_location(r, container)
+        if not session_url:
+            logger.exit(f"Issue retrieving session url: {r.json()}")
 
         # PUT to upload blob url
         headers = {
@@ -352,6 +354,8 @@ class Registry:
 
         # Location should be in the header
         session_url = self._get_location(r, container)
+        if not session_url:
+            logger.exit(f"Issue retrieving session url: {r.json()}")
 
         # Read the blob in chunks, for each do a patch
         start = 0
