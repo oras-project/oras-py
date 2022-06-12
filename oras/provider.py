@@ -256,6 +256,10 @@ class Registry:
         :type container: oras.container.Container or str
         """
         try:
+            # Ensure output directory exists first
+            outdir = os.path.dirname(outfile)
+            if outdir and not os.path.exists(outdir):
+                oras.utils.mkdir_p(outdir)
             with self.get_blob(container, digest, stream=True) as r:
                 r.raise_for_status()
                 with open(outfile, "wb") as f:
