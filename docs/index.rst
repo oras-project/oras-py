@@ -32,13 +32,14 @@ OCI Registry as Storage enables client libraries to push OCI Artifacts to `OCI C
     $ oras-py pull localhost:5000/dinosaur/artifact:v1
 
  
-To get started, see the :ref:`getting-started` page. Would you like to request a feature or contribute?
+To get started, see the `oras.land getting started guide <https://oras.land/client_libraries/1_python/>`_ or if you are a developer, see the :ref:`getting-started` page hosted here. Would you like to request a feature or contribute?
+
 `Open an issue <https://github.com/oras-project/oras-py/issues>`_.
 
 .. toctree::
-    :caption: Getting Started
     :maxdepth: 1
 
+    Getting Started <https://oras.land/client_libraries/1_python/>
     getting_started/index.rst
     contributing.md
     about/license

@@ -207,7 +207,7 @@ def read_in_chunks(image: Union[TextIO, io.BufferedReader], chunk_size: int = 10
     Helper function to read file in chunks, with default size 1k.
 
     :param image: file descriptor
-    :type image; TextIO or io.BufferedReader
+    :type image: TextIO or io.BufferedReader
     :param chunk_size: size of the chunk
     :type chunk_size: int
     """
