@@ -6,7 +6,8 @@ Developer Guide
 
 This developer guide includes more complex interactions like contributing
 registry entries and building containers. If you haven't read :ref:`getting_started-installation`
-you should do that first.
+you should do that first. If you want to see a more general user guide, look at the
+`oras.land Python guide <https://oras.land/client_libraries/1_python/>`_.
 
 
 Creating a Custom Client
