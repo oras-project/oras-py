@@ -256,6 +256,10 @@ class Registry:
         :type container: oras.container.Container or str
         """
         try:
+            # Ensure output directory exists first
+            outdir = os.path.dirname(outfile)
+            if outdir and not os.path.exists(outdir):
+                oras.utils.mkdir_p(outdir)
             with self.get_blob(container, digest, stream=True) as r:
                 r.raise_for_status()
                 with open(outfile, "wb") as f:
@@ -290,6 +294,8 @@ class Registry:
 
         # Location should be in the header
         session_url = self._get_location(r, container)
+        if not session_url:
+            logger.exit(f"Issue retrieving session url: {r.json()}")
 
         # PUT to upload blob url
         headers = {
@@ -352,6 +358,8 @@ class Registry:
 
         # Location should be in the header
         session_url = self._get_location(r, container)
+        if not session_url:
+            logger.exit(f"Issue retrieving session url: {r.json()}")
 
         # Read the blob in chunks, for each do a patch
         start = 0
