@@ -39,7 +39,8 @@ release = LooseVersion(sphinx_material.__version__).vstring
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autosummary',
+    "myst_parser",
+    "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.extlinks",
@@ -48,11 +49,11 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "nbsphinx",
-    "recommonmark",
     "sphinx_markdown_tables",
     "sphinx_copybutton",
     "sphinx_search.extension",
 ]
+
 
 autosummary_generate = True
 autoclass_content = "class"
@@ -63,7 +64,15 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "env", "README.md", ".github", ".circleci"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "env",
+    "README.md",
+    ".github",
+    ".circleci",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -83,11 +92,19 @@ html_sidebars = {
 }
 
 # Allows us to add to the default template
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 extensions.append("sphinx_material")
 html_theme_path = sphinx_material.html_theme_path()
 html_context = sphinx_material.get_html_context()
+
+# Add sidebar navigation to all pags
+html_context["sidebar_nav"] = {
+    "Getting Started": "https://oras.land/client_libraries/1_python/",
+    "Developer Guide": "getting_started/index.html",
+    "Contributing": "contributing.html",
+    "License": "about/license.html",
+}
 html_theme = "sphinx_material"
 html_css_files = ["custom.css"]
 
@@ -102,17 +119,13 @@ html_theme_options = {
     "html_minify": False,
     "html_prettify": True,
     "css_minify": False,
-
-     # icons at https://gist.github.com/albionselimaj/14fabdb89d7893c116ee4b48fdfdc7ae
-     # https://fonts.google.com/icons
+    # icons at https://gist.github.com/albionselimaj/14fabdb89d7893c116ee4b48fdfdc7ae
+    # https://fonts.google.com/icons
     "logo_icon": "&#xE3B6",
     "repo_type": "github",
     "globaltoc_depth": 2,
-
-
-     # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime, yellow, amber, orange, deep-orange, brown, grey, blue-grey, and white.
+    # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime, yellow, amber, orange, deep-orange, brown, grey, blue-grey, and white.
     "color_primary": "indigo",
-
     # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime, yellow, amber, orange, and deep-orange.
     "color_accent": "cyan",
     "touch_icon": "images/oras.png",
@@ -139,10 +152,8 @@ html_theme_options = {
         "index": "Oras Python",
         "customization": "Oras Python",
     },
-
     # Include the version dropdown top right? (e.g., if we use readthedocs)
     "version_dropdown": False,
-
     # Format of this is dict with [label,path]
     # Since we are rendering on gh-pages without readthedocs, we don't
     # have versions
@@ -152,8 +163,7 @@ html_theme_options = {
     #    "Development": "https://online-ml.github.io/viz/devel/",
     #    "Release (rel)": "/viz/",
     #    "Development (rel)": "/viz/devel/",
-    #},
-
+    # },
     # Do NOT strip these classes from tables!
     "table_classes": ["plain"],
 }

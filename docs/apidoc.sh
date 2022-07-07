@@ -3,4 +3,5 @@
 # new files generated (to update) by doing:
 #
 # 
+rm source/oras*.rst
 sphinx-apidoc -o source/ ../oras
