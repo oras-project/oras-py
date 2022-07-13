@@ -97,14 +97,6 @@ templates_path = ["_templates"]
 extensions.append("sphinx_material")
 html_theme_path = sphinx_material.html_theme_path()
 html_context = sphinx_material.get_html_context()
-
-# Add sidebar navigation to all pags
-html_context["sidebar_nav"] = {
-    "Getting Started": "https://oras.land/client_libraries/1_python/",
-    "Developer Guide": "getting_started/index.html",
-    "Contributing": "contributing.html",
-    "License": "about/license.html",
-}
 html_theme = "sphinx_material"
 html_css_files = ["custom.css"]
 

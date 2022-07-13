@@ -35,3 +35,18 @@ developer, see the `getting-started`{.interpreted-text role="ref"} page
 hosted here. Would you like to request a feature or contribute?
 
 [Open an issue](https://github.com/oras-project/oras-py/issues).
+
+```{toctree}
+:maxdepth: 1
+Getting Started <https://oras.land/client_libraries/1_python/>
+getting_started/index.md
+contributing.md
+about/license
+```
+
+```{toctree}
+:caption: API
+:maxdepth: 1
+source/modules.rst
+```
+

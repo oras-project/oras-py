@@ -1,4 +1,4 @@
-# Developer Guide {#getting_started-developer-guide}
+# Developer Guide
 
 This developer guide includes more complex interactions like
 contributing registry entries and building containers. If you haven\'t
@@ -13,14 +13,9 @@ The documentation is provided in the `docs` folder of the repository,
 and generally most content that you might want to add is under
 `getting_started`. For ease of contribution, files that are likely to be
 updated by contributors (e.g., mostly everything but the module generated files)
- are written in markdown. This means that we cannot use [toctre](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#table-of-contents), which relies on rst (restructured syntax) and the workaround is
- to define the table of contents links (globally) in `conf.py` and then to
-write them into `_templates/globaltoc.html`. It's not as nice as using rst,
-but since Markdown is the chosen language for the oras community we support
-that and want to make it as easy as possible to contribute documentation.
-You shouldn't need to do much other than edit markdown files, and if you
-do need to change the table of contents (or something else advanced) please
-[open an issue](https://github.com/oras-project/oras-py/issues) and ask for help!
+ are written in markdown. If you need to use [toctree](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#table-of-contents) you should not use extra newlines or spaces (see index.md files for exampls).
+Markdown is the chosen language for the oras community, and this is why we chose to
+use it over restructured syntax - it makes it easier to contribute documentation.
 
 
 ### Install Dependencies and Build

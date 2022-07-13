@@ -9,5 +9,8 @@ user guide (and more detailed examples) can be found here. If you have
 any questions or issues, please [let us
 know](https://github.com/oras-project/oras-py/issues)
 
-- [Installation](installation.md)
-- [Developer Guide](developer-guide.md)
+```{toctree}
+:maxdepth: 3
+installation
+developer-guide
+```
