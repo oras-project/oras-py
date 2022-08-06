@@ -558,6 +558,10 @@
 <span class="sd">        :type container: oras.container.Container or str</span>
 <span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Ensure output directory exists first</span>
+            <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">outdir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+                <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">mkdir_p</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -592,6 +596,8 @@
 
         <span class="c1"># Location should be in the header</span>
         <span class="n">session_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_location</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">session_url</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># PUT to upload blob url</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
@@ -654,6 +660,8 @@
 
         <span class="c1"># Location should be in the header</span>
         <span class="n">session_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_location</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">session_url</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Read the blob in chunks, for each do a patch</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1047,13 +1055,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Jun 23, 2022.
+              Aug 06, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      5.0.2.
+      5.1.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
