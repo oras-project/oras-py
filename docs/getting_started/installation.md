@@ -20,13 +20,13 @@ $ pip install .
 Note that we have several extra modes for installation:
 
 ``` console
-# interactions are done via the docker client instead of manual
+# Interactions are done via the docker client instead of manual
 $ pip install oras[docker]
 
 # Install dependencies for linting and tests
 $ pip install oras[tests]
 
-# install everything
+# Install everything
 $ pip install oras[all]
 ```
 

@@ -9,7 +9,7 @@ to [OCI Conformant](https://github.com/opencontainers/oci-conformance)
 registries. This is a Python client for that.
 
 ``` console
-# install the client
+# Install the client
 $ pip install  oras
 
 # Login to an OCI registry

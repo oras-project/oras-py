@@ -24,7 +24,7 @@ The documentation is built using sphinx, and generally you can install
 dependencies:
 
 ``` console
-# in main oras-py folder (oras-py is needed to build docs)
+# In main oras-py folder (oras-py is needed to build docs)
 $ pip install -e .
 
 # Now docs dependencies
@@ -37,7 +37,7 @@ make html
 
 ### Preview Documentation
 
-After `make html` you can cd into `_build/html` and start a local web
+After `make html` you can enter into `_build/html` and start a local web
 server to preview:
 
 ``` console
