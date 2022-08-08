@@ -36,8 +36,8 @@ Or in development mode, add `-e`:
 $ pip install -e .
 ```
 
-Development mode means that the install is done from where you\'ve
-cloned the library, so any changes you make are immediately \"live\" for
+Development mode means that the install is done from where you've
+cloned the library, so any changes you make are immediately "live" for
 testing.
 
 ## Docker Container

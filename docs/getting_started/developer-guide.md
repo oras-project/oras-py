@@ -1,7 +1,7 @@
 # Developer Guide
 
 This developer guide includes more complex interactions like
-contributing registry entries and building containers. If you haven\'t
+contributing registry entries and building containers. If you haven't
 read `getting_started-installation`{.interpreted-text role="ref"} you
 should do that first. If you want to see a more general user guide, look
 at the [oras.land Python
@@ -105,7 +105,7 @@ Specifically the function `self.get_blob` will allow you to do that.
 ### Push Interactions
 
 You might instead want to have a custom lookup of archive paths and
-media types. Let\'s say we start with this lookup, `archives`:
+media types. Let's say we start with this lookup, `archives`:
 
 ``` python
 archives = {
@@ -124,7 +124,7 @@ Registry provider to handle:
 
 This example is similar to what the `oras.provider.Registry` provides,
 but we are allowing better customization of content types and overriding
-the default \"push\" function.
+the default "push" function.
 
 ``` python
 import oras.oci
