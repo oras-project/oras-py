@@ -1,9 +1,6 @@
 name: Build and Deploy Container
 
 on:
-  schedule:
-    - cron: 0 3 * * *
-
   # Publish packages on release
   release:
     types: [published] 
