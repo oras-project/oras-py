@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="ie=edge" http-equiv="x-ua-compatible"/>
   <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
@@ -282,6 +282,30 @@
                 <nav class="md-nav">
                  <ul class="md-nav__list">
                   <li class="md-nav__item">
+                   <a class="md-nav__link" href="#documentation">
+                    Documentation
+                   </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#install-dependencies-and-build">
+                       Install Dependencies and Build
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#preview-documentation">
+                       Preview Documentation
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#docstrings">
+                       Docstrings
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
+                  </li>
+                  <li class="md-nav__item">
                    <a class="md-nav__link" href="#creating-a-custom-client">
                     Creating a Custom Client
                    </a>
@@ -314,7 +338,7 @@
                 </nav>
                </li>
                <li class="md-nav__item">
-                <a class="md-nav__extra_link" href="../_sources/getting_started/developer-guide.rst.txt">
+                <a class="md-nav__extra_link" href="../_sources/getting_started/developer-guide.md.txt">
                  Show Source
                 </a>
                </li>
@@ -365,6 +389,30 @@
            <nav class="md-nav">
             <ul class="md-nav__list">
              <li class="md-nav__item">
+              <a class="md-nav__link" href="#documentation">
+               Documentation
+              </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#install-dependencies-and-build">
+                  Install Dependencies and Build
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#preview-documentation">
+                  Preview Documentation
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#docstrings">
+                  Docstrings
+                 </a>
+                </li>
+               </ul>
+              </nav>
+             </li>
+             <li class="md-nav__item">
               <a class="md-nav__link" href="#creating-a-custom-client">
                Creating a Custom Client
               </a>
@@ -397,7 +445,7 @@
            </nav>
           </li>
           <li class="md-nav__item">
-           <a class="md-nav__extra_link" href="../_sources/getting_started/developer-guide.rst.txt">
+           <a class="md-nav__extra_link" href="../_sources/getting_started/developer-guide.md.txt">
             Show Source
            </a>
           </li>
@@ -411,8 +459,6 @@
      <div class="md-content">
       <article class="md-content__inner md-typeset" role="main">
        <section id="developer-guide">
-        <span id="getting-started-developer-guide">
-        </span>
         <h1 id="getting-started-developer-guide--page-root">
          Developer Guide
          <a class="headerlink" href="#getting-started-developer-guide--page-root" title="Permalink to this heading">
@@ -420,19 +466,151 @@
          </a>
         </h1>
         <p>
-         This developer guide includes more complex interactions like contributing
-registry entries and building containers. If you haven’t read
-         <a class="reference internal" href="installation.html#getting-started-installation">
-          <span class="std std-ref">
-           Installation
+         This developer guide includes more complex interactions like
+contributing registry entries and building containers. If you haven’t
+read
+         <code class="docutils literal notranslate">
+          <span class="pre">
+           getting_started-installation
           </span>
-         </a>
-         you should do that first. If you want to see a more general user guide, look at the
+         </code>
+         {.interpreted-text role=”ref”} you
+should do that first. If you want to see a more general user guide, look
+at the
          <a class="reference external" href="https://oras.land/client_libraries/1_python/">
-          oras.land Python guide
+          oras.land Python
+guide
          </a>
          .
         </p>
+        <section id="documentation">
+         <h2 id="documentation">
+          Documentation
+          <a class="headerlink" href="#documentation" title="Permalink to this heading">
+           ¶
+          </a>
+         </h2>
+         <p>
+          The documentation is provided in the
+          <code class="docutils literal notranslate">
+           <span class="pre">
+            docs
+           </span>
+          </code>
+          folder of the repository,
+and generally most content that you might want to add is under
+          <code class="docutils literal notranslate">
+           <span class="pre">
+            getting_started
+           </span>
+          </code>
+          . For ease of contribution, files that are likely to be
+updated by contributors (e.g., mostly everything but the module generated files)
+are written in markdown. If you need to use
+          <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#table-of-contents">
+           toctree
+          </a>
+          you should not use extra newlines or spaces (see index.md files for exampls).
+Markdown is the chosen language for the oras community, and this is why we chose to
+use it over restructured syntax - it makes it easier to contribute documentation.
+         </p>
+         <section id="install-dependencies-and-build">
+          <h3 id="install-dependencies-and-build">
+           Install Dependencies and Build
+           <a class="headerlink" href="#install-dependencies-and-build" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           The documentation is built using sphinx, and generally you can install
+dependencies:
+          </p>
+          <div class="highlight-console notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="gp"># </span>In main oras-py folder <span class="o">(</span>oras-py is needed to build docs<span class="o">)</span>
+<span class="gp">$ </span>pip install -e .
+
+<span class="gp"># </span>Now docs dependencies
+<span class="go">cd docs</span>
+<span class="go">pip install -r requrements.txt</span>
+
+<span class="gp"># </span>Build the docs into _build/html
+<span class="go">make html</span>
+</pre>
+           </div>
+          </div>
+         </section>
+         <section id="preview-documentation">
+          <h3 id="preview-documentation">
+           Preview Documentation
+           <a class="headerlink" href="#preview-documentation" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           After
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             make
+            </span>
+            <span class="pre">
+             html
+            </span>
+           </code>
+           you can enter into
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             _build/html
+            </span>
+           </code>
+           and start a local web
+server to preview:
+          </p>
+          <div class="highlight-console notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="gp">$ </span>python -m http.server <span class="m">9999</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           And open your browser to
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             localhost:9999
+            </span>
+           </code>
+          </p>
+         </section>
+         <section id="docstrings">
+          <h3 id="docstrings">
+           Docstrings
+           <a class="headerlink" href="#docstrings" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           To render our Python API into the docs, we keep an updated restructured
+syntax in the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             docs/source
+            </span>
+           </code>
+           folder that you can update on demand as
+follows:
+          </p>
+          <div class="highlight-console notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="gp">$ </span>./apidoc.sh
+</pre>
+           </div>
+          </div>
+          <p>
+           This should only be required if you change any docstrings or add/remove
+functions from oras-py source code.
+          </p>
+         </section>
+        </section>
         <section id="creating-a-custom-client">
          <h2 id="creating-a-custom-client">
           Creating a Custom Client
@@ -474,7 +652,8 @@ registry entries and building containers. If you haven’t read
            </a>
           </h3>
           <p>
-           Your most basic registry (that will mimic the default can be created like this:
+           Your most basic registry (that will mimic the default can be created
+like this:
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -494,8 +673,8 @@ registry entries and building containers. If you haven’t read
            </a>
           </h3>
           <p>
-           You can imagine having a custom function that will retrieve a manifest or blob
-and do custom operations on it.
+           You can imagine having a custom function that will retrieve a manifest
+or blob and do custom operations on it.
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -533,8 +712,8 @@ and do custom operations on it.
            </a>
           </h3>
           <p>
-           You might instead want to have a custom lookup of archive paths and media types.
-Let’s say we start with this lookup,
+           You might instead want to have a custom lookup of archive paths and
+media types. Let’s say we start with this lookup,
            <code class="docutils literal notranslate">
             <span class="pre">
              archives
@@ -552,8 +731,9 @@ Let’s say we start with this lookup,
            </div>
           </div>
           <p>
-           Note that since paths are unique (and media types are not) we use that as the dictionary key.
-Here is how we might then create a custom Registry provider to handle:
+           Note that since paths are unique (and media types are not) we use that
+as the dictionary key. Here is how we might then create a custom
+Registry provider to handle:
           </p>
           <ol class="arabic simple">
            <li>
@@ -580,8 +760,8 @@ Here is how we might then create a custom Registry provider to handle:
             </span>
            </code>
            provides,
-but we are allowing better customization of content types and overriding the
-default “push” function.
+but we are allowing better customization of content types and overriding
+the default “push” function.
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -665,16 +845,18 @@ default “push” function.
            </div>
           </div>
           <p>
-           The only difference between the above and the provided provider is that we are allowing
-more customization of the layers. The default oras client just assumes you have either
-a single layer or a compressed layer. Note that the decorator
+           The only difference between the above and the provided provider is that
+we are allowing more customization of the layers. The default oras
+client just assumes you have either a single layer or a compressed
+layer. Note that the decorator
            <code class="docutils literal notranslate">
             <span class="pre">
              ensure_container
             </span>
            </code>
-           simply ensures that the target you provide as the first argument is properly parsed
-for the remainder of the function.
+           simply ensures that
+the target you provide as the first argument is properly parsed for the
+remainder of the function.
           </p>
          </section>
          <section id="instantiate">
@@ -685,8 +867,8 @@ for the remainder of the function.
            </a>
           </h3>
           <p>
-           For both of the examples above, you might do the following.
-First, some registries may require authentiation:
+           For both of the examples above, you might do the following. First, some
+registries may require authentiation:
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -700,9 +882,9 @@ First, some registries may require authentiation:
            </div>
           </div>
           <p>
-           And then you can run your custom functions after doing that, either inspecting
-a particular unique resource identifier or using your lookup of archives (paths
-and media types) to push:
+           And then you can run your custom functions after doing that, either
+inspecting a particular unique resource identifier or using your lookup
+of archives (paths and media types) to push:
           </p>
           <div class="highlight-python notranslate">
            <div class="highlight">
@@ -771,7 +953,7 @@ and media types) to push:
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 14, 2022.
+              Aug 15, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
