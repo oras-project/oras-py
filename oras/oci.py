@@ -8,10 +8,10 @@ from typing import Dict, Optional, Tuple
 
 import jsonschema
 
-from oras.logger import logger
 import oras.defaults
 import oras.schemas
 import oras.utils
+from oras.logger import logger
 
 EmptyManifest = {
     "schemaVersion": 2,

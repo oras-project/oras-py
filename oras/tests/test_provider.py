@@ -6,8 +6,9 @@ import os
 import sys
 
 import pytest
-import oras.provider
+
 import oras.client
+import oras.provider
 import oras.utils
 
 here = os.path.abspath(os.path.dirname(__file__))

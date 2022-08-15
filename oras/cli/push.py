@@ -2,10 +2,11 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-from oras.logger import logger
+import os
+
 import oras.client
 import oras.utils
-import os
+from oras.logger import logger
 
 
 def load_manifest_annotations(annotation_file, annotations):
