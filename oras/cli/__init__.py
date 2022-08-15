@@ -89,7 +89,12 @@ def get_parser():
     pull.add_argument("--manifest-config-ref", help="manifest config reference")
 
     push = subparsers.add_parser("push", description=help.push_help)
-    push.add_argument("--manifest-annotations", help="manifest annotation file")
+    push.add_argument("--annotation-file", help="manifest annotation file")
+    push.add_argument(
+        "--annotation",
+        help="single manifest annotation (e.g., key=value)",
+        action="append",
+    )
     push.add_argument("--manifest-config", help="manifest config file")
     push.add_argument(
         "--disable-path-validation",

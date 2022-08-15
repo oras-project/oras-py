@@ -8,6 +8,7 @@ from typing import Dict, Optional, Tuple
 
 import jsonschema
 
+from oras.logger import logger
 import oras.defaults
 import oras.schemas
 import oras.utils
@@ -30,9 +31,19 @@ class Annotations:
         self.lookup = {}
         self.load(filename)
 
+    def add(self, section, key, value):
+        """
+        Add key/value pairs to a named section.
+        """
+        if section not in self.lookup:
+            self.lookup[section] = {}
+        self.lookup[section][key] = value
+
     def load(self, filename: str):
         if filename and os.path.exists(filename):
             self.lookup = oras.utils.read_json(filename)
+        if filename and not os.path.exists(filename):
+            logger.exit(f"Annotation file {filename} does not exist.")
 
     def get_annotations(self, section: str) -> dict:
         """
