@@ -391,7 +391,12 @@
     <span class="n">pull</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--manifest-config-ref"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"manifest config reference"</span><span class="p">)</span>
 
     <span class="n">push</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"push"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">help</span><span class="o">.</span><span class="n">push_help</span><span class="p">)</span>
-    <span class="n">push</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--manifest-annotations"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"manifest annotation file"</span><span class="p">)</span>
+    <span class="n">push</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--annotation-file"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"manifest annotation file"</span><span class="p">)</span>
+    <span class="n">push</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--annotation"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"single manifest annotation (e.g., key=value)"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"append"</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">push</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--manifest-config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"manifest config file"</span><span class="p">)</span>
     <span class="n">push</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">"--disable-path-validation"</span><span class="p">,</span>
@@ -525,7 +530,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

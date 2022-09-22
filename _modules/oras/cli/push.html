@@ -309,19 +309,56 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
+
 <span class="kn">import</span> <span class="nn">oras.client</span>
+<span class="kn">import</span> <span class="nn">oras.utils</span>
+<span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="load_manifest_annotations"><a class="viewcode-back" href="../../../source/oras.cli.html#oras.cli.push.load_manifest_annotations">[docs]</a><span class="k">def</span> <span class="nf">load_manifest_annotations</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Disambiguate annotations.</span>
+<span class="sd">    """</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotations</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">annotation_file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Annotation file </span><span class="si">{</span><span class="n">annotation_file</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">annotation_file</span><span class="p">:</span>
+        <span class="n">lookup</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">)</span>
+
+        <span class="c1"># not allowed to define both, mirroring oras-go</span>
+        <span class="k">if</span> <span class="s2">"$manifest"</span> <span class="ow">in</span> <span class="n">lookup</span> <span class="ow">and</span> <span class="n">lookup</span><span class="p">[</span><span class="s2">"$manifest"</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                <span class="s2">"`--annotation` and `--annotation-file` with $manifest cannot be both specified."</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Finally, parse the list of annotations</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">annot</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"="</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annot</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                <span class="s2">"Annotation </span><span class="si">{annot}</span><span class="s2"> invalid format, needs to be key=value pair."</span>
+            <span class="p">)</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">annot</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"="</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">parsed</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">parsed</span></div>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../source/oras.cli.html#oras.cli.push.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">extra</span><span class="p">,</span> <span class="n">subparser</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    A wrapper around an oras client push.</span>
 <span class="sd">    """</span>
+    <span class="n">manifest_annotations</span> <span class="o">=</span> <span class="n">load_manifest_annotations</span><span class="p">(</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">annotation_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">annotation</span>
+    <span class="p">)</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">insecure</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span>
         <span class="n">config_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
         <span class="n">disable_path_validation</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">disable_path_validation</span><span class="p">,</span>
         <span class="n">files</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filerefs</span><span class="p">,</span>
         <span class="n">manifest_config</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">manifest_config</span><span class="p">,</span>
+        <span class="n">annotation_file</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">annotation_file</span><span class="p">,</span>
+        <span class="n">manifest_annotations</span><span class="o">=</span><span class="n">manifest_annotations</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
         <span class="n">password</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
         <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span>
@@ -346,7 +383,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

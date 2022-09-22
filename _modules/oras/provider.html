@@ -751,8 +751,10 @@
 <span class="sd">        :type insecure: bool</span>
 <span class="sd">        :param manifest_config: content type</span>
 <span class="sd">        :type manifest_config: str</span>
-<span class="sd">        :param manifest_annotations: manifest annotations file</span>
-<span class="sd">        :type manifest_annotations: str</span>
+<span class="sd">        :param annotation_file: manifest annotations file</span>
+<span class="sd">        :type annotation_file: str</span>
+<span class="sd">        :param manifest_annotations: manifest annotations</span>
+<span class="sd">        :type manifest_annotations: dict</span>
 <span class="sd">        :param username: username for basic auth</span>
 <span class="sd">        :type username: str</span>
 <span class="sd">        :param password: password for basic auth</span>
@@ -769,8 +771,8 @@
         <span class="c1"># Prepare a new manifest</span>
         <span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
 
-        <span class="c1"># A lookup of annotations we can add</span>
-        <span class="n">annotset</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Annotations</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"manifest_annotations"</span><span class="p">))</span>
+        <span class="c1"># A lookup of annotations we can add (to blobs or manifest)</span>
+        <span class="n">annotset</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Annotations</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotation_file"</span><span class="p">))</span>
 
         <span class="c1"># Upload files as blobs</span>
         <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"files"</span><span class="p">,</span> <span class="p">[]):</span>
@@ -814,7 +816,13 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
 
         <span class="c1"># Add annotations to the manifest, if provided</span>
-        <span class="n">manifest_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$manifest"</span><span class="p">)</span>
+        <span class="n">manifest_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$manifest"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c1"># Custom manifest annotations from client key=value pairs</span>
+        <span class="c1"># These over-ride any potentially provided from file</span>
+        <span class="n">custom_annots</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"manifest_annotations"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">custom_annots</span><span class="p">:</span>
+            <span class="n">manifest_annots</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">custom_annots</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">manifest_annots</span><span class="p">:</span>
             <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">manifest_annots</span>
 
@@ -1055,7 +1063,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

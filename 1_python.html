@@ -641,6 +641,92 @@ Successfully pushed localhost:5000/dinosaur/artifact:v1
 </pre>
            </div>
           </div>
+          <p>
+           You can also provide an annotations file, which should be a lookup to an annotation set
+that corresponds with a particular file (absolute or relative path) or one of
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             $config
+            </span>
+           </code>
+           or
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             $manifest
+            </span>
+           </code>
+           . E.g.,:
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="p">{</span><span class="s2">"$manifest"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"manifest_annotation_key"</span><span class="p">,</span> <span class="s2">"manifest_annotation_value"</span><span class="p">},</span>
+ <span class="s2">"$config"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"config_annotation_key"</span><span class="p">,</span> <span class="s2">"config_annotation_value"</span><span class="p">},</span>
+ <span class="s2">"blob.tar.gz"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"blob_annotation_key"</span><span class="p">,</span> <span class="s2">"blob_annotation_value"</span><span class="p">}}</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           Given this file,
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             annotations.json
+            </span>
+           </code>
+           you would provide to push as follows:
+          </p>
+          <div class="highlight-bash notranslate">
+           <div class="highlight">
+            <pre><span></span>$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure <span class="se">\</span>
+--annotation-file ./annotations.json <span class="se">\</span>
+--manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
+./artifact.txt
+</pre>
+           </div>
+          </div>
+          <p>
+           As of version 0.0.14, you can also specify “one off” manifest annotations (e.g.,
+for the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             $manifest
+            </span>
+           </code>
+           group). However, you are not allowed to define a
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             $manifest
+            </span>
+           </code>
+           key
+and one-off annotations (choose one or the other). Note that you can provide as many as you
+like, and each much be in the format
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             --annotation
+            </span>
+            <span class="pre">
+             key1=value1
+            </span>
+           </code>
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             --annotation
+            </span>
+            <span class="pre">
+             key2=value2
+            </span>
+           </code>
+           :
+          </p>
+          <div class="highlight-bash notranslate">
+           <div class="highlight">
+            <pre><span></span>$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure <span class="se">\</span>
+--annotation <span class="nv">key1</span><span class="o">=</span>value1 --annotation <span class="nv">key2</span><span class="o">=</span>value2 <span class="se">\</span>
+--manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
+./artifact.txt
+</pre>
+           </div>
+          </div>
          </section>
          <section id="pull">
           <h3 id="pull">
@@ -794,7 +880,7 @@ see the
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

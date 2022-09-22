@@ -313,6 +313,7 @@
 <span class="kn">import</span> <span class="nn">oras.defaults</span>
 <span class="kn">import</span> <span class="nn">oras.schemas</span>
 <span class="kn">import</span> <span class="nn">oras.utils</span>
+<span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 
 <span class="n">EmptyManifest</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"schemaVersion"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
@@ -332,9 +333,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
+<div class="viewcode-block" id="Annotations.add"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Add key/value pairs to a named section.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">section</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
 <div class="viewcode-block" id="Annotations.load"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Annotation file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Annotations.get_annotations"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.get_annotations">[docs]</a>    <span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -462,7 +473,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

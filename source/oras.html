@@ -4961,6 +4961,59 @@ oras.
             Create a new set of annotations
            </p>
            <dl class="py method">
+            <dt class="sig sig-object py" id="oras.oci.Annotations.add">
+             <span class="sig-name descname">
+              <span class="pre">
+               add
+              </span>
+             </span>
+             <span class="sig-paren">
+              (
+             </span>
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                section
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                key
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                value
+               </span>
+              </span>
+             </em>
+             <span class="sig-paren">
+              )
+             </span>
+             <a class="reference internal" href="../_modules/oras/oci.html#Annotations.add">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
+             <a class="headerlink" href="#oras.oci.Annotations.add" title="Permalink to this definition">
+              ¶
+             </a>
+            </dt>
+            <dd>
+             <p>
+              Add key/value pairs to a named section.
+             </p>
+            </dd>
+           </dl>
+           <dl class="py method">
             <dt class="sig sig-object py" id="oras.oci.Annotations.get_annotations">
              <span class="sig-name descname">
               <span class="pre">
@@ -7082,13 +7135,25 @@ Given a response, look for a Www-Authenticate header to parse.
                 <li>
                  <p>
                   <strong>
-                   manifest_annotations
+                   annotation_file
                   </strong>
                   (
                   <em>
                    str
                   </em>
                   ) – manifest annotations file
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   manifest_annotations
+                  </strong>
+                  (
+                  <em>
+                   dict
+                  </em>
+                  ) – manifest annotations
                  </p>
                 </li>
                 <li>
@@ -7451,7 +7516,7 @@ Given a response, look for a Www-Authenticate header to parse.
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

@@ -882,6 +882,16 @@ registries may require authentiation:
            </div>
           </div>
           <p>
+           And as a reminder, if you want to deploy a quick local registry (without auth)
+you can do:
+          </p>
+          <div class="highlight-bash notranslate">
+           <div class="highlight">
+            <pre><span></span>$ docker run -it --rm -p <span class="m">5000</span>:5000 ghcr.io/oras-project/registry:latest
+</pre>
+           </div>
+          </div>
+          <p>
            And then you can run your custom functions after doing that, either
 inspecting a particular unique resource identifier or using your lookup
 of archives (paths and media types) to push:
@@ -953,7 +963,7 @@ of archives (paths and media types) to push:
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Aug 15, 2022.
+              Sep 22, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

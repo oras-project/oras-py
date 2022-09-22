@@ -217,13 +217,20 @@ remainder of the function.
 For both of the examples above, you might do the following. First, some
 registries may require authentiation:
 
-``` python
+```python
 # We will need GitHub personal access token or token
 token = os.environ.get("GITHUB_TOKEN")
 user = os.environ.get("GITHUB_USER")
 
 if not token or not user:
     sys.exit("GITHUB_TOKEN and GITHUB_USER are required in the environment.")
+```
+
+And as a reminder, if you want to deploy a quick local registry (without auth)
+you can do:
+
+```bash
+$ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
 ```
 
 And then you can run your custom functions after doing that, either
