@@ -35,13 +35,15 @@ tool to generate a contributors graphic below.
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://vsoch.github.io"><img src="https://avatars.githubusercontent.com/u/814322?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vanessasaurus</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=vsoch" title="Code">💻</a></td>
-    <td align="center"><a href="youtube.com/lachlanevenson"><img src="https://avatars.githubusercontent.com/u/6912984?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lachlan Evenson</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=lachie83" title="Code">💻</a></td>
-    <td align="center"><a href="http://SteveLasker.blog"><img src="https://avatars.githubusercontent.com/u/7647382?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Steve Lasker</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=SteveLasker" title="Code">💻</a></td>
-    <td align="center"><a href="https://dolit.ski"><img src="https://avatars.githubusercontent.com/u/393494?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Josh Dolitsky</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=jdolitsky" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/bridgetkromhout"><img src="https://avatars.githubusercontent.com/u/2104453?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bridget Kromhout</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=bridgetkromhout" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://vsoch.github.io"><img src="https://avatars.githubusercontent.com/u/814322?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vanessasaurus</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=vsoch" title="Code">💻</a></td>
+      <td align="center"><a href="youtube.com/lachlanevenson"><img src="https://avatars.githubusercontent.com/u/6912984?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lachlan Evenson</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=lachie83" title="Code">💻</a></td>
+      <td align="center"><a href="http://SteveLasker.blog"><img src="https://avatars.githubusercontent.com/u/7647382?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Steve Lasker</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=SteveLasker" title="Code">💻</a></td>
+      <td align="center"><a href="https://dolit.ski"><img src="https://avatars.githubusercontent.com/u/393494?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Josh Dolitsky</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=jdolitsky" title="Code">💻</a></td>
+      <td align="center"><a href="https://github.com/bridgetkromhout"><img src="https://avatars.githubusercontent.com/u/2104453?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bridget Kromhout</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=bridgetkromhout" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-restore -->
