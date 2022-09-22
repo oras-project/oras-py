@@ -155,7 +155,11 @@ class Registry:
         return ref.split(":", 1)
 
     def _upload_blob(
-        self, blob: str, container: Union[str, oras.container.Container], layer: dict
+        self,
+        blob: str,
+        container: Union[str, oras.container.Container],
+        layer: dict,
+        do_chunked: bool = False,
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -177,7 +181,9 @@ class Registry:
         self.reset_basic_auth()
 
         # Chunked for large, otherwise POST and PUT
-        if layer["size"] < 1024:
+        # This is currently disabled unless the user asks for it, as
+        # it doesn't seem to work for all registries
+        if not do_chunked:
             response = self._put_upload(blob, container, layer)
         else:
             response = self._chunked_upload(blob, container, layer)
