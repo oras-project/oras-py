@@ -449,8 +449,10 @@ class Registry:
         :type insecure: bool
         :param manifest_config: content type
         :type manifest_config: str
-        :param manifest_annotations: manifest annotations file
-        :type manifest_annotations: str
+        :param annotation_file: manifest annotations file
+        :type annotation_file: str
+        :param manifest_annotations: manifest annotations
+        :type manifest_annotations: dict
         :param username: username for basic auth
         :type username: str
         :param password: password for basic auth
@@ -467,8 +469,8 @@ class Registry:
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
 
-        # A lookup of annotations we can add
-        annotset = oras.oci.Annotations(kwargs.get("manifest_annotations"))
+        # A lookup of annotations we can add (to blobs or manifest)
+        annotset = oras.oci.Annotations(kwargs.get("annotation_file"))
 
         # Upload files as blobs
         for blob in kwargs.get("files", []):
@@ -512,7 +514,13 @@ class Registry:
                 os.remove(blob)
 
         # Add annotations to the manifest, if provided
-        manifest_annots = annotset.get_annotations("$manifest")
+        manifest_annots = annotset.get_annotations("$manifest") or {}
+
+        # Custom manifest annotations from client key=value pairs
+        # These over-ride any potentially provided from file
+        custom_annots = kwargs.get("manifest_annotations")
+        if custom_annots:
+            manifest_annots.update(custom_annots)
         if manifest_annots:
             manifest["annotations"] = manifest_annots
 

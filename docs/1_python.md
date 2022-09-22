@@ -137,6 +137,37 @@ $ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
 Successfully pushed localhost:5000/dinosaur/artifact:v1
 ```
 
+You can also provide an annotations file, which should be a lookup to an annotation set
+that corresponds with a particular file (absolute or relative path) or one of
+`$config` or `$manifest`. E.g.,:
+
+```python
+{"$manifest": {"manifest_annotation_key", "manifest_annotation_value"},
+ "$config": {"config_annotation_key", "config_annotation_value"},
+ "blob.tar.gz": {"blob_annotation_key", "blob_annotation_value"}}
+```
+
+Given this file, `annotations.json` you would provide to push as follows:
+
+```bash
+$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
+--annotation-file ./annotations.json \
+--manifest-config /dev/null:application/vnd.acme.rocket.config \
+./artifact.txt
+```
+
+As of version 0.0.14, you can also specify "one off" manifest annotations (e.g.,
+for the `$manifest` group). However, you are not allowed to define a `$manifest` key
+and one-off annotations (choose one or the other). Note that you can provide as many as you
+like, and each much be in the format `--annotation key1=value1` `--annotation key2=value2`:
+
+```bash
+$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
+--annotation key1=value1 --annotation key2=value2 \
+--manifest-config /dev/null:application/vnd.acme.rocket.config \
+./artifact.txt
+```
+
 ### Pull
 
 
