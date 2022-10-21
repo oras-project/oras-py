@@ -28,13 +28,26 @@ def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     return dest_name
 
 
-def extract_targz(targz: str, outdir: str) -> str:
+def extract_targz(targz: str, outdir: str, numeric_owner: bool = False) -> str:
     """
     Extract a .tar.gz to an output directory.
     """
-    with tarfile.open(targz, "r:gz") as fd:
-        fd.extractall(outdir)
-    return outdir
+    with tarfile.open(targz, "r:gz") as tar:
+        for member in tar.getmembers():
+            member_path = os.path.join(outdir, member.name)
+            if not is_within_directory(outdir, member_path):
+                raise Exception("Attempted Path Traversal in Tar File")
+        tar.extractall(outdir, members=None, numeric_owner=numeric_owner)
+
+
+def is_within_directory(directory: str, target: str) -> bool:
+    """
+    Determine whether a file is within a directory
+    """
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+    return prefix == abs_directory
 
 
 def get_size(path: str) -> int:

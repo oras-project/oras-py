@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - safe extraction for targz extractions (0.0.16)
  - disable chunked upload for now (not supported by all registries) (0.0.15)
  - support for adding one-off annotations for a manifest (0.0.14)
  - add debug if location header returned is empty (0.0.13)
