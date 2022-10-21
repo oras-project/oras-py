@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+  <meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="ie=edge" http-equiv="x-ua-compatible"/>
   <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
@@ -54,6 +54,8 @@
   <script src="../_static/_sphinx_javascript_frameworks_compat.js">
   </script>
   <script src="../_static/doctools.js">
+  </script>
+  <script src="../_static/sphinx_highlight.js">
   </script>
   <script src="../_static/clipboard.min.js">
   </script>
@@ -312,41 +314,843 @@
                    <a class="md-nav__link" href="#module-oras.auth">
                     oras.auth module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.auth.authHeader">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         authHeader
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.auth.get_basic_auth">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         get_basic_auth()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.auth.load_configs">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         load_configs()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.auth.parse_auth_header">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         parse_auth_header()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.client">
                     oras.client module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.client.OrasClient">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         OrasClient
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.get_tags">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.get_tags()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.login">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.login()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.logout">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.logout()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.pull">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.pull()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.push">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.push()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.set_basic_auth">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.set_basic_auth()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.client.OrasClient.version">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            OrasClient.version()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.container">
                     oras.container module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.container.Container">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Container
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.get_blob_url">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.get_blob_url()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.get_manifest_url">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.get_manifest_url()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.parse">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.parse()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.put_manifest_url">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.put_manifest_url()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.tags_url">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.tags_url()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.upload_blob_url">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.upload_blob_url()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.container.Container.uri">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Container.uri
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.decorator">
                     oras.decorator module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.decorator.ensure_container">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         ensure_container
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.defaults">
                     oras.defaults module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.defaults.registry">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         registry
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.defaults.registry.default_v2_registry">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            registry.default_v2_registry
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.defaults.registry.index_hostname">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            registry.index_hostname
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.defaults.registry.index_name">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            registry.index_name
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.defaults.registry.index_server">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            registry.index_server
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.logger">
                     oras.logger module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         ColorizingStreamHandler
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BLACK">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.BLACK
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BLUE">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.BLUE
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BOLD_SEQ">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.BOLD_SEQ
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.COLOR_SEQ">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.COLOR_SEQ
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.CYAN">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.CYAN
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.GREEN">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.GREEN
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.MAGENTA">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.MAGENTA
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.RED">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.RED
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.RESET_SEQ">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.RESET_SEQ
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.WHITE">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.WHITE
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.YELLOW">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.YELLOW
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.can_color_tty">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.can_color_tty()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.colors">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.colors
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.decorate">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.decorate()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.emit">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.emit()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.is_tty">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            ColorizingStreamHandler.is_tty
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.logger.Logger">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Logger
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.cleanup">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.cleanup()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.debug">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.debug()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.error">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.error()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.exit">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.exit()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.handler">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.handler()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.info">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.info()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.location">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.location()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.progress">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.progress()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.set_level">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.set_level()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.set_stream_handler">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.set_stream_handler()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.shellcmd">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.shellcmd()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.text_handler">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.text_handler()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.logger.Logger.warning">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Logger.warning()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.logger.setup_logger">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         setup_logger()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.oci">
                     oras.oci module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.oci.Annotations">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Annotations
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.oci.Annotations.add">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Annotations.add()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.oci.Annotations.get_annotations">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Annotations.get_annotations()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.oci.Annotations.load">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Annotations.load()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.oci.Layer">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Layer
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.oci.Layer.set_media_type">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Layer.set_media_type()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.oci.Layer.to_dict">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Layer.to_dict()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.oci.ManifestConfig">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         ManifestConfig()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.oci.NewLayer">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         NewLayer()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.oci.NewManifest">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         NewManifest()
+                        </span>
+                       </code>
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.provider">
                     oras.provider module
                    </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.provider.Registry">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Registry
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.authenticate_request">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.authenticate_request()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.do_request">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.do_request()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.get_blob">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.get_blob()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.get_container">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.get_container()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.get_manifest">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.get_manifest()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.get_tags">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.get_tags()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.load_configs">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.load_configs()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.logout">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.logout()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.pull">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.pull()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.push">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.push()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.reset_basic_auth">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.reset_basic_auth()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.set_basic_auth">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.set_basic_auth()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Registry.set_header">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Registry.set_header()
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
+                    </ul>
+                   </nav>
                   </li>
                   <li class="md-nav__item">
                    <a class="md-nav__link" href="#module-oras.schemas">
@@ -409,41 +1213,843 @@
               <a class="md-nav__link" href="#module-oras.auth">
                oras.auth module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.auth.authHeader">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    authHeader
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.auth.get_basic_auth">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    get_basic_auth()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.auth.load_configs">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    load_configs()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.auth.parse_auth_header">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    parse_auth_header()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.client">
                oras.client module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.client.OrasClient">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.get_tags">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.get_tags()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.login">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.login()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.logout">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.logout()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.pull">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.pull()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.push">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.push()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.set_basic_auth">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.set_basic_auth()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.client.OrasClient.version">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       OrasClient.version()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.container">
                oras.container module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.container.Container">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.get_blob_url">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.get_blob_url()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.get_manifest_url">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.get_manifest_url()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.parse">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.parse()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.put_manifest_url">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.put_manifest_url()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.tags_url">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.tags_url()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.upload_blob_url">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.upload_blob_url()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.container.Container.uri">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Container.uri
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.decorator">
                oras.decorator module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.decorator.ensure_container">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ensure_container
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.defaults">
                oras.defaults module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.defaults.registry">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    registry
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.defaults.registry.default_v2_registry">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       registry.default_v2_registry
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.defaults.registry.index_hostname">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       registry.index_hostname
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.defaults.registry.index_name">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       registry.index_name
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.defaults.registry.index_server">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       registry.index_server
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.logger">
                oras.logger module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BLACK">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.BLACK
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BLUE">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.BLUE
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.BOLD_SEQ">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.BOLD_SEQ
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.COLOR_SEQ">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.COLOR_SEQ
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.CYAN">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.CYAN
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.GREEN">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.GREEN
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.MAGENTA">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.MAGENTA
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.RED">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.RED
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.RESET_SEQ">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.RESET_SEQ
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.WHITE">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.WHITE
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.YELLOW">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.YELLOW
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.can_color_tty">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.can_color_tty()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.colors">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.colors
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.decorate">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.decorate()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.emit">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.emit()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.ColorizingStreamHandler.is_tty">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       ColorizingStreamHandler.is_tty
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.logger.Logger">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.cleanup">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.cleanup()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.debug">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.debug()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.error">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.error()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.exit">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.exit()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.handler">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.handler()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.info">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.info()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.location">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.location()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.progress">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.progress()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.set_level">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.set_level()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.set_stream_handler">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.set_stream_handler()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.shellcmd">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.shellcmd()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.text_handler">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.text_handler()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.logger.Logger.warning">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Logger.warning()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.logger.setup_logger">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    setup_logger()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.oci">
                oras.oci module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.oci.Annotations">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Annotations
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.oci.Annotations.add">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Annotations.add()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.oci.Annotations.get_annotations">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Annotations.get_annotations()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.oci.Annotations.load">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Annotations.load()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.oci.Layer">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Layer
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.oci.Layer.set_media_type">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Layer.set_media_type()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.oci.Layer.to_dict">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Layer.to_dict()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.oci.ManifestConfig">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ManifestConfig()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.oci.NewLayer">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    NewLayer()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.oci.NewManifest">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    NewManifest()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.provider">
                oras.provider module
               </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.provider.Registry">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.authenticate_request">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.authenticate_request()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.do_request">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.do_request()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.get_blob">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.get_blob()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.get_container">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.get_container()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.get_manifest">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.get_manifest()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.get_tags">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.get_tags()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.load_configs">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.load_configs()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.logout">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.logout()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.pull">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.pull()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.push">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.push()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.reset_basic_auth">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.reset_basic_auth()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.set_basic_auth">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.set_basic_auth()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Registry.set_header">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Registry.set_header()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+               </ul>
+              </nav>
              </li>
              <li class="md-nav__item">
               <a class="md-nav__link" href="#module-oras.schemas">
@@ -512,36 +2118,167 @@
               <a class="reference internal" href="oras.cli.html#module-oras.cli.login">
                oras.cli.login module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.login.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli.logout">
                oras.cli.logout module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.logout.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli.pull">
                oras.cli.pull module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.pull.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli.push">
                oras.cli.push module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.push.load_manifest_annotations">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   load_manifest_annotations()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.push.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli.shell">
                oras.cli.shell module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.shell.bpython">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   bpython()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.shell.create_client">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   create_client()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.shell.ipython">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   ipython()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.shell.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.shell.python">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   python()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli.version">
                oras.cli.version module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.version.main">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   main()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.cli.html#module-oras.cli">
                Module contents
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.get_parser">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_parser()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.cli.html#oras.cli.run">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   run()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
             </ul>
            </li>
@@ -559,6 +2296,46 @@
               <a class="reference internal" href="oras.main.html#module-oras.main.login">
                oras.main.login module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.main.html#oras.main.login.DockerClient">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   DockerClient
+                  </span>
+                 </code>
+                </a>
+                <ul>
+                 <li class="toctree-l4">
+                  <a class="reference internal" href="oras.main.html#oras.main.login.DockerClient.login">
+                   <code class="docutils literal notranslate">
+                    <span class="pre">
+                     DockerClient.login()
+                    </span>
+                   </code>
+                  </a>
+                 </li>
+                </ul>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.main.html#oras.main.login.login">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   login()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.main.html#oras.main.login.readline">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   readline()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.main.html#module-oras.main">
@@ -608,11 +2385,195 @@
               <a class="reference internal" href="oras.utils.html#module-oras.utils.fileio">
                oras.utils.fileio module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.copyfile">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   copyfile()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.extract_targz">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   extract_targz()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.get_file_hash">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_file_hash()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.get_size">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_size()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.get_tmpdir">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_tmpdir()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.get_tmpfile">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_tmpfile()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.is_within_directory">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   is_within_directory()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.make_targz">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   make_targz()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.mkdir_p">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   mkdir_p()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.print_json">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   print_json()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.read_file">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   read_file()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.read_in_chunks">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   read_in_chunks()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.read_json">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   read_json()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.recursive_find">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   recursive_find()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.write_file">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   write_file()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.fileio.write_json">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   write_json()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.utils.html#module-oras.utils.request">
                oras.utils.request module
               </a>
+              <ul>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.request.append_url_params">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   append_url_params()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.request.find_docker_config">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   find_docker_config()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.request.get_docker_client">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   get_docker_client()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.utils.html#oras.utils.request.iter_localhosts">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   iter_localhosts()
+                  </span>
+                 </code>
+                </a>
+               </li>
+              </ul>
              </li>
              <li class="toctree-l2">
               <a class="reference internal" href="oras.utils.html#module-oras.utils">
@@ -7516,13 +9477,13 @@ Given a response, look for a Www-Authenticate header to parse.
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Sep 22, 2022.
+              Oct 21, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      5.1.1.
+      5.3.0.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

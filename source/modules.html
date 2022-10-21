@@ -3,7 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+  <meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="ie=edge" http-equiv="x-ua-compatible"/>
   <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
@@ -54,6 +54,8 @@
   <script src="../_static/_sphinx_javascript_frameworks_compat.js">
   </script>
   <script src="../_static/doctools.js">
+  </script>
+  <script src="../_static/sphinx_highlight.js">
   </script>
   <script src="../_static/clipboard.min.js">
   </script>
@@ -476,41 +478,811 @@
              <a class="reference internal" href="oras.html#module-oras.auth">
               oras.auth module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.authHeader">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  authHeader
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.get_basic_auth">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  get_basic_auth()
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.load_configs">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  load_configs()
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.parse_auth_header">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  parse_auth_header()
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.client">
               oras.client module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.client.OrasClient">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  OrasClient
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.get_tags">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.get_tags()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.login">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.login()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.logout">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.logout()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.pull">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.pull()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.push">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.push()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.set_basic_auth">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.set_basic_auth()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.client.OrasClient.version">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    OrasClient.version()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.container">
               oras.container module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.container.Container">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Container
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.get_blob_url">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.get_blob_url()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.get_manifest_url">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.get_manifest_url()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.parse">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.parse()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.put_manifest_url">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.put_manifest_url()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.tags_url">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.tags_url()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.upload_blob_url">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.upload_blob_url()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.container.Container.uri">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Container.uri
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.decorator">
               oras.decorator module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.decorator.ensure_container">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  ensure_container
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.defaults">
               oras.defaults module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.defaults.registry">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  registry
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.defaults.registry.default_v2_registry">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    registry.default_v2_registry
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.defaults.registry.index_hostname">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    registry.index_hostname
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.defaults.registry.index_name">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    registry.index_name
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.defaults.registry.index_server">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    registry.index_server
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.logger">
               oras.logger module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  ColorizingStreamHandler
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.BLACK">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.BLACK
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.BLUE">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.BLUE
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.BOLD_SEQ">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.BOLD_SEQ
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.COLOR_SEQ">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.COLOR_SEQ
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.CYAN">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.CYAN
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.GREEN">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.GREEN
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.MAGENTA">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.MAGENTA
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.RED">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.RED
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.RESET_SEQ">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.RESET_SEQ
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.WHITE">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.WHITE
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.YELLOW">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.YELLOW
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.can_color_tty">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.can_color_tty()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.colors">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.colors
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.decorate">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.decorate()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.emit">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.emit()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.ColorizingStreamHandler.is_tty">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    ColorizingStreamHandler.is_tty
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.logger.Logger">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Logger
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.cleanup">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.cleanup()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.debug">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.debug()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.error">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.error()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.exit">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.exit()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.handler">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.handler()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.info">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.info()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.location">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.location()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.progress">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.progress()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.set_level">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.set_level()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.set_stream_handler">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.set_stream_handler()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.shellcmd">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.shellcmd()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.text_handler">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.text_handler()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.logger.Logger.warning">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Logger.warning()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.logger.setup_logger">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  setup_logger()
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.oci">
               oras.oci module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.oci.Annotations">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Annotations
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.oci.Annotations.add">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Annotations.add()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.oci.Annotations.get_annotations">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Annotations.get_annotations()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.oci.Annotations.load">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Annotations.load()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.oci.Layer">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Layer
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.oci.Layer.set_media_type">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Layer.set_media_type()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.oci.Layer.to_dict">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Layer.to_dict()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.oci.ManifestConfig">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  ManifestConfig()
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.oci.NewLayer">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  NewLayer()
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.oci.NewManifest">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  NewManifest()
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.provider">
               oras.provider module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.provider.Registry">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Registry
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.authenticate_request">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.authenticate_request()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.do_request">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.do_request()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_blob">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_blob()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_container">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_container()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_manifest">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_manifest()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_tags">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_tags()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.load_configs">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.load_configs()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.logout">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.logout()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.pull">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.pull()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.push">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.push()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.reset_basic_auth">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.reset_basic_auth()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.set_basic_auth">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.set_basic_auth()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.set_header">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.set_header()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.schemas">
@@ -577,13 +1349,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Sep 22, 2022.
+              Oct 21, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      5.1.1.
+      5.3.0.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

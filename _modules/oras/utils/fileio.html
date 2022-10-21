@@ -54,6 +54,8 @@
   </script>
   <script src="../../../_static/doctools.js">
   </script>
+  <script src="../../../_static/sphinx_highlight.js">
+  </script>
   <script src="../../../_static/clipboard.min.js">
   </script>
   <script src="../../../_static/copybutton.js">
@@ -330,13 +332,26 @@
     <span class="k">return</span> <span class="n">dest_name</span></div>
 
 
-<div class="viewcode-block" id="extract_targz"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.extract_targz">[docs]</a><span class="k">def</span> <span class="nf">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="extract_targz"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.extract_targz">[docs]</a><span class="k">def</span> <span class="nf">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numeric_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Extract a .tar.gz to an output directory.</span>
 <span class="sd">    """</span>
-    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">targz</span><span class="p">,</span> <span class="s2">"r:gz"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
-        <span class="n">fd</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">outdir</span></div>
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">targz</span><span class="p">,</span> <span class="s2">"r:gz"</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">tar</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+            <span class="n">member_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_within_directory</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">member_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Attempted Path Traversal in Tar File"</span><span class="p">)</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numeric_owner</span><span class="o">=</span><span class="n">numeric_owner</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_within_directory"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.is_within_directory">[docs]</a><span class="k">def</span> <span class="nf">is_within_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Determine whether a file is within a directory</span>
+<span class="sd">    """</span>
+    <span class="n">abs_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">abs_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonprefix</span><span class="p">([</span><span class="n">abs_directory</span><span class="p">,</span> <span class="n">abs_target</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">prefix</span> <span class="o">==</span> <span class="n">abs_directory</span></div>
 
 
 <div class="viewcode-block" id="get_size"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_size">[docs]</a><span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -589,13 +604,13 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Sep 22, 2022.
+              Oct 21, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      5.1.1.
+      5.3.0.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
