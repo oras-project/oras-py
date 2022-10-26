@@ -64,6 +64,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/2104453?v=4"
             ]
+        },
+        {
+            "login": "magelisk",
+            "name": "Matt Warner",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/magelisk",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/18201513?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

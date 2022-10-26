@@ -22,5 +22,10 @@
         "name": "Lachlan Evenson",
         "bio": "Cloud builder",
         "blog": "youtube.com/lachlanevenson"
+    },
+    "magelisk": {
+        "name": "Matt Warner",
+        "bio": "Matt Warner",
+        "blog": "https://github.com/magelisk"
     }
 }

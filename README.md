@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png](https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png)
@@ -42,6 +42,7 @@ tool to generate a contributors graphic below.
       <td align="center" valign="top" width="14.28%"><a href="http://SteveLasker.blog"><img src="https://avatars.githubusercontent.com/u/7647382?v=4?s=100" width="100px;" alt="Steve Lasker"/><br /><sub><b>Steve Lasker</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=SteveLasker" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://dolit.ski"><img src="https://avatars.githubusercontent.com/u/393494?v=4?s=100" width="100px;" alt="Josh Dolitsky"/><br /><sub><b>Josh Dolitsky</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=jdolitsky" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bridgetkromhout"><img src="https://avatars.githubusercontent.com/u/2104453?v=4?s=100" width="100px;" alt="Bridget Kromhout"/><br /><sub><b>Bridget Kromhout</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=bridgetkromhout" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/magelisk"><img src="https://avatars.githubusercontent.com/u/18201513?v=4?s=100" width="100px;" alt="Matt Warner"/><br /><sub><b>Matt Warner</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=magelisk" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
