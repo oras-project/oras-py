@@ -25,4 +25,3 @@ The versions coincide with releases on pip. Only major versions will be released
  - Adding authenticated login tests, fixing bugs with login/logout (0.0.11)
  - First draft release with basic functionality (0.0.1)
  - Initial skeleton of project (0.0.0)
-

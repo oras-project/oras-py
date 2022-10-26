@@ -10,7 +10,7 @@ export ORAS_REGISTRY=${ORAS_HOST}:${ORAS_PORT}
 export ORAS_USER=myuser
 export ORAS_PASS=mypass
 
-if [ ! -z ${with_auth} ]; then 
+if [ ! -z ${with_auth} ]; then
     export ORAS_AUTH=true
 fi
 

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script performs linting, and was used before pre-commit was added 10/25.
+# It is included in case we want to use it in another context.
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR/../
 

@@ -8,34 +8,34 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: "gh-pages"
+    - uses: actions/checkout@v3
+      with:
+        ref: gh-pages
 
-      - name: Create conda environment
-        run: conda create --quiet -c conda-forge --name oraspy
+    - name: Create conda environment
+      run: conda create --quiet -c conda-forge --name oraspy
 
-      - name: Install Oras and Dependencies
-        run: |
-          export PATH="/usr/share/miniconda/bin:$PATH"
-          root=$PWD
-          source activate oraspy
-          cd /tmp
-          git clone https://github.com/oras-project/oras-py
-          cd oras-py
-          pip install -e .
-          cd docs/
-          pip install -r requirements.txt
-          make html
-          cp -R $root/.git _build/html/.git
-          rm -rf $root
-          mv _build/html $root
-          cd $root
-          touch .nojekyll
-          ls
+    - name: Install Oras and Dependencies
+      run: |
+        export PATH="/usr/share/miniconda/bin:$PATH"
+        root=$PWD
+        source activate oraspy
+        cd /tmp
+        git clone https://github.com/oras-project/oras-py
+        cd oras-py
+        pip install -e .
+        cd docs/
+        pip install -r requirements.txt
+        make html
+        cp -R $root/.git _build/html/.git
+        rm -rf $root
+        mv _build/html $root
+        cd $root
+        touch .nojekyll
+        ls
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages
-          folder: .
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
+      with:
+        branch: gh-pages
+        folder: .

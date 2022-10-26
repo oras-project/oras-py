@@ -6,6 +6,7 @@ __license__ = "Apache-2.0"
 # Default tag to use
 default_tag = "latest"
 
+
 # https://github.com/moby/moby/blob/master/registry/config.go#L29
 class registry:
     index_hostname = "index.docker.io"
