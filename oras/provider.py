@@ -418,7 +418,7 @@ class Registry:
             for error in msg.get("errors", []):
                 if isinstance(error, dict) and "message" in error:
                     logger.error(error["message"])
-        except:
+        except Exception:
             pass
 
     def _upload_manifest(
@@ -733,7 +733,7 @@ class Registry:
         if not h.realm.startswith("http"):  # type: ignore
             h.realm = f"{self.prefix}://{h.realm}"
 
-        # If the www-authenticate included a scope, honor it!        
+        # If the www-authenticate included a scope, honor it!
         if h.scope:
             params["scope"] = h.scope
 

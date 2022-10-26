@@ -2,11 +2,11 @@
 
 Oras Python will allow you to run traditional push and pull commands for artifacts,
 or generate a custom client. This small user guide will walk you through these various
-steps, and please [open an issue](https://github.com/oras-project/oras-py/issues) if 
-functionality is missing. More detailed developer examples can also be found on the 
+steps, and please [open an issue](https://github.com/oras-project/oras-py/issues) if
+functionality is missing. More detailed developer examples can also be found on the
 [Oras Python](https://oras-project.github.io/oras-py/) page hosted alongside the repository.
 
-## Installation 
+## Installation
 
 ### Pypi
 
@@ -15,15 +15,15 @@ and you can install as follows:
 
 ```bash
 $ pip install oras
-``` 
-   
+```
+
 You can also clone the repository and install locally:
 
 ```bash
 $ git clone https://github.com/oras-project/oras-py
 $ cd oras-py
 $ pip install .
-``` 
+```
 
 Or in development mode:
 
@@ -41,7 +41,7 @@ We provide a [Dockerfile](https://github.com/oras-project/oras-py/blob/main/Dock
 ```bash
 $ docker build -t oras-py .
 
-$ docker run -it oras-py                                                                                                                   
+$ docker run -it oras-py
 # which oras-py
 /opt/conda/bin/oras-py
 ```
@@ -93,8 +93,8 @@ Login Succeeded
 
 You can also provide them interactively
 
-        
-```bash   
+
+```bash
 $ oras-py login -k localhost:5000 --insecure
 Username: myuser
 Password: mypass
@@ -196,9 +196,9 @@ client.login(password="myuser", username="myuser", insecure=True)
 ```
 
 And logout!
-        
+
 ```bash
-client.logout("localhost:5000")   
+client.logout("localhost:5000")
 ```
 
 ### Push and Pull
@@ -207,7 +207,7 @@ We are again following [the example here](https://oras.land/cli/1_pushing/).
 We are assuming an `artifact.txt` in the present working directory.
 
 
-```bash    
+```bash
 client = oras.client.OrasClient(insecure=True)
 client.push(files=["artifact.txt"], target="localhost:5000/dinosaur/artifact:v1")
 Successfully pushed localhost:5000/dinosaur/artifact:v1
@@ -228,7 +228,7 @@ The benefit of Oras Python is that you can create a subclass that easily impleme
 a registry, and then allows you to do custom interactions. We provide a few examples:
 
  - [Conda Mirror](https://github.com/oras-project/oras-py/blob/main/examples/conda-mirror.py): an example to parse custom layers to retrieve metadata index.jsons (and archive) along with a binary to download.
- 
+
 If you are looking for developer documentation or more detailed client examples,
 see the [Oras Python Documentation](https://oras-project.github.io/oras-py/)
 hosted alongside the repository.

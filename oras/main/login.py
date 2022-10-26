@@ -107,7 +107,7 @@ def login(
         )
 
     # Fallback to manual login
-    except:
+    except Exception:
         return DockerClient().login(
             username=username,  # type: ignore
             password=password,  # type: ignore

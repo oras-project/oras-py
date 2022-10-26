@@ -8,7 +8,7 @@ install:
 
 .PHONY: lint
 lint:
-	/bin/bash scripts/lint.sh
+	pre-commit run --all-files
 
 .PHONY: testreqs
 testreqs:
@@ -17,3 +17,4 @@ testreqs:
 .PHONY: develop
 develop:
 	pip install -e .[all]
+	pip install -r .github/dev-requirements.txt

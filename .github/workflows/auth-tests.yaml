@@ -25,6 +25,6 @@ jobs:
           REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
         run: |
            htpasswd -cB -b auth.htpasswd myuser mypass
-           cp auth.htpasswd /etc/docker/registry/auth.htpasswd 
+           cp auth.htpasswd /etc/docker/registry/auth.htpasswd
            registry serve /etc/docker/registry/config.yml & sleep 5
            echo $PWD && ls $PWD && make test

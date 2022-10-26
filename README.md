@@ -10,7 +10,7 @@
 OCI Registry as Storage enables client libraries to push OCI Artifacts to [OCI Conformant](https://github.com/opencontainers/oci-conformance) registries. This is a Python client for that.
 
 See our ⭐️ [Documentation](https://oras-project.github.io/oras-py/) ⭐️ to get started.
- 
+
 ## TODO
 
  - add example (custom) GitHub client
@@ -18,7 +18,7 @@ See our ⭐️ [Documentation](https://oras-project.github.io/oras-py/) ⭐️ t
  - need to have git commit, state, added to defaults on install/release. See [here](https://github.com/oras-project/oras/blob/main/Makefile).
  - plain_http vs insecure?
  - todo we haven't added path traversal, or cacheRoot to pull
- - environment variables like `ORAS_CACHE` 
+ - environment variables like `ORAS_CACHE`
 
 ## Code of Conduct
 
@@ -28,7 +28,7 @@ Please follow it in all your interactions with the project members and users.
 
 ## 😁️ Contributors 😁️
 
-We use the [all-contributors](https://github.com/all-contributors/all-contributors) 
+We use the [all-contributors](https://github.com/all-contributors/all-contributors)
 tool to generate a contributors graphic below.
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->

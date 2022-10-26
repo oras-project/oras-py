@@ -49,7 +49,7 @@ to build a container with the client.
 ``` console
 $ docker build -t oras-py .
 
-$ docker run -it oras-py                                                                                                                   
+$ docker run -it oras-py
 # which oras-py
 /opt/conda/bin/oras-py
 ```

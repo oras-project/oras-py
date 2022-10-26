@@ -6,6 +6,8 @@
 
 # -- Path setup --------------------------------------------------------------
 
+import os
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -14,7 +16,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 from distutils.version import LooseVersion
-import os
 
 import sphinx_material
 from recommonmark.transform import AutoStructify
@@ -186,6 +187,7 @@ extlinks = {
     "durole": ("http://docutils.sourceforge.net/docs/ref/rst/" "roles.html#%s", ""),
     "dudir": ("http://docutils.sourceforge.net/docs/ref/rst/" "directives.html#%s", ""),
 }
+
 
 # Enable eval_rst in markdown
 def setup(app):
