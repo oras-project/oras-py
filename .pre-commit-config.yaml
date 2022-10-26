@@ -25,6 +25,12 @@ repos:
         types: [python]
         entry: isort
 
+      - id: mypy
+        name: mypy
+        language: python
+        types: [python]
+        entry: mypy
+
       - id: flake8
         name: flake8
         language: python

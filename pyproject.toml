@@ -5,3 +5,6 @@ exclude = ["^env/"]
 [tool.isort]
 profile = "black" # needed for black/isort compatibility
 skip = []
+
+[tool.mypy]
+mypy_path = ["oras", "examples"]
