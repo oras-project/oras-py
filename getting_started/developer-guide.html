@@ -284,6 +284,11 @@
                 <nav class="md-nav">
                  <ul class="md-nav__list">
                   <li class="md-nav__item">
+                   <a class="md-nav__link" href="#code-linting">
+                    Code Linting
+                   </a>
+                  </li>
+                  <li class="md-nav__item">
                    <a class="md-nav__link" href="#documentation">
                     Documentation
                    </a>
@@ -391,6 +396,11 @@
            <nav class="md-nav">
             <ul class="md-nav__list">
              <li class="md-nav__item">
+              <a class="md-nav__link" href="#code-linting">
+               Code Linting
+              </a>
+             </li>
+             <li class="md-nav__item">
               <a class="md-nav__link" href="#documentation">
                Documentation
               </a>
@@ -480,11 +490,100 @@ read
 should do that first. If you want to see a more general user guide, look
 at the
          <a class="reference external" href="https://oras.land/client_libraries/1_python/">
-          oras.land Python
-guide
+          oras.land Python guide
          </a>
          .
         </p>
+        <section id="code-linting">
+         <h2 id="code-linting">
+          Code Linting
+          <a class="headerlink" href="#code-linting" title="Permalink to this heading">
+           ¶
+          </a>
+         </h2>
+         <p>
+          We use
+          <a class="reference external" href="https://pre-commit.com/">
+           pre-commit
+          </a>
+          to handle code linting and formatting, including:
+         </p>
+         <ul class="simple">
+          <li>
+           <p>
+            black
+           </p>
+          </li>
+          <li>
+           <p>
+            isort
+           </p>
+          </li>
+          <li>
+           <p>
+            flake8
+           </p>
+          </li>
+          <li>
+           <p>
+            mypy
+           </p>
+          </li>
+         </ul>
+         <p>
+          Our setup also handles line endings and ensuring that you don’t add large files!
+Using the tools is easy. After installing oras-py to a local environment,
+you can use pre-commit as follows:
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span>$ pip install -r .github/dev-requirements.txt
+</pre>
+          </div>
+         </div>
+         <p>
+          Then to do a manual run:
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span>$ pre-commit run --all-files
+</pre>
+          </div>
+         </div>
+         <div class="highlight-console notranslate">
+          <div class="highlight">
+           <pre><span></span><span class="go">check for added large files..............................................Passed</span>
+<span class="go">check for case conflicts.................................................Passed</span>
+<span class="go">check docstring is first.................................................Passed</span>
+<span class="go">fix end of files.........................................................Passed</span>
+<span class="go">trim trailing whitespace.................................................Passed</span>
+<span class="go">mixed line ending........................................................Passed</span>
+<span class="go">black....................................................................Passed</span>
+<span class="go">isort....................................................................Passed</span>
+<span class="go">flake8...................................................................Passed</span>
+</pre>
+          </div>
+         </div>
+         <p>
+          And to install as a hook (recommended so you never commit with linting flaws!)
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span>$ pre-commit install
+</pre>
+          </div>
+         </div>
+         <p>
+          The above are provided as courtesy commands via:
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span>$ make develop
+$ make lint
+</pre>
+          </div>
+         </div>
+        </section>
         <section id="documentation">
          <h2 id="documentation">
           Documentation

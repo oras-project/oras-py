@@ -1,7 +1,7 @@
 # Contributing
 
-When contributing to Oras Python, it is important to properly communicate the gist of the contribution. 
-If it is a simple code or editorial fix, simply explaining this within the GitHub Pull Request (PR) will suffice. But if this is a larger 
+When contributing to Oras Python, it is important to properly communicate the gist of the contribution.
+If it is a simple code or editorial fix, simply explaining this within the GitHub Pull Request (PR) will suffice. But if this is a larger
 fix or Enhancement, it should be first discussed with the project leader or developers.
 You can look at the [OWNERS](https://github.com/oras-project/oras-py/blob/main/OWNERS.md) file of the repository to see who might be best to ping,
 or jump into the [#oras](https://cloud-native.slack.com/archives/CJ1KHJM5Z) channel in the

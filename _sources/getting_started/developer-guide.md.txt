@@ -4,8 +4,55 @@ This developer guide includes more complex interactions like
 contributing registry entries and building containers. If you haven't
 read `getting_started-installation`{.interpreted-text role="ref"} you
 should do that first. If you want to see a more general user guide, look
-at the [oras.land Python
-guide](https://oras.land/client_libraries/1_python/).
+at the [oras.land Python guide](https://oras.land/client_libraries/1_python/).
+
+## Code Linting
+
+We use [pre-commit](https://pre-commit.com/) to handle code linting and formatting, including:
+
+ - black
+ - isort
+ - flake8
+ - mypy
+
+Our setup also handles line endings and ensuring that you don't add large files!
+Using the tools is easy. After installing oras-py to a local environment,
+you can use pre-commit as follows:
+
+
+```bash
+$ pip install -r .github/dev-requirements.txt
+```
+
+Then to do a manual run:
+
+```bash
+$ pre-commit run --all-files
+```
+```console
+check for added large files..............................................Passed
+check for case conflicts.................................................Passed
+check docstring is first.................................................Passed
+fix end of files.........................................................Passed
+trim trailing whitespace.................................................Passed
+mixed line ending........................................................Passed
+black....................................................................Passed
+isort....................................................................Passed
+flake8...................................................................Passed
+```
+
+And to install as a hook (recommended so you never commit with linting flaws!)
+
+```bash
+$ pre-commit install
+```
+
+The above are provided as courtesy commands via:
+
+```bash
+$ make develop
+$ make lint
+```
 
 ## Documentation
 
