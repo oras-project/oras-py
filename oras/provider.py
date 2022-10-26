@@ -715,9 +715,12 @@ class Registry:
             )
             return False
 
+        params = {}
+
         # Prepare request to retry
         h = oras.auth.parse_auth_header(authHeaderRaw)
         if h.service:
+            params["service"] = h.service
             headers.update(
                 {
                     "Service": h.service,
@@ -730,8 +733,7 @@ class Registry:
         if not h.realm.startswith("http"):  # type: ignore
             h.realm = f"{self.prefix}://{h.realm}"
 
-        # If the www-authenticate included a scope, honor it!
-        params = {}
+        # If the www-authenticate included a scope, honor it!        
         if h.scope:
             params["scope"] = h.scope
 
