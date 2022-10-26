@@ -1019,9 +1019,12 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="c1"># Prepare request to retry</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">"service"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{</span>
                     <span class="s2">"Service"</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
@@ -1034,8 +1037,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"http"</span><span class="p">):</span>  <span class="c1"># type: ignore</span>
             <span class="n">h</span><span class="o">.</span><span class="n">realm</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="c1"># If the www-authenticate included a scope, honor it!</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># If the www-authenticate included a scope, honor it!        </span>
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">"scope"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span>
 
@@ -1071,7 +1073,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Oct 22, 2022.
+              Oct 26, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
