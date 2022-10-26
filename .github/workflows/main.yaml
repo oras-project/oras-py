@@ -6,40 +6,40 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup black linter
-        run: conda create --quiet --name black pyflakes
-      - name: Check Spelling
-        uses: crate-ci/typos@592b36d23c62cb378f6097a292bc902ee73f93ef # version 1.0.4
-        with:
-          files: ./docs ./README.md
+    - uses: actions/checkout@v3
+    - name: Setup black linter
+      run: conda create --quiet --name black pyflakes
+    - name: Check Spelling
+      uses: crate-ci/typos@7ad296c72fa8265059cc03d1eda562fbdfcd6df2 # v1.9.0
+      with:
+        files: ./docs ./README.md
 
-      - name: Lint Oras Python
-        run: |
-          export PATH="/usr/share/miniconda/bin:$PATH"
-          source activate black
-          pip install black
-          make install
-          make lint
-           
+    - name: Lint Oras Python
+      run: |
+        export PATH="/usr/share/miniconda/bin:$PATH"
+        source activate black
+        pip install black
+        make install
+        make lint
+         
   test-oras-py:
     runs-on: ubuntu-latest
     services:
       registry:
         image: ghcr.io/oras-project/registry:latest
         ports:
-          - 5000:5000
+        - 5000:5000
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Environment
-        run: conda create --quiet --name oras requests
-      - name: Test Oras Python
-        env:
-          registry_host: localhost
-          registry_port: ${{ job.services.registry.ports[5000] }}
-        run: |
-          export PATH="/usr/share/miniconda/bin:$PATH"
-          source activate oras
-          pip install --upgrade pip setuptools
-          make install
-          make test
+    - uses: actions/checkout@v3
+    - name: Setup Environment
+      run: conda create --quiet --name oras requests
+    - name: Test Oras Python
+      env:
+        registry_host: localhost
+        registry_port: ${{ job.services.registry.ports[5000] }}
+      run: |
+        export PATH="/usr/share/miniconda/bin:$PATH"
+        source activate oras
+        pip install --upgrade pip setuptools
+        make install
+        make test
