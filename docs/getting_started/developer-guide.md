@@ -13,6 +13,7 @@ We use [pre-commit](https://pre-commit.com/) to handle code linting and formatti
  - black
  - isort
  - flake8
+ - mypy
 
 Our setup also handles line endings and ensuring that you don't add large files!
 Using the tools is easy. After installing oras-py to a local environment,
