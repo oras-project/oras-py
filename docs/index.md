@@ -30,10 +30,9 @@ $ oras-py pull localhost:5000/dinosaur/artifact:v1
 ```
 
 To get started, see the [oras.land getting started
-guide](https://oras.land/client_libraries/1_python/) or if you are a
-developer, see the `getting-started`{.interpreted-text role="ref"} page
-hosted here. Would you like to request a feature or contribute?
-
+guide](https://oras.land/client_libraries/1_python/) or if you
+are a developer, see the links below. Would you like to
+request a feature or contribute?
 [Open an issue](https://github.com/oras-project/oras-py/issues).
 
 ```{toctree}
