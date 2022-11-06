@@ -16,7 +16,7 @@ Please follow it in all your interactions with the project members and users.
 2. Follow the existing code style precedent. The testing includes linting that will help, but generally we use black, isort, mypy, and pyflakes.
 3. Test your PR locally, and provide the steps necessary to test for the reviewers.
 4. The project's default copyright and header have been included in any new source files.
-5. All (major) changes to Singularity Registry must be documented in the CHANGELOG.md in the root of the repository, and documentation updated here.
+5. All (major) changes must be documented in the CHANGELOG.md in the root of the repository, and documentation updated here.
 6. If necessary, update the README.md.
 7. The pull request will be reviewed by others, and the final merge must be done by an OWNER.
 
