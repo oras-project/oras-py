@@ -10,7 +10,7 @@ def main(args, parser, extra, subparser):
     Main is a light wrapper around the login command.
     """
     client = oras.client.OrasClient()
-    client.login(
+    res = client.login(
         password=args.password,
         username=args.username,
         config_path=args.config,
@@ -18,3 +18,4 @@ def main(args, parser, extra, subparser):
         insecure=args.insecure,
         password_stdin=args.password_stdin,
     )
+    print(res)
