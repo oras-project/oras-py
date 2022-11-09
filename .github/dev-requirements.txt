@@ -2,4 +2,4 @@ pre-commit
 black
 isort
 flake8
-mypy
+mypy==0.961
