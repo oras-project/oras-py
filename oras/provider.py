@@ -404,7 +404,7 @@ class Registry:
         """
         if response.status_code not in [200, 201, 202]:
             self._parse_response_errors(response)
-            logger.exit(f"Issue with {response.request.url}:\n{response.reason}")
+            logger.exit(f"Issue with {response.request.url}\n{response.reason}")
 
     def _parse_response_errors(self, response: requests.Response):
         """
