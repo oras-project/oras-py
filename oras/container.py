@@ -63,7 +63,10 @@ class Container:
         """
         Assemble the complete unique resource identifier
         """
-        uri = f"{self.namespace}/{self.repository}"
+        if self.namespace:
+            uri = f"{self.namespace}/{self.repository}"
+        else:
+            uri = f"{self.repository}"
         if self.registry:
             uri = f"{self.registry}/{uri}"
 
@@ -93,9 +96,8 @@ class Container:
         self.tag = items["tag"] or oras.defaults.default_tag
         self.digest = items["digest"]
 
-        # Repository and namespace are required
-        if not self.repository or not self.namespace:
-            logger.exit(
-                "You are minimally required to include a <namespace>/<repository>"
-            )
-        self.namespace = self.namespace.strip("/")
+        # Repository is required
+        if not self.repository:
+            logger.exit("You are minimally required to include a <repository>")
+        if self.namespace:
+            self.namespace = self.namespace.strip("/")
