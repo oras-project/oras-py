@@ -301,7 +301,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            logger.exit(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url: {r.json()}")
 
         # PUT to upload blob url
         headers = {
@@ -365,7 +365,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            logger.exit(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url: {r.json()}")
 
         # Read the blob in chunks, for each do a patch
         start = 0
@@ -404,7 +404,7 @@ class Registry:
         """
         if response.status_code not in [200, 201, 202]:
             self._parse_response_errors(response)
-            logger.exit(f"Issue with {response.request.url}:\n{response.reason}")
+            raise ValueError(f"Issue with {response.request.url}:\n{response.reason}")
 
     def _parse_response_errors(self, response: requests.Response):
         """
@@ -483,12 +483,12 @@ class Registry:
 
             # Must exist
             if not os.path.exists(blob):
-                logger.exit(f"{blob} does not exist.")
+                raise FileNotFoundError(f"{blob} does not exist.")
 
             # Path validation means blob must be relative to PWD.
             if validate_path:
                 if not self._validate_path(blob):
-                    logger.exit(
+                    raise ValueError(
                         f"Blob {blob} is not in the present working directory context."
                     )
 
