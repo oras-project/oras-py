@@ -13,7 +13,12 @@ jobs:
         files: ./docs ./README.md
 
     - name: Lint Oras Python
+    - name: Setup Environment
+      run: conda create --quiet --name oras pre-commit
+    - name: Lint Oras Python
       run: |
+        export PATH="/usr/share/miniconda/bin:$PATH"
+        source activate oras
         make develop
         make lint
 
