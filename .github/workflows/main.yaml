@@ -12,7 +12,6 @@ jobs:
       with:
         files: ./docs ./README.md
 
-    - name: Lint Oras Python
     - name: Setup Environment
       run: conda create --quiet --name oras pre-commit
     - name: Lint Oras Python
