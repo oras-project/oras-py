@@ -784,4 +784,5 @@ class Registry:
         if token:
             self.headers.update({"Authorization": "Bearer %s" % token})
             self.token = token
-        return True
+            return True
+        return False
