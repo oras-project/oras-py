@@ -87,7 +87,7 @@ make html
 After `make html` you can enter into `_build/html` and start a local web
 server to preview:
 
-``` console
+```console
 $ python -m http.server 9999
 ```
 
@@ -99,12 +99,46 @@ To render our Python API into the docs, we keep an updated restructured
 syntax in the `docs/source` folder that you can update on demand as
 follows:
 
-``` console
+```console
 $ ./apidoc.sh
 ```
 
 This should only be required if you change any docstrings or add/remove
 functions from oras-py source code.
+
+## Running Tests
+
+You'll want to create an environment to install to, and then install:
+
+```bash
+$ make install
+```
+
+You'll then want a registry running for the tests:
+
+```bash
+$ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
+```
+
+And then when you run `make test`, the tests will run. This ultimately
+runs the file [scripts/test.sh](https://github.com/oras-project/oras-py/blob/main/scripts/test.sh).
+If you want to test interactively, add an IPython import statement somewhere in the tests:
+
+```bash
+# pip install IPython
+import IPython
+IPython.embed()
+```
+
+And then change the last line of the file to be:
+
+```diff
+- pytest oras/
++ pytest -xs oras/
+```
+
+And then you should be able to interactively run (and debug) the same tests
+that run in GitHub actions.
 
 ## Creating a Custom Client
 
@@ -280,9 +314,9 @@ you can do:
 $ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
 ```
 
-And then you can run your custom functions after doing that, either
-inspecting a particular unique resource identifier or using your lookup
-of archives (paths and media types) to push:
+And add the `-d` for detached. Then you can run your custom functions after
+doing that, either inspecting a particular unique resource identifier or using
+your lookup of archives (paths and media types) to push:
 
 ``` python
 def main():
