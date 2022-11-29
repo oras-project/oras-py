@@ -707,7 +707,14 @@ class Registry:
             self.set_header("Authorization", "Basic %s" % self.token)
 
         headers = copy.deepcopy(self.headers)
+        h = oras.auth.parse_auth_header(authHeaderRaw)
+
         if "Authorization" not in headers:
+
+            # First try to request an anonymous token
+            if self.request_anonymous_token(h):
+                return True
+
             logger.error(
                 "This endpoint requires a token. Please set "
                 "oras.provider.Registry.set_basic_auth(username, password) "
@@ -718,7 +725,6 @@ class Registry:
         params = {}
 
         # Prepare request to retry
-        h = oras.auth.parse_auth_header(authHeaderRaw)
         if h.service:
             params["service"] = h.service
             headers.update(
@@ -743,10 +749,39 @@ class Registry:
 
         # Request the token
         info = authResponse.json()
-        token = info.get("token")
-        if not token:
-            token = info.get("access_token")
+        token = info.get("token") or info.get("access_token")
 
         # Set the token to the original request and retry
         self.headers.update({"Authorization": "Bearer %s" % token})
+        return True
+
+    def request_anonymous_token(self, h: oras.auth.authHeader) -> bool:
+        """
+        Given no basic auth, fall back to trying to request an anonymous token.
+
+        Returns: boolean if headers have been updated with token.
+        """
+        if not h.realm:
+            return False
+
+        params = {}
+        if h.service:
+            params["service"] = h.service
+        if h.scope:
+            params["scope"] = h.scope
+
+        response = self.session.request("GET", h.realm, params=params)
+        if response.status_code != 200:
+            return False
+
+        # From https://docs.docker.com/registry/spec/auth/token/ section
+        # We can get token OR access_token OR both (when both they are identical)
+        data = response.json()
+
+        token = data.get("token") or data.get("access_token")
+
+        # Update the headers and self.token (used next time)
+        if token:
+            self.headers.update({"Authorization": "Bearer %s" % token})
+            self.token = token
         return True
