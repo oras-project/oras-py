@@ -386,13 +386,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
             <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Token: "</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"token required"</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"token required"</span><span class="p">)</span>
 
         <span class="c1"># If we do have a username, we just need a passowrd</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Password: "</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"password required"</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"password required"</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -445,7 +445,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Nov 06, 2022.
+              Dec 02, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

@@ -605,7 +605,7 @@
         <span class="c1"># Location should be in the header</span>
         <span class="n">session_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_location</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">session_url</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># PUT to upload blob url</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
@@ -669,7 +669,7 @@
         <span class="c1"># Location should be in the header</span>
         <span class="n">session_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_location</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">session_url</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Read the blob in chunks, for each do a patch</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
@@ -708,7 +708,7 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">202</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_response_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_response_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -787,12 +787,12 @@
 
             <span class="c1"># Must exist</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
 
             <span class="c1"># Path validation means blob must be relative to PWD.</span>
             <span class="k">if</span> <span class="n">validate_path</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_path</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">"Blob </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> is not in the present working directory context."</span>
                     <span class="p">)</span>
 
@@ -1011,7 +1011,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Basic </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
 
         <span class="n">headers</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="s2">"Authorization"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+
+            <span class="c1"># First try to request an anonymous token</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_anonymous_token</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s2">"This endpoint requires a token. Please set "</span>
                 <span class="s2">"oras.provider.Registry.set_basic_auth(username, password) "</span>
@@ -1022,7 +1029,6 @@
         <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Prepare request to retry</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">"service"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -1047,13 +1053,43 @@
 
         <span class="c1"># Request the token</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">authResponse</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
 
         <span class="c1"># Set the token to the original request and retry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">token</span><span class="p">})</span>
-        <span class="k">return</span> <span class="kc">True</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Registry.request_anonymous_token"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.request_anonymous_token">[docs]</a>    <span class="k">def</span> <span class="nf">request_anonymous_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">authHeader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Given no basic auth, fall back to trying to request an anonymous token.</span>
+
+<span class="sd">        Returns: boolean if headers have been updated with token.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">"service"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span>
+        <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">"scope"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">"GET"</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># From https://docs.docker.com/registry/spec/auth/token/ section</span>
+        <span class="c1"># We can get token OR access_token OR both (when both they are identical)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="n">token</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
+
+        <span class="c1"># Update the headers and self.token (used next time)</span>
+        <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">token</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
 </pre>
        </div>
       </article>
@@ -1073,7 +1109,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Nov 06, 2022.
+              Dec 02, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

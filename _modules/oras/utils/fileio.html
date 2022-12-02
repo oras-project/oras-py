@@ -319,8 +319,6 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
-
 
 <div class="viewcode-block" id="make_targz"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.make_targz">[docs]</a><span class="k">def</span> <span class="nf">make_targz</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dest_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">"""</span>
@@ -367,18 +365,14 @@
 <div class="viewcode-block" id="get_file_hash"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_file_hash">[docs]</a><span class="k">def</span> <span class="nf">get_file_hash</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sha256"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Return an sha256 hash of the file based on an algorithm</span>
+<span class="sd">    Raises AttributeError if incorrect algorithm supplied.</span>
 
 <span class="sd">    :param path: the path to get the size for</span>
 <span class="sd">    :type path: str</span>
 <span class="sd">    :param algorithm: the algorithm to use</span>
 <span class="sd">    :type algorithm: str</span>
 <span class="sd">    """</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">hasher</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">hashlib</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">)()</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> is an invalid algorithm."</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">algorithms_guaranteed</span><span class="p">))</span>
-
+    <span class="n">hasher</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">hashlib</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">)()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span> <span class="sa">b</span><span class="s2">""</span><span class="p">):</span>
             <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
@@ -398,7 +392,7 @@
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"Error creating path </span><span class="si">%s</span><span class="s2">, exiting."</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error creating path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_tmpfile"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_tmpfile">[docs]</a><span class="k">def</span> <span class="nf">get_tmpfile</span><span class="p">(</span>
@@ -604,7 +598,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Nov 06, 2022.
+              Dec 02, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
