@@ -86,7 +86,7 @@ def test_basic_push_pull(tmp_path):
     # Move artifact outside of context (should not work)
     moved_artifact = tmp_path / os.path.basename(artifact)
     shutil.copyfile(artifact, moved_artifact)
-    with pytest.raises(SystemExit):
+    with pytest.raises(ValueError):
         client.push(files=[moved_artifact], target=target)
 
     # This should work because we aren't checking paths

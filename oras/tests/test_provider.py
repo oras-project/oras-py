@@ -76,7 +76,7 @@ def test_annotated_registry_push(tmp_path):
 
     # File that doesn't exist
     annotation_file = os.path.join(here, "annotations-nope.json")
-    with pytest.raises(SystemExit):
+    with pytest.raises(FileNotFoundError):
         res = client.push(
             files=[artifact], target=target, annotation_file=annotation_file
         )

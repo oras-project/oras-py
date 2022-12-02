@@ -301,7 +301,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            logger.exit(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url: {r.json()}")
 
         # PUT to upload blob url
         headers = {
@@ -365,7 +365,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            logger.exit(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url: {r.json()}")
 
         # Read the blob in chunks, for each do a patch
         start = 0
@@ -404,7 +404,7 @@ class Registry:
         """
         if response.status_code not in [200, 201, 202]:
             self._parse_response_errors(response)
-            logger.exit(f"Issue with {response.request.url}\n{response.reason}")
+            raise ValueError(f"Issue with {response.request.url}:\n{response.reason}")
 
     def _parse_response_errors(self, response: requests.Response):
         """
@@ -483,12 +483,12 @@ class Registry:
 
             # Must exist
             if not os.path.exists(blob):
-                logger.exit(f"{blob} does not exist.")
+                raise FileNotFoundError(f"{blob} does not exist.")
 
             # Path validation means blob must be relative to PWD.
             if validate_path:
                 if not self._validate_path(blob):
-                    logger.exit(
+                    raise ValueError(
                         f"Blob {blob} is not in the present working directory context."
                     )
 
@@ -707,7 +707,14 @@ class Registry:
             self.set_header("Authorization", "Basic %s" % self.token)
 
         headers = copy.deepcopy(self.headers)
+        h = oras.auth.parse_auth_header(authHeaderRaw)
+
         if "Authorization" not in headers:
+
+            # First try to request an anonymous token
+            if self.request_anonymous_token(h):
+                return True
+
             logger.error(
                 "This endpoint requires a token. Please set "
                 "oras.provider.Registry.set_basic_auth(username, password) "
@@ -718,7 +725,6 @@ class Registry:
         params = {}
 
         # Prepare request to retry
-        h = oras.auth.parse_auth_header(authHeaderRaw)
         if h.service:
             params["service"] = h.service
             headers.update(
@@ -743,10 +749,40 @@ class Registry:
 
         # Request the token
         info = authResponse.json()
-        token = info.get("token")
-        if not token:
-            token = info.get("access_token")
+        token = info.get("token") or info.get("access_token")
 
         # Set the token to the original request and retry
         self.headers.update({"Authorization": "Bearer %s" % token})
         return True
+
+    def request_anonymous_token(self, h: oras.auth.authHeader) -> bool:
+        """
+        Given no basic auth, fall back to trying to request an anonymous token.
+
+        Returns: boolean if headers have been updated with token.
+        """
+        if not h.realm:
+            return False
+
+        params = {}
+        if h.service:
+            params["service"] = h.service
+        if h.scope:
+            params["scope"] = h.scope
+
+        response = self.session.request("GET", h.realm, params=params)
+        if response.status_code != 200:
+            return False
+
+        # From https://docs.docker.com/registry/spec/auth/token/ section
+        # We can get token OR access_token OR both (when both they are identical)
+        data = response.json()
+
+        token = data.get("token") or data.get("access_token")
+
+        # Update the headers and self.token (used next time)
+        if token:
+            self.headers.update({"Authorization": "Bearer %s" % token})
+            self.token = token
+            return True
+        return False

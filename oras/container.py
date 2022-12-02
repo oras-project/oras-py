@@ -7,7 +7,6 @@ import re
 from typing import Optional
 
 import oras.defaults
-from oras.logger import logger
 
 docker_regex = re.compile(
     "(?:(?P<registry>[^/@]+[.:][^/@]*)/)?"
@@ -95,7 +94,7 @@ class Container:
         """
         match = re.search(docker_regex, name)
         if not match:
-            logger.exit(
+            raise ValueError(
                 f"{name} does not match a recognized registry unique resource identifier. Try <registry>/<namespace>/<repository>:<tag|digest>"
             )
         items = match.groupdict()  # type: ignore
@@ -107,6 +106,8 @@ class Container:
 
         # Repository is required
         if not self.repository:
-            logger.exit("You are minimally required to include a <repository>")
+            raise ValueError(
+                "You are minimally required to include a <namespace>/<repository>"
+            )
         if self.namespace:
             self.namespace = self.namespace.strip("/")

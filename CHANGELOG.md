@@ -14,7 +14,10 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
- - ecr and others do not require a formatted namespace (0.0.18)
+ - ecr and others do not require a formatted namespace (0.0.19)
+ - logger should only exit in command line client, not in API (0.0.18)
+   - raising exceptions allows the calling using to catch the error
+   - support for requesting anonymous token from registry
  - Added expected header for authentication to gitlab registry (0.0.17)
  - safe extraction for targz extractions (0.0.16)
  - disable chunked upload for now (not supported by all registries) (0.0.15)
