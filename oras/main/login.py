@@ -82,13 +82,13 @@ def login(
         if not username:
             password = input("Token: ")
             if not password:
-                logger.exit("token required")
+                raise ValueError("token required")
 
         # If we do have a username, we just need a passowrd
         else:
             password = input("Password: ")
             if not password:
-                logger.exit("password required")
+                raise ValueError("password required")
 
     else:
         logger.warning(

@@ -15,8 +15,6 @@ import tarfile
 import tempfile
 from typing import Generator, Optional, TextIO, Union
 
-from oras.logger import logger
-
 
 def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     """
@@ -63,18 +61,14 @@ def get_size(path: str) -> int:
 def get_file_hash(path: str, algorithm: str = "sha256") -> str:
     """
     Return an sha256 hash of the file based on an algorithm
+    Raises AttributeError if incorrect algorithm supplied.
 
     :param path: the path to get the size for
     :type path: str
     :param algorithm: the algorithm to use
     :type algorithm: str
     """
-    try:
-        hasher = getattr(hashlib, algorithm)()
-    except AttributeError:
-        logger.error("%s is an invalid algorithm.")
-        logger.exit(" ".join(hashlib.algorithms_guaranteed))
-
+    hasher = getattr(hashlib, algorithm)()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             hasher.update(chunk)
@@ -94,7 +88,7 @@ def mkdir_p(path: str):
         if e.errno == errno.EEXIST and os.path.isdir(path):
             pass
         else:
-            logger.exit("Error creating path %s, exiting." % path)
+            raise ValueError(f"Error creating path {path}.")
 
 
 def get_tmpfile(

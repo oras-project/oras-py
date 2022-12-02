@@ -11,7 +11,6 @@ import jsonschema
 import oras.defaults
 import oras.schemas
 import oras.utils
-from oras.logger import logger
 
 EmptyManifest = {
     "schemaVersion": 2,
@@ -43,7 +42,7 @@ class Annotations:
         if filename and os.path.exists(filename):
             self.lookup = oras.utils.read_json(filename)
         if filename and not os.path.exists(filename):
-            logger.exit(f"Annotation file {filename} does not exist.")
+            raise FileNotFoundError(f"Annotation file {filename} does not exist.")
 
     def get_annotations(self, section: str) -> dict:
         """
