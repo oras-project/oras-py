@@ -734,9 +734,6 @@ class Registry:
             return False
 
         params = {}
-        import IPython
-
-        IPython.embed()
 
         # Prepare request to retry
         if h.service:
