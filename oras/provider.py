@@ -695,7 +695,7 @@ class Registry:
         # Otherwise, authenticate the request and retry
         if self.authenticate_request(response):
             headers.update(self.headers)
-            return self.session.request(
+            response = self.session.request(
                 method,
                 url,
                 data=data,
@@ -703,6 +703,21 @@ class Registry:
                 headers=headers,
                 stream=stream,
             )
+
+        # Fallback to using Authorziation if already required
+        # This is a catch for EC2. I don't think this is correct
+        # A basic token should be used for a bearer one.
+        if response.status_code in [401, 404] and "Authorization" in self.headers:
+            headers.update(self.headers)
+            response = self.session.request(
+                method,
+                url,
+                data=data,
+                json=json,
+                headers=headers,
+                stream=stream,
+            )
+
         return response
 
     def authenticate_request(self, originalResponse: requests.Response) -> bool:
@@ -715,10 +730,6 @@ class Registry:
         :param originalResponse: original response to get the Www-Authenticate header
         :type originalResponse: requests.Response
         """
-        # Cut out early if Authorization already set (EC2)
-        if "Authorization" in self.headers:
-            return True
-
         authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
         if not authHeaderRaw:
             logger.debug(
