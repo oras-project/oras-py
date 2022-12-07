@@ -500,8 +500,8 @@ class Registry:
         for blob in kwargs.get("files", []):
 
             # You can provide a blob + content type
-            if ":" in blob:
-                blob, media_type = blob.split(":", 1)
+            if ":" in str(blob):
+                blob, media_type = str(blob).split(":", 1)
 
             # Must exist
             if not os.path.exists(blob):
