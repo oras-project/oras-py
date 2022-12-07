@@ -91,7 +91,8 @@ class Registry:
         :param hostname: the registry hostname to look for
         :type hostname: str
         """
-        if hostname in self._auths:
+        # Note that the hostname can be defined without a token
+        if hostname in self._auths and self._auths[hostname].get("auth"):
             self.token = self._auths[hostname]["auth"]
             return True
         return False
