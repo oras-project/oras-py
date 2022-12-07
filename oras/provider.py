@@ -689,7 +689,7 @@ class Registry:
         )
 
         # A 401 response is a request for authentication
-        if response.status_code != 401:
+        if response.status_code not in [401, 404]:
             return response
 
         # Otherwise, authenticate the request and retry
@@ -708,6 +708,7 @@ class Registry:
         # This is a catch for EC2. I don't think this is correct
         # A basic token should be used for a bearer one.
         if response.status_code in [401, 404] and "Authorization" in self.headers:
+            logger.debug("Trying with provided Basic Authorization...")
             headers.update(self.headers)
             response = self.session.request(
                 method,
@@ -738,8 +739,8 @@ class Registry:
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
-        if self._basic_auth:
-            self.set_header("Authorization", "Basic %s" % self._basic_auth)
+        if self.token:
+            self.set_header("Authorization", "Bearer %s" % self._basic_auth)
             return True
 
         headers = copy.deepcopy(self.headers)
