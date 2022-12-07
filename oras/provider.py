@@ -754,9 +754,10 @@ class Registry:
         if h.scope:
             params["scope"] = h.scope
 
-        print(f"params {params}")
+        logger.debug(f"Auth response parameters: {params}")
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
         if authResponse.status_code != 200:
+            logger.debug("Auth response was not successful: {response.text}")
             return False
 
         # Request the token
