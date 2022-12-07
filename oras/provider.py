@@ -700,7 +700,9 @@ class Registry:
         :type originalResponse: requests.Response
         """
         authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
+        print(f"Auth header raw is {authHeaderRaw}")
         if not authHeaderRaw:
+            print("Www-Authenticate not found in original response, returning false.")
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
@@ -713,7 +715,9 @@ class Registry:
         if "Authorization" not in headers:
 
             # First try to request an anonymous token
+            print("No Authorization, requesting anonymous token")
             if self.request_anonymous_token(h):
+                print("Success! We have token!")
                 return True
 
             logger.error(
@@ -763,6 +767,7 @@ class Registry:
         Returns: boolean if headers have been updated with token.
         """
         if not h.realm:
+            print("There is no realm, exiting early")
             return False
 
         params = {}
@@ -771,19 +776,23 @@ class Registry:
         if h.scope:
             params["scope"] = h.scope
 
+        print(f"Final params are {params}")
         response = self.session.request("GET", h.realm, params=params)
         if response.status_code != 200:
+            print(f"Response for anon token failed: {response.text}")
             return False
 
         # From https://docs.docker.com/registry/spec/auth/token/ section
         # We can get token OR access_token OR both (when both they are identical)
         data = response.json()
-
+        print(f"response data {data}")
         token = data.get("token") or data.get("access_token")
 
         # Update the headers and self.token (used next time)
         if token:
+            print("updating token")
             self.headers.update({"Authorization": "Bearer %s" % token})
             self.token = token
             return True
+        print("no token!")
         return False
