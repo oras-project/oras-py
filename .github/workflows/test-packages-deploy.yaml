@@ -35,7 +35,7 @@ jobs:
           artifact=$(ls dist/*.tar.gz)
           echo ${token} | oras-py login -u ${user} ghcr.io --password-stdin
           echo "Preparing to push ${artifact} to ${uri}"
-          oras-py push ${uri} ${artifact}
+          oras-py push --debug ${uri} ${artifact}
           echo "Preparing to pull ${artifact}"
-          oras-py pull -a ${uri}
+          oras-py pull --debug -a ${uri}
           ls
