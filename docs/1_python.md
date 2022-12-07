@@ -232,3 +232,22 @@ a registry, and then allows you to do custom interactions. We provide a few exam
 If you are looking for developer documentation or more detailed client examples,
 see the [Oras Python Documentation](https://oras-project.github.io/oras-py/)
 hosted alongside the repository.
+
+
+## Debugging
+
+> Can I see more debug information?
+
+Yes! Try adding `--debug` *after* any command like pull, push, login, etc. More verbose
+output should appear. If we need further verbosity, please open an issue and it can be added.
+
+> I get unauthorized when trying to login to an Amazon ECR Registry
+
+Note that for [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html)
+you might need to login per the instructions at the link provided. If you look at your `~/.docker/config.json` and see
+that there is a "credsStore" section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn't support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you've done
+this correctly, you should see an "auth" key under a hostname under "auths" in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper.

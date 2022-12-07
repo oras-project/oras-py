@@ -19,7 +19,7 @@ $ pip install .
 
 Note that we have several extra modes for installation:
 
-``` console
+```console
 # Interactions are done via the docker client instead of manual
 $ pip install oras[docker]
 
@@ -32,7 +32,7 @@ $ pip install oras[all]
 
 Or in development mode, add `-e`:
 
-``` console
+```console
 $ pip install -e .
 ```
 
@@ -46,7 +46,7 @@ We provide a
 [Dockerfile](https://github.com/oras-project/oras-py/blob/main/Dockerfile)
 to build a container with the client.
 
-``` console
+```console
 $ docker build -t oras-py .
 
 $ docker run -it oras-py
