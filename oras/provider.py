@@ -40,6 +40,7 @@ class Registry:
         self.session: requests.Session = requests.Session()
         self.prefix: str = "http" if insecure else "https"
         self.token: Optional[str] = None
+        self.token_type = "Basic"
         self._auths: dict = {}
         self._basic_auth = None
 
@@ -706,7 +707,7 @@ class Registry:
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
-        if self.token:
+        if self.token and "Authorization" not in self.headers:
             self.set_header("Authorization", "Basic %s" % self.token)
 
         headers = copy.deepcopy(self.headers)
@@ -788,11 +789,10 @@ class Registry:
         print(f"response data {data}")
         token = data.get("token") or data.get("access_token")
 
-        # Update the headers and self.token (used next time)
+        # Update the headers but not self.token (expects Basic)
         if token:
             print("updating token")
             self.headers.update({"Authorization": "Bearer %s" % token})
-            self.token = token
             return True
         print("no token!")
         return False
