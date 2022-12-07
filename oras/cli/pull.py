@@ -12,6 +12,8 @@ def main(args, parser, extra, subparser):
     """
     client = oras.client.OrasClient(insecure=args.insecure)
     try:
+        if args.username and args.password:
+            client.set_basic_auth(args.username, args.password)
         client.pull(
             config_path=args.config,
             allowed_media_type=args.allowed_media_type
@@ -20,8 +22,6 @@ def main(args, parser, extra, subparser):
             overwrite=not args.keep_old_files,
             manifest_config_ref=args.manifest_config_ref,
             outdir=args.output,
-            password=args.password,
-            username=args.username,
             target=args.target,
         )
     except Exception as e:

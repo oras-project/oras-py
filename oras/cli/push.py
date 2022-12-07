@@ -46,6 +46,8 @@ def main(args, parser, extra, subparser):
     )
     client = oras.client.OrasClient(insecure=args.insecure)
     try:
+        if args.username and args.password:
+            client.set_basic_auth(args.username, args.password)
         client.push(
             config_path=args.config,
             disable_path_validation=args.disable_path_validation,
@@ -53,8 +55,6 @@ def main(args, parser, extra, subparser):
             manifest_config=args.manifest_config,
             annotation_file=args.annotation_file,
             manifest_annotations=manifest_annotations,
-            username=args.username,
-            password=args.password,
             quiet=args.quiet,
             target=args.target,
         )

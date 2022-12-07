@@ -473,10 +473,6 @@ class Registry:
         :type annotation_file: str
         :param manifest_annotations: manifest annotations
         :type manifest_annotations: dict
-        :param username: username for basic auth
-        :type username: str
-        :param password: password for basic auth
-        :type password: str
         :param target: target location to push to
         :type target: str
         """
@@ -581,10 +577,6 @@ class Registry:
         :type manifest_config_ref: str
         :param outdir: output directory path
         :type outdir: str
-        :param username: username for basic auth
-        :type username: str
-        :param password: password for basic auth
-        :type password: str
         :param target: target location to pull from
         :type target: str
         """
@@ -742,6 +734,9 @@ class Registry:
             return False
 
         params = {}
+        import IPython
+
+        IPython.embed()
 
         # Prepare request to retry
         if h.service:
@@ -762,6 +757,7 @@ class Registry:
         if h.scope:
             params["scope"] = h.scope
 
+        print(f"params {params}")
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
         if authResponse.status_code != 200:
             return False
