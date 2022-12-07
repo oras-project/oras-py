@@ -12,7 +12,7 @@ def main(args, parser, extra, subparser):
     """
     client = oras.client.OrasClient()
     try:
-        client.login(
+        result = client.login(
             password=args.password,
             username=args.username,
             config_path=args.config,
@@ -20,5 +20,6 @@ def main(args, parser, extra, subparser):
             insecure=args.insecure,
             password_stdin=args.password_stdin,
         )
+        logger.info(result)
     except Exception as e:
         logger.exit(str(e))
