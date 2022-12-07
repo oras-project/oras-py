@@ -476,8 +476,6 @@ class Registry:
         :type files: list
         :param insecure: allow registry to use http
         :type insecure: bool
-        :param manifest_config: content type
-        :type manifest_config: str
         :param annotation_file: manifest annotations file
         :type annotation_file: str
         :param manifest_annotations: manifest annotations
@@ -496,9 +494,14 @@ class Registry:
 
         # A lookup of annotations we can add (to blobs or manifest)
         annotset = oras.oci.Annotations(kwargs.get("annotation_file"))
+        media_type = None
 
         # Upload files as blobs
         for blob in kwargs.get("files", []):
+
+            # You can provide a blob + content type
+            if ":" in blob:
+                blob, media_type = blob.split(":", 1)
 
             # Must exist
             if not os.path.exists(blob):
@@ -521,7 +524,7 @@ class Registry:
                 cleanup_blob = True
 
             # Create a new layer from the blob
-            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob)
+            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
             annotations = annotset.get_annotations(blob)
             layer["annotations"] = {oras.defaults.annotation_title: blob_name}
             if annotations:
@@ -529,6 +532,7 @@ class Registry:
 
             # update the manifest with the new layer
             manifest["layers"].append(layer)
+            logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
             response = self._upload_blob(blob, container, layer)
@@ -563,6 +567,7 @@ class Registry:
             conf["annotations"] = config_annots
 
         # Config is just another layer blob!
+        logger.debug(f"Preparing config {conf}")
         response = self._upload_blob(config_file, container, conf)
         self._check_200_response(response)
 
