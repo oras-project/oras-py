@@ -134,7 +134,7 @@ def get_parser():
             "-p",
             "--password",
             dest="password",
-            help="registry password or identity token",
+            help="registry password",
         )
         command.add_argument(
             "-i",

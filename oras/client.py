@@ -49,6 +49,15 @@ class OrasClient:
     def __str__(self) -> str:
         return "[oras-client]"
 
+    def set_token_auth(self, token: str):
+        """
+        Set token authentication.
+
+        :param token: the bearer token
+        :type token: str
+        """
+        self.remote.set_token_auth(token)
+
     def set_basic_auth(self, username: str, password: str):
         """
         Add basic authentication to the request.

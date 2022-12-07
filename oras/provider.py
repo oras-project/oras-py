@@ -40,7 +40,6 @@ class Registry:
         self.session: requests.Session = requests.Session()
         self.prefix: str = "http" if insecure else "https"
         self.token: Optional[str] = None
-        self.token_type = "Basic"
         self._auths: dict = {}
         self._basic_auth = None
 
@@ -106,7 +105,7 @@ class Registry:
             # Case 2: no auth there (wonky file)
             elif not auth:
                 return False
-            self.token = auth
+            self._basic_auth = auth
             return True
         return False
 
@@ -121,6 +120,16 @@ class Registry:
         """
         self._basic_auth = oras.auth.get_basic_auth(username, password)
         self.set_header("Authorization", "Basic %s" % self._basic_auth)
+
+    def set_token_auth(self, token: str):
+        """
+        Set token authentication.
+
+        :param token: the bearer token
+        :type token: str
+        """
+        self.token = token
+        self.set_header("Authorization", "Bearer %s" % token)
 
     def reset_basic_auth(self):
         """
@@ -712,8 +721,8 @@ class Registry:
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
-        if self.token and "Authorization" not in self.headers:
-            self.set_header("Authorization", "Basic %s" % self.token)
+        if self._basic_auth and "Authorization" not in self.headers:
+            self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
         headers = copy.deepcopy(self.headers)
         h = oras.auth.parse_auth_header(authHeaderRaw)
@@ -737,6 +746,7 @@ class Registry:
 
         # Prepare request to retry
         if h.service:
+            logger.debug(f"Service: {h.service}")
             params["service"] = h.service
             headers.update(
                 {
@@ -752,12 +762,12 @@ class Registry:
 
         # If the www-authenticate included a scope, honor it!
         if h.scope:
+            logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
-        logger.debug(f"Auth response parameters: {params}")
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
         if authResponse.status_code != 200:
-            logger.debug("Auth response was not successful: {response.text}")
+            logger.debug(f"Auth response was not successful: {authResponse.text}")
             return False
 
         # Request the token
