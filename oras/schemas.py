@@ -6,14 +6,6 @@ __license__ = "Apache-2.0"
 
 schema_url = "http://json-schema.org/draft-07/schema"
 
-# Key value pairs
-annotations = {
-    "type": "object",
-    "patternProperties": {
-        "\\w[\\w-]*": {"type": "string"},
-    },
-}
-
 # Layer
 
 layerProperties = {
@@ -22,7 +14,7 @@ layerProperties = {
         "mediaType": {"type": "string"},
         "size": {"type": "number"},
         "digest": {"type": "string"},
-        "annotations": annotations,
+        "annotations": {"type": ["object", "null", "array"]},
     },
 }
 
@@ -44,10 +36,11 @@ layer.update(layerProperties)
 
 manifestProperties = {
     "schemaVersion": {"type": "number"},
+    "subject": {"type": ["null", "string"]},
     "mediaType": {"type": "string"},
     "layers": {"type": "array", "items": layerProperties},
     "config": layerProperties,
-    "annotations": annotations,
+    "annotations": {"type": ["object", "null", "array"]},
 }
 
 

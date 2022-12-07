@@ -598,7 +598,9 @@ class Registry:
 
         files = []
         for layer in manifest.get("layers", []):
-            filename = layer.get("annotations", {}).get(oras.defaults.annotation_title)
+            filename = (layer.get("annotations") or {}).get(
+                oras.defaults.annotation_title
+            )
 
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
@@ -713,6 +715,10 @@ class Registry:
         :param originalResponse: original response to get the Www-Authenticate header
         :type originalResponse: requests.Response
         """
+        # Cut out early if Authorization already set (EC2)
+        if "Authorization" in self.headers:
+            return True
+
         authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
         if not authHeaderRaw:
             logger.debug(
@@ -721,8 +727,9 @@ class Registry:
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
-        if self._basic_auth and "Authorization" not in self.headers:
+        if self._basic_auth:
             self.set_header("Authorization", "Basic %s" % self._basic_auth)
+            return True
 
         headers = copy.deepcopy(self.headers)
         h = oras.auth.parse_auth_header(authHeaderRaw)
