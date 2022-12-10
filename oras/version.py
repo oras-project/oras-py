@@ -8,7 +8,7 @@ EMAIL = "vsoch@users.noreply.github.com"
 NAME = "oras"
 PACKAGE_URL = "https://github.com/oras-project/oras-python"
 KEYWORDS = "oci, registry, storage"
-DESCRIPTION = "OCI Registry as Storage Python client"
+DESCRIPTION = "OCI Registry as Storage Python SDK"
 LICENSE = "LICENSE"
 
 ################################################################################
