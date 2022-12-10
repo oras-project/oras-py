@@ -343,6 +343,11 @@
                        Instantiate
                       </a>
                      </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#debugging">
+                       Debugging
+                      </a>
+                     </li>
                     </ul>
                    </nav>
                   </li>
@@ -458,6 +463,11 @@
                 <li class="md-nav__item">
                  <a class="md-nav__link" href="#instantiate">
                   Instantiate
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#debugging">
+                  Debugging
                  </a>
                 </li>
                </ul>
@@ -1098,6 +1108,68 @@ your lookup of archives (paths and media types) to push:
 </pre>
            </div>
           </div>
+          <p>
+           The above examples supplement our official
+           <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/examples">
+            examples folder
+           </a>
+           .
+Please let us know if you need an additional example or help with your client!
+          </p>
+         </section>
+         <section id="debugging">
+          <h3 id="debugging">
+           Debugging
+           <a class="headerlink" href="#debugging" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <blockquote>
+           <div>
+            <p>
+             Can I see more debug information?
+            </p>
+           </div>
+          </blockquote>
+          <p>
+           Yes! Try adding
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             --debug
+            </span>
+           </code>
+           <em>
+            after
+           </em>
+           any command like pull, push, login, etc. More verbose
+output should appear. If we need further verbosity, please open an issue and it can be added.
+          </p>
+          <blockquote>
+           <div>
+            <p>
+             I get unauthorized when trying to login to an Amazon ECR Registry
+            </p>
+           </div>
+          </blockquote>
+          <p>
+           Note that for
+           <a class="reference external" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html">
+            Amazon ECR
+           </a>
+           you might need to login per the instructions at the link provided. If you look at your
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             ~/.docker/config.json
+            </span>
+           </code>
+           and see
+that there is a “credsStore” section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn’t support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you’ve done
+this correctly, you should see an “auth” key under a hostname under “auths” in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper.
+          </p>
          </section>
         </section>
        </section>
@@ -1146,7 +1218,7 @@ your lookup of archives (paths and media types) to push:
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 02, 2022.
+              Dec 10, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

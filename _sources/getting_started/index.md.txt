@@ -1,6 +1,6 @@
 # Developer Guide
 
-Oras Python is a Python client and API for OCI registry as Storage. You
+Oras Python is a Python SDK for OCI registry as Storage (ORAS). You
 should be able to easily pull and push artifacts from Python and build
 your own custom interactions. The main getting started docs can be found
 on [oras.land Python's page](https://oras.land/client_libraries/1_python/) and the developer

@@ -318,32 +318,8 @@
               </a>
              </li>
              <li class="md-nav__item">
-              <a class="md-nav__link" href="#command-line">
-               Command Line
-              </a>
-              <nav class="md-nav">
-               <ul class="md-nav__list">
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="#login">
-                  Login
-                 </a>
-                </li>
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="#push">
-                  Push
-                 </a>
-                </li>
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="#pull">
-                  Pull
-                 </a>
-                </li>
-               </ul>
-              </nav>
-             </li>
-             <li class="md-nav__item">
-              <a class="md-nav__link" href="#within-python">
-               Within Python
+              <a class="md-nav__link" href="#usage">
+               Usage
               </a>
               <nav class="md-nav">
                <ul class="md-nav__list">
@@ -363,6 +339,11 @@
              <li class="md-nav__item">
               <a class="md-nav__link" href="#custom-clients">
                Custom Clients
+              </a>
+             </li>
+             <li class="md-nav__item">
+              <a class="md-nav__link" href="#debugging">
+               Debugging
               </a>
              </li>
             </ul>
@@ -390,14 +371,22 @@
          </a>
         </h1>
         <p>
-         Oras Python will allow you to run traditional push and pull commands for artifacts,
-or generate a custom client. This small user guide will walk you through these various
-steps, and please
+         Oras Python is a Python SDK that will allow you to create applications in Python
+that can do traditional push and pull commands to interact with a custom set of
+artifacts. As of version 0.1.0 we no longer provide a default client alongside
+oras Python, and if you need a client you should use
+         <a class="reference external" href="https://github.com/oras-project/oras">
+          oras
+         </a>
+         in Go.
+This user guide will walk you through these various steps, and point you to
+relevant examples. Please
          <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
           open an issue
          </a>
          if
-functionality is missing. More detailed developer examples can also be found on the
+you have a question or otherwise need help with your specific implementation.
+More detailed developer examples can also be found on the
          <a class="reference external" href="https://oras-project.github.io/oras-py/">
           Oras Python
          </a>
@@ -467,15 +456,16 @@ so any changes you make are immediately “live” for testing.
            <a class="reference external" href="https://github.com/oras-project/oras-py/blob/main/Dockerfile">
             Dockerfile
            </a>
-           to build a container with the client.
+           to build a container
+with the Python SDK.
           </p>
           <div class="highlight-bash notranslate">
            <div class="highlight">
             <pre><span></span>$ docker build -t oras-py .
 
 $ docker run -it oras-py
-<span class="c1"># which oras-py</span>
-/opt/conda/bin/oras-py
+$ ipython
+&gt; import oras
 </pre>
            </div>
           </div>
@@ -489,7 +479,8 @@ $ docker run -it oras-py
           </a>
          </h2>
          <p>
-          You should see
+          It’s often helpful to develop with a local registry running.
+You should see
           <a class="reference external" href="https://oras.land/implementors/#docker-distribution">
            supported registries
           </a>
@@ -534,233 +525,23 @@ docker run -it --rm -p <span class="m">5000</span>:5000 <span class="se">\</span
           </div>
          </div>
         </section>
-        <section id="command-line">
-         <h2 id="command-line">
-          Command Line
-          <a class="headerlink" href="#command-line" title="Permalink to this heading">
-           ¶
-          </a>
-         </h2>
-         <section id="login">
-          <h3 id="login">
-           Login
-           <a class="headerlink" href="#login" title="Permalink to this heading">
-            ¶
-           </a>
-          </h3>
-          <p>
-           Once you create (or already have) a registry, you will want to login. You can do:
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ oras-py login -u myuser -p mypass localhost:5000
-
-<span class="c1"># or localhost (insecure)</span>
-$ oras-py login -u myuser -p mypass -k localhost:5000 --insecure
-
-WARNING! Using --password via the CLI is insecure. Use --password-stdin.
-Login Succeeded
-</pre>
-           </div>
-          </div>
-          <p>
-           You can also provide them interactively
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ oras-py login -k localhost:5000 --insecure
-Username: myuser
-Password: mypass
-Login Succeeded
-</pre>
-           </div>
-          </div>
-          <p>
-           or use
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             --password-stdin
-            </span>
-           </code>
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ <span class="nb">echo</span> mypass <span class="p">|</span> oras-py login -u myuser -k localhost:5000 --insecure --password-stdin
-Login Succeeded
-</pre>
-           </div>
-          </div>
-          <p>
-           Note that oras-py will not remove content from your docker config files, so
-there is no concept of a “logout” unless you are using the client interactively,
-and have configs loaded, then you can do:
-          </p>
-          <div class="highlight-python notranslate">
-           <div class="highlight">
-            <pre><span></span><span class="n">cli</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
-</pre>
-           </div>
-          </div>
-         </section>
-         <section id="push">
-          <h3 id="push">
-           Push
-           <a class="headerlink" href="#push" title="Permalink to this heading">
-            ¶
-           </a>
-          </h3>
-          <p>
-           Let’s first push a container. Let’s follow
-           <a class="reference external" href="https://oras.land/cli/1_pushing/">
-            the example here
-           </a>
-           :
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span><span class="nb">echo</span> <span class="s2">"hello dinosaur"</span> &gt; artifact.txt
-$ oras-py push localhost:5000/dinosaur/artifact:v1 <span class="se">\</span>
---manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
-./artifact.txt
-Successfully pushed localhost:5000/dinosaur/artifact:v1
-</pre>
-           </div>
-          </div>
-          <p>
-           And if you aren’t using https, add
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             --insecure
-            </span>
-           </code>
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure <span class="se">\</span>
---manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
-./artifact.txt
-Successfully pushed localhost:5000/dinosaur/artifact:v1
-</pre>
-           </div>
-          </div>
-          <p>
-           You can also provide an annotations file, which should be a lookup to an annotation set
-that corresponds with a particular file (absolute or relative path) or one of
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             $config
-            </span>
-           </code>
-           or
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             $manifest
-            </span>
-           </code>
-           . E.g.,:
-          </p>
-          <div class="highlight-python notranslate">
-           <div class="highlight">
-            <pre><span></span><span class="p">{</span><span class="s2">"$manifest"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"manifest_annotation_key"</span><span class="p">,</span> <span class="s2">"manifest_annotation_value"</span><span class="p">},</span>
- <span class="s2">"$config"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"config_annotation_key"</span><span class="p">,</span> <span class="s2">"config_annotation_value"</span><span class="p">},</span>
- <span class="s2">"blob.tar.gz"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"blob_annotation_key"</span><span class="p">,</span> <span class="s2">"blob_annotation_value"</span><span class="p">}}</span>
-</pre>
-           </div>
-          </div>
-          <p>
-           Given this file,
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             annotations.json
-            </span>
-           </code>
-           you would provide to push as follows:
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure <span class="se">\</span>
---annotation-file ./annotations.json <span class="se">\</span>
---manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
-./artifact.txt
-</pre>
-           </div>
-          </div>
-          <p>
-           As of version 0.0.14, you can also specify “one off” manifest annotations (e.g.,
-for the
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             $manifest
-            </span>
-           </code>
-           group). However, you are not allowed to define a
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             $manifest
-            </span>
-           </code>
-           key
-and one-off annotations (choose one or the other). Note that you can provide as many as you
-like, and each much be in the format
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             --annotation
-            </span>
-            <span class="pre">
-             key1=value1
-            </span>
-           </code>
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             --annotation
-            </span>
-            <span class="pre">
-             key2=value2
-            </span>
-           </code>
-           :
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure <span class="se">\</span>
---annotation <span class="nv">key1</span><span class="o">=</span>value1 --annotation <span class="nv">key2</span><span class="o">=</span>value2 <span class="se">\</span>
---manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
-./artifact.txt
-</pre>
-           </div>
-          </div>
-         </section>
-         <section id="pull">
-          <h3 id="pull">
-           Pull
-           <a class="headerlink" href="#pull" title="Permalink to this heading">
-            ¶
-           </a>
-          </h3>
-          <p>
-           Now try a pull! We will first need to delete the file
-          </p>
-          <div class="highlight-bash notranslate">
-           <div class="highlight">
-            <pre><span></span>$ rm -f artifact.txt <span class="c1"># first delete the file</span>
-$ oras-py pull localhost:5000/dinosaur/artifact:v1
-$ cat artifact.txt
-hello dinosaur
-</pre>
-           </div>
-          </div>
-         </section>
-        </section>
-        <section id="within-python">
-         <h2 id="within-python">
-          Within Python
-          <a class="headerlink" href="#within-python" title="Permalink to this heading">
+        <section id="usage">
+         <h2 id="usage">
+          Usage
+          <a class="headerlink" href="#usage" title="Permalink to this heading">
            ¶
           </a>
          </h2>
          <p>
-          If you want to use the library from within Python, here is how to do that.
-You’ll still need a running registry as shown above. As a trick, if you want
+          The library is intended to be used within Python. We provide a basic client
+that handles push and pull, and you are encouraged to check out our
+          <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/oras/cli">
+           examples
+          </a>
+          (provided alongside the repository and in the wild) to see other implementations
+available. You’ll still need a running registry as shown above, or if you have
+access to a remote registry (e.g., GitHub Packages, Docker Hub, or other that
+supports ORAS) you can use that. As a trick, if you want
 more detail than is available in these docs, you can peek into the
           <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/oras/cli">
            Python client code
@@ -864,6 +645,60 @@ see the
           hosted alongside the repository.
          </p>
         </section>
+        <section id="debugging">
+         <h2 id="debugging">
+          Debugging
+          <a class="headerlink" href="#debugging" title="Permalink to this heading">
+           ¶
+          </a>
+         </h2>
+         <blockquote>
+          <div>
+           <p>
+            Can I see more debug information?
+           </p>
+          </div>
+         </blockquote>
+         <p>
+          Yes! Try adding
+          <code class="docutils literal notranslate">
+           <span class="pre">
+            --debug
+           </span>
+          </code>
+          <em>
+           after
+          </em>
+          any command like pull, push, login, etc. More verbose
+output should appear. If we need further verbosity, please open an issue and it can be added.
+         </p>
+         <blockquote>
+          <div>
+           <p>
+            I get unauthorized when trying to login to an Amazon ECR Registry
+           </p>
+          </div>
+         </blockquote>
+         <p>
+          Note that for
+          <a class="reference external" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html">
+           Amazon ECR
+          </a>
+          you might need to login per the instructions at the link provided. If you look at your
+          <code class="docutils literal notranslate">
+           <span class="pre">
+            ~/.docker/config.json
+           </span>
+          </code>
+          and see
+that there is a “credsStore” section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn’t support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you’ve done
+this correctly, you should see an “auth” key under a hostname under “auths” in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper.
+         </p>
+        </section>
        </section>
       </article>
      </div>
@@ -882,7 +717,7 @@ see the
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 02, 2022.
+              Dec 10, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

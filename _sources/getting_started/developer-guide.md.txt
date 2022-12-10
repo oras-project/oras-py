@@ -70,7 +70,7 @@ use it over restructured syntax - it makes it easier to contribute documentation
 The documentation is built using sphinx, and generally you can install
 dependencies:
 
-``` console
+```console
 # In main oras-py folder (oras-py is needed to build docs)
 $ pip install -e .
 
@@ -153,7 +153,7 @@ If you want to create your own client, you likely want to:
 Your most basic registry (that will mimic the default can be created
 like this:
 
-``` python
+```python
 import oras.provider
 
 class MyProvider(oras.provider.Registry):
@@ -165,7 +165,7 @@ class MyProvider(oras.provider.Registry):
 You can imagine having a custom function that will retrieve a manifest
 or blob and do custom operations on it.
 
-``` python
+```python
 def inspect(self, name):
 
     # Parse the name into a container
@@ -188,7 +188,7 @@ Specifically the function `self.get_blob` will allow you to do that.
 You might instead want to have a custom lookup of archive paths and
 media types. Let's say we start with this lookup, `archives`:
 
-``` python
+```python
 archives = {
     "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
     "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"
@@ -207,7 +207,7 @@ This example is similar to what the `oras.provider.Registry` provides,
 but we are allowing better customization of content types and overriding
 the default "push" function.
 
-``` python
+```python
 import oras.oci
 import oras.defaults
 import oras.provider
@@ -318,7 +318,7 @@ And add the `-d` for detached. Then you can run your custom functions after
 doing that, either inspecting a particular unique resource identifier or using
 your lookup of archives (paths and media types) to push:
 
-``` python
+```python
 def main():
 
     # Pull Example
@@ -334,3 +334,26 @@ def main():
         "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"}
     reg.push("ghcr.io/vsoch/excellent-dinosaur:latest", archives)
 ```
+
+The above examples supplement our official [examples folder](https://github.com/oras-project/oras-py/tree/main/examples).
+Please let us know if you need an additional example or help with your client!
+
+
+### Debugging
+
+> Can I see more debug information?
+
+Yes! Try adding `--debug` *after* any command like pull, push, login, etc. More verbose
+output should appear. If we need further verbosity, please open an issue and it can be added.
+
+
+> I get unauthorized when trying to login to an Amazon ECR Registry
+
+Note that for [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html)
+you might need to login per the instructions at the link provided. If you look at your `~/.docker/config.json` and see
+that there is a "credsStore" section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn't support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you've done
+this correctly, you should see an "auth" key under a hostname under "auths" in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper.

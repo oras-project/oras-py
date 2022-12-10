@@ -354,6 +354,10 @@
 <span class="sd">        :param hostname: the registry hostname to remove</span>
 <span class="sd">        :type hostname: str</span>
 <span class="sd">        """</span>
+        <span class="c1"># Remove any basic auth or token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"You are not logged in to </span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">return</span>
@@ -395,8 +399,21 @@
 <span class="sd">        :param hostname: the registry hostname to look for</span>
 <span class="sd">        :type hostname: str</span>
 <span class="sd">        """</span>
+        <span class="c1"># Note that the hostname can be defined without a token</span>
         <span class="k">if</span> <span class="n">hostname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">[</span><span class="n">hostname</span><span class="p">][</span><span class="s2">"auth"</span><span class="p">]</span>
+            <span class="n">auth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">[</span><span class="n">hostname</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"auth"</span><span class="p">)</span>
+
+            <span class="c1"># Case 1: they use a credsStore we don't know how to read</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">auth</span> <span class="ow">and</span> <span class="s2">"credsStore"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">[</span><span class="n">hostname</span><span class="p">]:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">'"credsStore" found in your ~/.docker/config.json, which is not supported by oras-py. Remove it, docker login, and try again.'</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># Case 2: no auth there (wonky file)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">auth</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span> <span class="o">=</span> <span class="n">auth</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -411,6 +428,16 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Basic </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Registry.set_token_auth"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.set_token_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_token_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Set token authentication.</span>
+
+<span class="sd">        :param token: the bearer token</span>
+<span class="sd">        :type token: str</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.reset_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.reset_basic_auth">[docs]</a>    <span class="k">def</span> <span class="nf">reset_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -708,7 +735,7 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">202</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_response_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_response_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -757,16 +784,10 @@
 <span class="sd">        :type files: list</span>
 <span class="sd">        :param insecure: allow registry to use http</span>
 <span class="sd">        :type insecure: bool</span>
-<span class="sd">        :param manifest_config: content type</span>
-<span class="sd">        :type manifest_config: str</span>
 <span class="sd">        :param annotation_file: manifest annotations file</span>
 <span class="sd">        :type annotation_file: str</span>
 <span class="sd">        :param manifest_annotations: manifest annotations</span>
 <span class="sd">        :type manifest_annotations: dict</span>
-<span class="sd">        :param username: username for basic auth</span>
-<span class="sd">        :type username: str</span>
-<span class="sd">        :param password: password for basic auth</span>
-<span class="sd">        :type password: str</span>
 <span class="sd">        :param target: target location to push to</span>
 <span class="sd">        :type target: str</span>
 <span class="sd">        """</span>
@@ -781,9 +802,14 @@
 
         <span class="c1"># A lookup of annotations we can add (to blobs or manifest)</span>
         <span class="n">annotset</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Annotations</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotation_file"</span><span class="p">))</span>
+        <span class="n">media_type</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Upload files as blobs</span>
         <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"files"</span><span class="p">,</span> <span class="p">[]):</span>
+
+            <span class="c1"># You can provide a blob + content type</span>
+            <span class="k">if</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">blob</span><span class="p">,</span> <span class="n">media_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
             <span class="c1"># Must exist</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
@@ -806,7 +832,7 @@
                 <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Create a new layer from the blob</span>
-            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">)</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="n">media_type</span><span class="p">)</span>
             <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
             <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="p">}</span>
             <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
@@ -814,6 +840,7 @@
 
             <span class="c1"># update the manifest with the new layer</span>
             <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="c1"># Upload the blob layer</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
@@ -848,6 +875,7 @@
             <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_annots</span>
 
         <span class="c1"># Config is just another layer blob!</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing config </span><span class="si">{</span><span class="n">conf</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
@@ -871,10 +899,6 @@
 <span class="sd">        :type manifest_config_ref: str</span>
 <span class="sd">        :param outdir: output directory path</span>
 <span class="sd">        :type outdir: str</span>
-<span class="sd">        :param username: username for basic auth</span>
-<span class="sd">        :type username: str</span>
-<span class="sd">        :param password: password for basic auth</span>
-<span class="sd">        :type password: str</span>
 <span class="sd">        :param target: target location to pull from</span>
 <span class="sd">        :type target: str</span>
 <span class="sd">        """</span>
@@ -887,7 +911,9 @@
 
         <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">manifest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"layers"</span><span class="p">,</span> <span class="p">[]):</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span>
+            <span class="p">)</span>
 
             <span class="c1"># If we don't have a filename, default to digest. Hopefully does not happen</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
@@ -976,13 +1002,13 @@
         <span class="p">)</span>
 
         <span class="c1"># A 401 response is a request for authentication</span>
-        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">401</span><span class="p">,</span> <span class="mi">404</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">response</span>
 
         <span class="c1"># Otherwise, authenticate the request and retry</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_request</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
                 <span class="n">method</span><span class="p">,</span>
                 <span class="n">url</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
@@ -990,6 +1016,22 @@
                 <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
                 <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
             <span class="p">)</span>
+
+        <span class="c1"># Fallback to using Authorization if already required</span>
+        <span class="c1"># This is a catch for EC2. I don't think this is correct</span>
+        <span class="c1"># A basic token should be used for a bearer one.</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">401</span><span class="p">,</span> <span class="mi">404</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">"Authorization"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Trying with provided Basic Authorization..."</span><span class="p">)</span>
+            <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+                <span class="n">method</span><span class="p">,</span>
+                <span class="n">url</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="Registry.authenticate_request"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.authenticate_request">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">originalResponse</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -1004,11 +1046,15 @@
 <span class="sd">        """</span>
         <span class="n">authHeaderRaw</span> <span class="o">=</span> <span class="n">originalResponse</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Www-Authenticate"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">authHeaderRaw</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">"Www-Authenticate not found in original response, cannot authenticate."</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="c1"># If we have a token, set auth header (base64 encoded user/pass)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Basic </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
 
         <span class="n">headers</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">)</span>
@@ -1016,7 +1062,9 @@
         <span class="k">if</span> <span class="s2">"Authorization"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
 
             <span class="c1"># First try to request an anonymous token</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"No Authorization, requesting anonymous token"</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_anonymous_token</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Successfully obtained anonymous token!"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
@@ -1030,6 +1078,7 @@
 
         <span class="c1"># Prepare request to retry</span>
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Service: </span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">"service"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">service</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{</span>
@@ -1045,10 +1094,12 @@
 
         <span class="c1"># If the www-authenticate included a scope, honor it!</span>
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Scope: </span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">"scope"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span>
 
         <span class="n">authResponse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">if</span> <span class="n">authResponse</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Auth response was not successful: </span><span class="si">{</span><span class="n">authResponse</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="c1"># Request the token</span>
@@ -1066,6 +1117,7 @@
 <span class="sd">        Returns: boolean if headers have been updated with token.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Request anonymous token: no realm provided, exiting early"</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1074,21 +1126,22 @@
         <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="s2">"scope"</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">scope</span>
 
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Final params are </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">"GET"</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">realm</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Response for anon token failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="c1"># From https://docs.docker.com/registry/spec/auth/token/ section</span>
         <span class="c1"># We can get token OR access_token OR both (when both they are identical)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-
         <span class="n">token</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
 
-        <span class="c1"># Update the headers and self.token (used next time)</span>
+        <span class="c1"># Update the headers but not self.token (expects Basic)</span>
         <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">token</span><span class="p">})</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
             <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Warning: no token or access_token present in response."</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div></div>
 </pre>
        </div>
@@ -1109,7 +1162,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 02, 2022.
+              Dec 10, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

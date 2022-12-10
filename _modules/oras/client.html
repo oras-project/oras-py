@@ -310,9 +310,11 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">oras.auth</span>
 <span class="kn">import</span> <span class="nn">oras.container</span>
-<span class="kn">import</span> <span class="nn">oras.main</span> <span class="k">as</span> <span class="nn">main</span>
+<span class="kn">import</span> <span class="nn">oras.main.login</span> <span class="k">as</span> <span class="nn">login</span>
 <span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">import</span> <span class="nn">oras.utils</span>
 <span class="kn">import</span> <span class="nn">oras.version</span>
 
 
@@ -352,6 +354,15 @@
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"[oras-client]"</span>
+
+<div class="viewcode-block" id="OrasClient.set_token_auth"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_token_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_token_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Set token authentication.</span>
+
+<span class="sd">        :param token: the bearer token</span>
+<span class="sd">        :type token: str</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">set_token_auth</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OrasClient.set_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_basic_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -437,7 +448,7 @@
 <span class="sd">        :param config_path: list of config paths to add</span>
 <span class="sd">        :type config_path: list</span>
 <span class="sd">        """</span>
-        <span class="n">login_func</span> <span class="o">=</span> <span class="n">main</span><span class="o">.</span><span class="n">login</span>
+        <span class="n">login_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_login</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="p">,</span> <span class="s2">"login"</span><span class="p">):</span>
             <span class="n">login_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">login</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="n">login_func</span><span class="p">(</span>
@@ -456,7 +467,64 @@
 <span class="sd">        :param hostname: the hostname to login to</span>
 <span class="sd">        :type hostname: str</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_login</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">password_stdin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Login to an OCI registry.</span>
+
+<span class="sd">        The username and password can come from stdin. Most people use username</span>
+<span class="sd">        password to get a token, so we are disabling providing just a token for</span>
+<span class="sd">        now. A tool that wants to provide a token should use set_token_auth.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Read password from stdin</span>
+        <span class="k">if</span> <span class="n">password_stdin</span><span class="p">:</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+        <span class="c1"># No username, try to get from stdin</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
+            <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Username: "</span><span class="p">)</span>
+
+        <span class="c1"># No password provided</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Password: "</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"password required"</span><span class="p">)</span>
+
+        <span class="c1"># Cut out early if we didn't get what we need</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">"Login"</span><span class="p">:</span> <span class="s2">"Not successful"</span><span class="p">}</span>
+
+        <span class="c1"># Set basic auth for the client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+        <span class="c1"># Login</span>
+        <span class="c1"># https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="n">insecure</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+                <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+                <span class="n">registry</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+                <span class="n">dockercfg_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Fallback to manual login</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">login</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">()</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="n">registry</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="n">dockercfg_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
+            <span class="p">)</span></div>
 </pre>
        </div>
       </article>
@@ -476,7 +544,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 02, 2022.
+              Dec 10, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

@@ -307,12 +307,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">oras.auth</span>
 <span class="kn">import</span> <span class="nn">oras.utils</span>
-<span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 
 
 <div class="viewcode-block" id="DockerClient"><a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.DockerClient">[docs]</a><span class="k">class</span> <span class="nc">DockerClient</span><span class="p">:</span>
@@ -356,76 +354,6 @@
             <span class="p">}</span>
         <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">dockercfg_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span></div></div>
-
-
-<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
-    <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">password_stdin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""</span>
-<span class="sd">    Login to an OCI registry.</span>
-
-<span class="sd">    The username and password can come from stdin.</span>
-<span class="sd">    """</span>
-    <span class="c1"># Read password from stdin</span>
-    <span class="k">if</span> <span class="n">password_stdin</span><span class="p">:</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="n">readline</span><span class="p">()</span>
-
-    <span class="c1"># No password provided</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-
-        <span class="c1"># No username, try to get from stdin</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
-            <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Username: "</span><span class="p">)</span>
-
-        <span class="c1"># if we still don't have a username, we require a token</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Token: "</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"token required"</span><span class="p">)</span>
-
-        <span class="c1"># If we do have a username, we just need a passowrd</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Password: "</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"password required"</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">"WARNING! Using --password via the CLI is insecure. Use --password-stdin."</span>
-        <span class="p">)</span>
-
-    <span class="c1"># Login</span>
-    <span class="c1"># https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="n">insecure</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
-            <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
-            <span class="n">registry</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
-            <span class="n">dockercfg_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="c1"># Fallback to manual login</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DockerClient</span><span class="p">()</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-            <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-            <span class="n">registry</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-            <span class="n">dockercfg_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="readline"><a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.readline">[docs]</a><span class="k">def</span> <span class="nf">readline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">"""</span>
-<span class="sd">    Read lines from stdin</span>
-<span class="sd">    """</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 </pre>
        </div>
       </article>
@@ -445,7 +373,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 02, 2022.
+              Dec 10, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
