@@ -1,9 +1,13 @@
 # Oras Python User Guide
 
-Oras Python will allow you to run traditional push and pull commands for artifacts,
-or generate a custom client. This small user guide will walk you through these various
-steps, and please [open an issue](https://github.com/oras-project/oras-py/issues) if
-functionality is missing. More detailed developer examples can also be found on the
+Oras Python is a Python SDK that will allow you to create applications in Python
+that can do traditional push and pull commands to interact with a custom set of
+artifacts. As of version 0.1.0 we no longer provide a default client alongside
+oras Python, and if you need a client you should use [oras](https://github.com/oras-project/oras) in Go.
+This user guide will walk you through these various steps, and point you to
+relevant examples. Please [open an issue](https://github.com/oras-project/oras-py/issues) if
+you have a question or otherwise need help with your specific implementation.
+More detailed developer examples can also be found on the
 [Oras Python](https://oras-project.github.io/oras-py/) page hosted alongside the repository.
 
 ## Installation
@@ -34,20 +38,23 @@ $ pip install -e .
 Development mode means that the install is done from where you've cloned the library,
 so any changes you make are immediately "live" for testing.
 
+
 ### Docker Container
 
-We provide a [Dockerfile](https://github.com/oras-project/oras-py/blob/main/Dockerfile) to build a container with the client.
+We provide a [Dockerfile](https://github.com/oras-project/oras-py/blob/main/Dockerfile) to build a container
+with the Python SDK.
 
 ```bash
 $ docker build -t oras-py .
 
 $ docker run -it oras-py
-# which oras-py
-/opt/conda/bin/oras-py
+$ ipython
+> import oras
 ```
 
 ## Registry
 
+It's often helpful to develop with a local registry running.
 You should see [supported registries](https://oras.land/implementors/#docker-distribution) or if you
 want to deploy a local testing registry (without auth), you can do:
 
@@ -75,117 +82,18 @@ docker run -it --rm -p 5000:5000 \
     ghcr.io/oras-project/registry:latest
 ```
 
-## Command Line
+## Usage
 
-### Login
-
-Once you create (or already have) a registry, you will want to login. You can do:
-
-```bash
-$ oras-py login -u myuser -p mypass localhost:5000
-
-# or localhost (insecure)
-$ oras-py login -u myuser -p mypass -k localhost:5000 --insecure
-
-WARNING! Using --password via the CLI is insecure. Use --password-stdin.
-Login Succeeded
-```
-
-You can also provide them interactively
-
-
-```bash
-$ oras-py login -k localhost:5000 --insecure
-Username: myuser
-Password: mypass
-Login Succeeded
-```
-
-or use `--password-stdin`
-
-```bash
-$ echo mypass | oras-py login -u myuser -k localhost:5000 --insecure --password-stdin
-Login Succeeded
-```
-
-Note that oras-py will not remove content from your docker config files, so
-there is no concept of a "logout" unless you are using the client interactively,
-and have configs loaded, then you can do:
-
-```python
-cli.logout(hostname)
-```
-
-### Push
-
-Let's first push a container. Let's follow [the example here](https://oras.land/cli/1_pushing/):
-
-```bash
-echo "hello dinosaur" > artifact.txt
-$ oras-py push localhost:5000/dinosaur/artifact:v1 \
---manifest-config /dev/null:application/vnd.acme.rocket.config \
-./artifact.txt
-Successfully pushed localhost:5000/dinosaur/artifact:v1
-```
-
-And if you aren't using https, add `--insecure`
-
-```bash
-$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
---manifest-config /dev/null:application/vnd.acme.rocket.config \
-./artifact.txt
-Successfully pushed localhost:5000/dinosaur/artifact:v1
-```
-
-You can also provide an annotations file, which should be a lookup to an annotation set
-that corresponds with a particular file (absolute or relative path) or one of
-`$config` or `$manifest`. E.g.,:
-
-```python
-{"$manifest": {"manifest_annotation_key", "manifest_annotation_value"},
- "$config": {"config_annotation_key", "config_annotation_value"},
- "blob.tar.gz": {"blob_annotation_key", "blob_annotation_value"}}
-```
-
-Given this file, `annotations.json` you would provide to push as follows:
-
-```bash
-$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
---annotation-file ./annotations.json \
---manifest-config /dev/null:application/vnd.acme.rocket.config \
-./artifact.txt
-```
-
-As of version 0.0.14, you can also specify "one off" manifest annotations (e.g.,
-for the `$manifest` group). However, you are not allowed to define a `$manifest` key
-and one-off annotations (choose one or the other). Note that you can provide as many as you
-like, and each much be in the format `--annotation key1=value1` `--annotation key2=value2`:
-
-```bash
-$ oras-py push localhost:5000/dinosaur/artifact:v1 --insecure \
---annotation key1=value1 --annotation key2=value2 \
---manifest-config /dev/null:application/vnd.acme.rocket.config \
-./artifact.txt
-```
-
-### Pull
-
-
-Now try a pull! We will first need to delete the file
-
-```bash
-$ rm -f artifact.txt # first delete the file
-$ oras-py pull localhost:5000/dinosaur/artifact:v1
-$ cat artifact.txt
-hello dinosaur
-```
-
-## Within Python
-
-If you want to use the library from within Python, here is how to do that.
-You'll still need a running registry as shown above. As a trick, if you want
+The library is intended to be used within Python. We provide a basic client
+that handles push and pull, and you are encouraged to check out our
+[examples](https://github.com/oras-project/oras-py/tree/main/oras/cli)
+(provided alongside the repository and in the wild) to see other implementations
+available. You'll still need a running registry as shown above, or if you have
+access to a remote registry (e.g., GitHub Packages, Docker Hub, or other that
+supports ORAS) you can use that. As a trick, if you want
 more detail than is available in these docs, you can peek into the
 [Python client code](https://github.com/oras-project/oras-py/tree/main/oras/cli).
+
 
 ### Login and Logout
 

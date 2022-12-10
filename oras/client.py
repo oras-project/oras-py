@@ -6,9 +6,11 @@ __license__ = "Apache-2.0"
 import sys
 from typing import List, Optional, Union
 
+import oras.auth
 import oras.container
-import oras.main as main
+import oras.main.login as login
 import oras.provider
+import oras.utils
 import oras.version
 
 
@@ -142,7 +144,7 @@ class OrasClient:
         :param config_path: list of config paths to add
         :type config_path: list
         """
-        login_func = main.login
+        login_func = self._login
         if hasattr(self.remote, "login"):
             login_func = self.remote.login  # type: ignore
         return login_func(
@@ -162,3 +164,60 @@ class OrasClient:
         :type hostname: str
         """
         self.remote.logout(hostname)
+
+    def _login(
+        self,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        password_stdin: bool = False,
+        insecure: bool = False,
+        hostname: Optional[str] = None,
+        config_path: Optional[str] = None,
+    ) -> dict:
+        """
+        Login to an OCI registry.
+
+        The username and password can come from stdin. Most people use username
+        password to get a token, so we are disabling providing just a token for
+        now. A tool that wants to provide a token should use set_token_auth.
+        """
+        # Read password from stdin
+        if password_stdin:
+            password = oras.utils.readline()
+
+        # No username, try to get from stdin
+        if not username:
+            username = input("Username: ")
+
+        # No password provided
+        if not password:
+            password = input("Password: ")
+            if not password:
+                raise ValueError("password required")
+
+        # Cut out early if we didn't get what we need
+        if not password or not username:
+            return {"Login": "Not successful"}
+
+        # Set basic auth for the client
+        self.set_basic_auth(username, password)
+
+        # Login
+        # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
+        try:
+            client = oras.utils.get_docker_client(insecure=insecure)
+            return client.login(
+                username=username,
+                password=password,
+                registry=hostname,
+                dockercfg_path=config_path,
+            )
+
+        # Fallback to manual login
+        except Exception:
+            return login.DockerClient().login(
+                username=username,  # type: ignore
+                password=password,  # type: ignore
+                registry=hostname,  # type: ignore
+                dockercfg_path=config_path,
+            )

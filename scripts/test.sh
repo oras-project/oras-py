@@ -20,7 +20,4 @@ printf "ORAS_REGISTRY: ${ORAS_REGISTRY}\n"
 printf "ORAS_AUTH: ${ORAS_AUTH}\n"
 
 # Client (command line) tests
-if [[ "${ORAS_AUTH}" != "true" ]]; then
-    /bin/bash oras/tests/test_client.sh
-fi
 pytest oras/

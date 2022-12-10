@@ -6,17 +6,14 @@
 
 ![https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png](https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png)
 
-
-OCI Registry as Storage enables client libraries to push OCI Artifacts to [OCI Conformant](https://github.com/opencontainers/oci-conformance) registries. This is a Python client for that.
+OCI Registry as Storage enables libraries to push OCI Artifacts to [OCI Conformant](https://github.com/opencontainers/oci-conformance) registries. This is a Python SDK for Python developers to empower them to do this in their applications.
 
 See our ⭐️ [Documentation](https://oras-project.github.io/oras-py/) ⭐️ to get started.
 
 ## TODO
 
  - add example (custom) GitHub client
- - refactor internals to be more like oras-go (e.g., provider, copy?)
  - need to have git commit, state, added to defaults on install/release. See [here](https://github.com/oras-project/oras/blob/main/Makefile).
- - plain_http vs insecure?
  - todo we haven't added path traversal, or cacheRoot to pull
  - environment variables like `ORAS_CACHE`
 

@@ -11,6 +11,7 @@ from .fileio import (
     read_file,
     read_in_chunks,
     read_json,
+    readline,
     recursive_find,
     write_file,
     write_json,

@@ -335,6 +335,10 @@ def main():
     reg.push("ghcr.io/vsoch/excellent-dinosaur:latest", archives)
 ```
 
+The above examples supplement our official [examples folder](https://github.com/oras-project/oras-py/tree/main/examples).
+Please let us know if you need an additional example or help with your client!
+
+
 ### Debugging
 
 > Can I see more debug information?

@@ -50,6 +50,10 @@ class Registry:
         :param hostname: the registry hostname to remove
         :type hostname: str
         """
+        # Remove any basic auth or token
+        self._basic_auth = None
+        self.token = None
+
         if not self._auths:
             logger.info(f"You are not logged in to {hostname}")
             return
@@ -709,7 +713,7 @@ class Registry:
                 stream=stream,
             )
 
-        # Fallback to using Authorziation if already required
+        # Fallback to using Authorization if already required
         # This is a catch for EC2. I don't think this is correct
         # A basic token should be used for a bearer one.
         if response.status_code in [401, 404] and "Authorization" in self.headers:
