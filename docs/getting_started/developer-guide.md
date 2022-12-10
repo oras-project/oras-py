@@ -343,8 +343,15 @@ Please let us know if you need an additional example or help with your client!
 
 > Can I see more debug information?
 
-Yes! Try adding `--debug` *after* any command like pull, push, login, etc. More verbose
-output should appear. If we need further verbosity, please open an issue and it can be added.
+Yes! Try using setup_logger with debug set to true:
+
+```
+from oras.logger import setup_logger, logger
+setup_logger(quiet=False, debug=True)
+logger.debug('This is my debug message!')
+```
+
+More verbose output should appear.
 
 
 > I get unauthorized when trying to login to an Amazon ECR Registry
