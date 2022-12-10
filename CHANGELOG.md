@@ -14,6 +14,8 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - moving of docs to fully be here with extended examples (0.1.1)
+   - addition of oras.utils.workdir to provide local context
  - clients are removed from Python SDK in favor of examples (0.1.0)
    - login refactored to be part of the basic client
  - ecr and others do not require a formatted namespace (0.0.19)

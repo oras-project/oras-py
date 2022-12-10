@@ -13,3 +13,4 @@ sphinx-copybutton
 readthedocs-sphinx-search
 sphinx-gallery
 myst-parser
+pytest

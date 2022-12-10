@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   oras.cli
    oras.main
    oras.tests
    oras.utils
@@ -19,14 +18,6 @@ oras.auth module
 ----------------
 
 .. automodule:: oras.auth
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-oras.client module
-------------------
-
-.. automodule:: oras.client
    :members:
    :undoc-members:
    :show-inheritance:

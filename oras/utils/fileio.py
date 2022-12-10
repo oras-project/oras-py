@@ -14,6 +14,7 @@ import stat
 import sys
 import tarfile
 import tempfile
+from contextlib import contextmanager
 from typing import Generator, Optional, TextIO, Union
 
 
@@ -25,6 +26,22 @@ def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     with tarfile.open(dest_name, "w:gz") as tar:
         tar.add(source_dir, arcname=os.path.basename(source_dir))
     return dest_name
+
+
+@contextmanager
+def workdir(dirname):
+    """
+    Provide context for a working directory, e.g.,
+
+    with workdir(name):
+       # do stuff
+    """
+    here = os.getcwd()
+    os.chdir(dirname)
+    try:
+        yield
+    finally:
+        os.chdir(here)
 
 
 def readline() -> str:
