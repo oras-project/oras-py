@@ -11,6 +11,7 @@ import pathlib
 import re
 import shutil
 import stat
+import sys
 import tarfile
 import tempfile
 from typing import Generator, Optional, TextIO, Union
@@ -24,6 +25,14 @@ def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     with tarfile.open(dest_name, "w:gz") as tar:
         tar.add(source_dir, arcname=os.path.basename(source_dir))
     return dest_name
+
+
+def readline() -> str:
+    """
+    Read lines from stdin
+    """
+    content = sys.stdin.readlines()
+    return content[0].strip()
 
 
 def extract_targz(targz: str, outdir: str, numeric_owner: bool = False):

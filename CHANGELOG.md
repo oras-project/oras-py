@@ -14,6 +14,12 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - clients are removed from Python SDK in favor of examples (0.1.0)
+   - login refactored to be part of the basic client
+ - ecr and others do not require a formatted namespace (0.0.19)
+   - relaxing manifest requirements - ECR has extra field "subject"
+   - relaxing manifest requirements - ECR has annotations with None
+   - cutting out early for asking for token if Authorization header set.
  - logger should only exit in command line client, not in API (0.0.18)
    - raising exceptions allows the calling using to catch the error
    - support for requesting anonymous token from registry
