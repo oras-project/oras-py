@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <meta content="Copy to clipboard" name="lang:clipboard.copy"/>
+  <meta content="Copied to clipboard" name="lang:clipboard.copied"/>
+  <meta content="en" name="lang:search.language"/>
+  <meta content="True" name="lang:search.pipeline.stopwords"/>
+  <meta content="True" name="lang:search.pipeline.trimmer"/>
+  <meta content="No matching documents" name="lang:search.result.none"/>
+  <meta content="1 matching document" name="lang:search.result.one"/>
+  <meta content="# matching documents" name="lang:search.result.other"/>
+  <meta content="[\s\-]+" name="lang:search.tokenizer"/>
+  <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&amp;display=fallback" rel="stylesheet"/>
+  <style>
+   body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+  </style>
+  <link href="../_static/stylesheets/application.css" rel="stylesheet"/>
+  <link href="../_static/stylesheets/application-palette.css" rel="stylesheet"/>
+  <link href="../_static/stylesheets/application-fixes.css" rel="stylesheet"/>
+  <link href="../_static/fonts/material-icons.css" rel="stylesheet"/>
+  <meta content="#4051b5" name="theme-color"/>
+  <script src="../_static/javascripts/modernizr.js">
+  </script>
+  <link href="../_static/images/oras.png" rel="apple-touch-icon"/>
+  <title>
+   User Guide — Oras Python
+  </title>
+  <link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/material.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/custom.css" rel="stylesheet" type="text/css"/>
+  <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js">
+  </script>
+  <script src="../_static/jquery.js">
+  </script>
+  <script src="../_static/underscore.js">
+  </script>
+  <script src="../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
+  <script src="../_static/doctools.js">
+  </script>
+  <script src="../_static/sphinx_highlight.js">
+  </script>
+  <script src="../_static/clipboard.min.js">
+  </script>
+  <script src="../_static/copybutton.js">
+  </script>
+  <script src="../_static/js/rtd_sphinx_search.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js">
+  </script>
+  <link href="../_static/favicon.ico" rel="shortcut icon"/>
+  <link href="../genindex.html" rel="index" title="Index"/>
+  <link href="../search.html" rel="search" title="Search"/>
+  <link href="developer-guide.html" rel="next" title="Developer Guide"/>
+  <link href="installation.html" rel="prev" title="Installation"/>
+  <!-- Social: Facebook / Open Graph -->
+  <title>
+   Oras Python
+  </title>
+  <link href="https://oras-project.github.io/oras-py/" rel="canonical"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://oras-project.github.io/oras-py/" property="og:url"/>
+  <meta content="Oras Python" property="og:title"/>
+  <meta content="https://raw.githubusercontent.com/oras-project/oras-py/main/docs/images/oras.png" property="og:image"/>
+  <meta content="OCI Registry as Storage (ORAS) in Python" property="og:description"/>
+  <meta content="Oras Python" property="og:site_name"/>
+  <meta content="en_US" property="og:locale"/>
+  <!-- Social: Twitter -->
+  <meta content="summary" name="twitter:card"/>
+  <meta content="@orasproject" name="twitter:site"/>
+  <meta content="ORAS" name="twitter:title"/>
+  <meta content="OCI Registry as Storage (ORAS) in Python" name="twitter:description"/>
+  <meta content="https://raw.githubusercontent.com/oras-project/oras-py/main/docs/images/oras.png" name="twitter:image"/>
+  <!-- Social: Google+ / Schema.org  -->
+  <meta content="Oras Python" itemprop="name"/>
+  <meta content="OCI Registry as Storage (ORAS) in Python" itemprop="description"/>
+  <meta content="https://raw.githubusercontent.com/oras-project/oras-py/main/docs/images/oras.png" itemprop="image"/>
+  <script type="application/ld+json">
+   {"@type":"WebSite","headline":"Oras Python","url":"https://oras-project.github.io/oras-py","description":"OCI Registry as Storage (ORAS) Python","name":"Oras Python","@context":"https://schema.org"}
+  </script>
+  <link href="../_static/images/oras.png" rel="apple-touch-icon"/>
+ </head>
+ <body data-md-color-accent="cyan" data-md-color-primary="indigo" dir="ltr">
+  <svg class="md-svg">
+   <defs data-children-count="0">
+    <svg height="448" id="__github" viewbox="0 0 416 448" width="416" xmlns="http://www.w3.org/2000/svg">
+     <path d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z" fill="currentColor">
+     </path>
+    </svg>
+   </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+  <input class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+  <label class="md-overlay" data-md-component="overlay" for="__drawer">
+  </label>
+  <a class="md-skip" href="#getting_started/user-guide" tabindex="1">
+   Skip to content
+  </a>
+  <header class="md-header" data-md-component="header">
+   <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <a class="md-header-nav__button md-logo" href="../index.html" title="Oras Python">
+       <i class="md-icon">
+        
+       </i>
+      </a>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer">
+      </label>
+     </div>
+     <div class="md-flex__cell md-flex__cell--stretch">
+      <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+       <span class="md-header-nav__topic">
+        Oras Python
+       </span>
+       <span class="md-header-nav__topic">
+        User Guide
+       </span>
+      </div>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <label class="md-icon md-icon--search md-header-nav__button" for="__search">
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+       <label class="md-search__overlay" for="__search">
+       </label>
+       <div class="md-search__inner" role="search">
+        <form action="../search.html" class="md-search__form" method="get" name="search">
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <label class="md-icon md-search__icon" for="__search">
+         </label>
+         <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
+          
+         </button>
+        </form>
+        <div class="md-search__output">
+         <div class="md-search__scrollwrap" data-md-scrollfix="">
+          <div class="md-search-result" data-md-component="result">
+           <div class="md-search-result__meta">
+            Type to start searching
+           </div>
+           <ol class="md-search-result__list">
+           </ol>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="md-flex__cell md-flex__cell--shrink">
+      <div class="md-header-nav__source">
+       <a class="md-source" data-md-source="github" href="https://github.com/oras-project/oras-py/" title="Go to repository">
+        <div class="md-source__icon">
+         <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>-->
+         <!-- updated to match riverml.xml site-->
+         <svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+          <path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z" fill="#ffffff">
+          </path>
+         </svg>
+        </div>
+        <div class="md-source__repository">
+         Oras Python
+        </div>
+       </a>
+      </div>
+     </div>
+    </div>
+   </nav>
+  </header>
+  <div class="md-container">
+   <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+     <ul class="md-tabs__list">
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://oras.land">
+        oras.land
+       </a>
+      </li>
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://github.com/oras-project">
+        Oras on GitHub
+       </a>
+      </li>
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="https://github.com/oras-project/oras-py">
+        Oras Python on GitHub
+       </a>
+      </li>
+      <li class="md-tabs__item">
+       <a class="md-tabs__link" href="index.html">
+        Guides
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+   <main class="md-main">
+    <div class="md-main__inner md-grid" data-md-component="container">
+     <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+      <div class="md-sidebar__scrollwrap">
+       <div class="md-sidebar__inner">
+        <nav class="md-nav md-nav--primary" data-md-level="0">
+         <label class="md-nav__title md-nav__title--site" for="__drawer">
+          <a class="md-nav__button md-logo" href="../index.html" title="Oras Python">
+           <i class="md-icon">
+            
+           </i>
+          </a>
+          <a href="../index.html" title="Oras Python">
+           Oras Python
+          </a>
+         </label>
+         <div class="md-nav__source">
+          <a class="md-source" data-md-source="github" href="https://github.com/oras-project/oras-py/" title="Go to repository">
+           <div class="md-source__icon">
+            <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>-->
+            <!-- updated to match riverml.xml site-->
+            <svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+             <path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z" fill="#ffffff">
+             </path>
+            </svg>
+           </div>
+           <div class="md-source__repository">
+            Oras Python
+           </div>
+          </a>
+         </div>
+         <ul class="md-nav__list">
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="index.html">
+            Guides
+           </a>
+           <ul class="md-nav__list">
+            <li class="md-nav__item">
+             <a class="md-nav__link" href="installation.html">
+              Installation
+             </a>
+            </li>
+            <li class="md-nav__item">
+             <input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+             <label class="md-nav__link md-nav__link--active" for="__toc">
+              User Guide
+             </label>
+             <a class="md-nav__link md-nav__link--active" href="#">
+              User Guide
+             </a>
+             <nav class="md-nav md-nav--secondary">
+              <label class="md-nav__title" for="__toc">
+               Contents
+              </label>
+              <ul class="md-nav__list" data-md-scrollfix="">
+               <li class="md-nav__item">
+                <a class="md-nav__link" href="#getting-started-user-guide--page-root">
+                 User Guide
+                </a>
+                <nav class="md-nav">
+                 <ul class="md-nav__list">
+                  <li class="md-nav__item">
+                   <a class="md-nav__link" href="#local-development-registry">
+                    Local Development Registry
+                   </a>
+                   <nav class="md-nav">
+                    <ul class="md-nav__list">
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#create-a-client-class">
+                       Create a Client Class
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#push-interactions">
+                       Push Interactions
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#pull-interactions">
+                       Pull Interactions
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#authentication">
+                       Authentication
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#debugging">
+                       Debugging
+                      </a>
+                     </li>
+                    </ul>
+                   </nav>
+                  </li>
+                  <li class="md-nav__item">
+                   <a class="md-nav__link" href="#custom-clients">
+                    Custom Clients
+                   </a>
+                  </li>
+                 </ul>
+                </nav>
+               </li>
+               <li class="md-nav__item">
+                <a class="md-nav__extra_link" href="../_sources/getting_started/user-guide.md.txt">
+                 Show Source
+                </a>
+               </li>
+              </ul>
+             </nav>
+            </li>
+            <li class="md-nav__item">
+             <a class="md-nav__link" href="developer-guide.html">
+              Developer Guide
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="../contributing.html">
+            Contributing
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="../about/license.html">
+            Apache License
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <span class="md-nav__link caption">
+            <span class="caption-text">
+             API
+            </span>
+           </span>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="../source/modules.html">
+            oras
+           </a>
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+      <div class="md-sidebar__scrollwrap">
+       <div class="md-sidebar__inner">
+        <nav class="md-nav md-nav--secondary">
+         <label class="md-nav__title" for="__toc">
+          Contents
+         </label>
+         <ul class="md-nav__list" data-md-scrollfix="">
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="#getting-started-user-guide--page-root">
+            User Guide
+           </a>
+           <nav class="md-nav">
+            <ul class="md-nav__list">
+             <li class="md-nav__item">
+              <a class="md-nav__link" href="#local-development-registry">
+               Local Development Registry
+              </a>
+              <nav class="md-nav">
+               <ul class="md-nav__list">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#create-a-client-class">
+                  Create a Client Class
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#push-interactions">
+                  Push Interactions
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#pull-interactions">
+                  Pull Interactions
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#authentication">
+                  Authentication
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#debugging">
+                  Debugging
+                 </a>
+                </li>
+               </ul>
+              </nav>
+             </li>
+             <li class="md-nav__item">
+              <a class="md-nav__link" href="#custom-clients">
+               Custom Clients
+              </a>
+             </li>
+            </ul>
+           </nav>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__extra_link" href="../_sources/getting_started/user-guide.md.txt">
+            Show Source
+           </a>
+          </li>
+          <li class="md-nav__item" id="searchbox">
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="md-content">
+      <article class="md-content__inner md-typeset" role="main">
+       <section id="user-guide">
+        <h1 id="getting-started-user-guide--page-root">
+         User Guide
+         <a class="headerlink" href="#getting-started-user-guide--page-root" title="Permalink to this heading">
+          ¶
+         </a>
+        </h1>
+        <p>
+         Oras Python is a Python SDK that will allow you to create applications in Python
+that can do traditional push and pull commands to interact with a custom set of
+artifacts. As of version 0.1.0 we no longer provide a default client alongside
+oras Python, and if you need a client you should use
+         <a class="reference external" href="https://github.com/oras-project/oras">
+          oras
+         </a>
+         in Go.
+This user guide will walk you through these various steps, and point you to
+relevant examples. Please
+         <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
+          open an issue
+         </a>
+         if
+you have a question or otherwise need help with your specific implementation,
+or jump to our
+         <a class="reference internal" href="developer-guide.html">
+          <span class="doc std std-doc">
+           developer guide
+          </span>
+         </a>
+         to learn about running tests
+or contributing to the project. If you want to create your own client, you likely want to:
+        </p>
+        <ol class="arabic simple">
+         <li>
+          <p>
+           Start a local registry (described below), or have access to an ORAS
+           <a class="reference external" href="https://oras.land/implementors/#docker-distribution">
+            supported registry
+           </a>
+          </p>
+         </li>
+         <li>
+          <p>
+           Decide on the context for your code (e.g., it’s easy to start with Python functions in a single file and move to a client setup if appropriate for your tool)
+          </p>
+         </li>
+         <li>
+          <p>
+           Subclass the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             oras.provider.Registry
+            </span>
+           </code>
+           for your custom class (examples below!)
+          </p>
+         </li>
+         <li>
+          <p>
+           Add custom functions to push, pull, or create manifests / layers
+          </p>
+         </li>
+         <li>
+          <p>
+           Provide authentication, if required.
+          </p>
+         </li>
+        </ol>
+        <section id="local-development-registry">
+         <h2 id="local-development-registry">
+          Local Development Registry
+          <a class="headerlink" href="#local-development-registry" title="Permalink to this heading">
+           ¶
+          </a>
+         </h2>
+         <p>
+          It’s often helpful to develop with a local registry running.
+If you want to deploy a local testing registry (without auth), you can do:
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span>$ docker run -it --rm -p <span class="m">5000</span>:5000 ghcr.io/oras-project/registry:latest
+</pre>
+          </div>
+         </div>
+         <p>
+          And add the
+          <code class="docutils literal notranslate">
+           <span class="pre">
+            -d
+           </span>
+          </code>
+          for detached.  If you are brave and want to try basic auth:
+         </p>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span><span class="c1"># This is an htpassword file, "b" means bcrypt</span>
+htpasswd -cB -b auth.htpasswd myuser mypass
+</pre>
+          </div>
+         </div>
+         <blockquote>
+          <div>
+           <p>
+            ⚠️ The server below will work to login with basic auth, but you won’t be able to issue tokens.
+           </p>
+          </div>
+         </blockquote>
+         <div class="highlight-bash notranslate">
+          <div class="highlight">
+           <pre><span></span><span class="c1"># And start the registry with authentication</span>
+docker run -it --rm -p <span class="m">5000</span>:5000 <span class="se">\</span>
+    -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/auth.htpasswd:/etc/docker/registry/auth.htpasswd <span class="se">\</span>
+    -e <span class="nv">REGISTRY_AUTH</span><span class="o">=</span><span class="s2">"{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"</span> <span class="se">\</span>
+    ghcr.io/oras-project/registry:latest
+</pre>
+          </div>
+         </div>
+         <section id="create-a-client-class">
+          <h3 id="create-a-client-class">
+           Create a Client Class
+           <a class="headerlink" href="#create-a-client-class" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           Your most basic registry (that will mimic the default can be created
+like this:
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">import</span> <span class="nn">oras.provider</span>
+
+<span class="k">class</span> <span class="nc">MyProvider</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           If you want to also have the default
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             login
+            </span>
+           </code>
+           and
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             logout
+            </span>
+           </code>
+           functions, you
+should wrap the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             oras.client.OrasClient
+            </span>
+           </code>
+           instead:
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">import</span> <span class="nn">oras.client</span>
+
+<span class="k">class</span> <span class="nc">MyProvider</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           If you don’t use this class, it’s recommended to set basic auth with
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             self.set_basic_auth(username,
+            </span>
+            <span class="pre">
+             password)
+            </span>
+           </code>
+           , which is provided by
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             oras.provider.Registry
+            </span>
+           </code>
+           .
+Also note that we currently just have one provider type (the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             Registry
+            </span>
+           </code>
+           ) and if you
+have an idea for a request or custom provider, please
+           <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
+            let us know
+           </a>
+           .
+          </p>
+         </section>
+         <section id="push-interactions">
+          <h3 id="push-interactions">
+           Push Interactions
+           <a class="headerlink" href="#push-interactions" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           Let’s start with a very basic push interaction, and this one
+follows
+           <a class="reference external" href="https://oras.land/cli/1_pushing/">
+            the example here
+           </a>
+           .
+          </p>
+          <details>
+           <summary>
+            Example of basic push (click to expand)
+           </summary>
+           <p>
+            We are assuming an
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              artifact.txt
+             </span>
+            </code>
+            in the present working directory.
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">"artifact.txt"</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s2">"localhost:5000/dinosaur/artifact:v1"</span><span class="p">)</span>
+<span class="n">Successfully</span> <span class="n">pushed</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">dinosaur</span><span class="o">/</span><span class="n">artifact</span><span class="p">:</span><span class="n">v1</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">201</span><span class="p">]</span><span class="o">&gt;</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           This next example has a similar design to what the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             oras.provider.Registry
+            </span>
+           </code>
+           provides,
+but we are allowing better customization of content types and overriding
+the default “push” function. This example maintains providing archives
+as a lookup of paths and media types, and assumes annotations provided
+conform to what the ORAS command line client expects (e.g., groups like
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             $config
+            </span>
+           </code>
+           ).
+          </p>
+          <details>
+           <summary>
+            Example using oras.provider.Registry (click to expand)
+           </summary>
+           <p>
+            You might start with a custom lookup of archive paths and
+media types. Let’s say we start with this lookup,
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              archives
+             </span>
+            </code>
+            :
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="n">archives</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz"</span><span class="p">:</span> <span class="s2">"application/vnd.oci.image.layer.v1.tar+gzip"</span><span class="p">,</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/sbom.json"</span><span class="p">:</span> <span class="s2">"application/vnd.cyclonedx"</span>
+<span class="p">}</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Note that since paths are unique (and media types are not) we use that
+as the dictionary key. Here is how we might then create a custom
+Registry provider to handle:
+           </p>
+           <ol class="arabic simple">
+            <li>
+             <p>
+              Creating layers from the blobs and media types
+             </p>
+            </li>
+            <li>
+             <p>
+              Creating a manifest with the layers, and a config
+             </p>
+            </li>
+            <li>
+             <p>
+              Uploading all of them
+             </p>
+            </li>
+           </ol>
+           <p>
+            Then here is how our registry client would look:
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">oras.oci</span>
+<span class="kn">import</span> <span class="nn">oras.defaults</span>
+<span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
+    <span class="nd">@ensure_container</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">archives</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Given a dict of layers (paths and corresponding mediaType) push.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Prepare a new manifest</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
+
+        <span class="c1"># A lookup of annotations we can add</span>
+        <span class="n">annotset</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Annotations</span><span class="p">(</span><span class="n">annotations</span> <span class="ow">or</span> <span class="p">{})</span>
+
+        <span class="c1"># Upload files as blobs</span>
+        <span class="k">for</span> <span class="n">blob</span><span class="p">,</span> <span class="n">mediaType</span> <span class="ow">in</span> <span class="n">archives</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="c1"># Must exist</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+
+            <span class="c1"># Save directory or blob name before compressing</span>
+            <span class="n">blob_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+            <span class="c1"># If it's a directory, we need to compress</span>
+            <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">blob</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+                <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Create a new layer from the blob</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">mediaType</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">)</span>
+            <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
+
+            <span class="c1"># update the manifest with the new layer</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+            <span class="c1"># Upload the blob layer</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+            <span class="c1"># Do we need to cleanup a temporary targz?</span>
+            <span class="k">if</span> <span class="n">cleanup_blob</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+        <span class="c1"># Add annotations to the manifest, if provided</span>
+        <span class="n">manifest_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$manifest"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">manifest_annots</span><span class="p">:</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">manifest_annots</span>
+
+        <span class="c1"># Prepare the manifest config (temporary or one provided)</span>
+        <span class="n">config_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$config"</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">()</span>
+
+        <span class="c1"># Config annotations?</span>
+        <span class="k">if</span> <span class="n">config_annots</span><span class="p">:</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_annots</span>
+
+        <span class="c1"># Config is just another layer blob!</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="c1"># Final upload of the manifest</span>
+        <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Note that the decorator
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              ensure_container
+             </span>
+            </code>
+            simply ensures that
+the target you provide as the first argument is properly parsed for the
+remainder of the function. And the only difference between the above and the provided provider is that
+we are allowing more customization of the layers. The default oras
+client just assumes you have either a single layer or a compressed
+layer.
+           </p>
+          </details>
+          <p>
+           Here is another derivation of the first example (and example
+usage) that allows you to specify a custom path (title), media type, and annotations
+as a list of artifacts (I like this design better).
+          </p>
+          <details>
+           <summary>
+            Example using oras.provider.Registry for a custom list (click to expand)
+           </summary>
+           <p>
+            This example provides a courtesy function to create your client, and also shows
+how to use
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              oras.utils.workdir
+             </span>
+            </code>
+            to ensure the upload is in context of your archive files.
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">oras.defaults</span>
+<span class="kn">import</span> <span class="nn">oras.oci</span>
+<span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_oras_client</span><span class="p">():</span>
+    <span class="sd">"""</span>
+<span class="sd">    Consistent method to get an oras client</span>
+<span class="sd">    """</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_USER"</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_PASS"</span><span class="p">)</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="n">Registry</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">password</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Found username and password for basic auth"</span><span class="p">)</span>
+        <span class="n">reg</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"ORAS_USER or ORAS_PASS is missing, and required."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">reg</span>
+
+
+<span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
+    <span class="nd">@ensure_container</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">archives</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Given a list of layer metadata (paths and corresponding mediaType) push.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Prepare a new manifest</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
+
+        <span class="c1"># Upload files as blobs</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">archives</span><span class="p">:</span>
+
+            <span class="n">blob</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path"</span><span class="p">)</span>
+            <span class="n">media_type</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"media_type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"org.dinosaur.tool.datatype"</span>
+            <span class="p">)</span>
+            <span class="n">annots</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">blob</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Path </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist or is not defineds."</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Artifact title is basename or user defined</span>
+            <span class="n">blob_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"title"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+            <span class="c1"># If it's a directory, we need to compress</span>
+            <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">blob</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+                <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Create a new layer from the blob</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">media_type</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="c1"># Update annotations with title we will need for extraction</span>
+            <span class="n">annots</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="p">})</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">annots</span>
+
+            <span class="c1"># update the manifest with the new layer</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+            <span class="c1"># Upload the blob layer</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Uploading </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">uri</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+            <span class="c1"># Do we need to cleanup a temporary targz?</span>
+            <span class="k">if</span> <span class="n">cleanup_blob</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+
+        <span class="c1"># Prepare manifest and config</span>
+        <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_annotations</span>
+        <span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">()</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">default_config_annotations</span>
+
+        <span class="c1"># Config is just another layer blob!</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="c1"># Final upload of the manifest</span>
+        <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            And here is an example of how you might assemble your artifacts and use the
+function above to get a client and push! 🎉️
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">oras.utils</span>
+
+<span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Given an ORAS identifier, save artifacts to it.</span>
+<span class="sd">    """</span>
+    <span class="n">oras_cli</span> <span class="o">=</span> <span class="n">get_oras_client</span><span class="p">()</span>
+
+    <span class="c1"># Create lookup of archives - relative path and mediatype</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+    <span class="c1"># Using os.listdir assumes we have single files at the base of our root.</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+
+        <span class="c1"># use some logic here to derive the mediaType</span>
+        <span class="n">media_type</span> <span class="o">=</span> <span class="s2">"org.dinosaur.tool.datatype"</span>
+
+        <span class="c1"># Add some custom annotations!</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>  <span class="c1"># bytes</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"creationTime"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="p">),</span> <span class="s2">"size"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">)}</span>
+        <span class="n">archives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"path"</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+                <span class="s2">"title"</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+                <span class="s2">"media_type"</span><span class="p">:</span> <span class="n">media_type</span><span class="p">,</span>
+                <span class="s2">"annotations"</span><span class="p">:</span> <span class="n">annotations</span><span class="p">,</span>
+             <span class="p">}</span>
+         <span class="p">)</span>
+
+    <span class="c1"># Push should be relative to cache context</span>
+    <span class="k">with</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">workdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+        <span class="n">oras_cli</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">archives</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           The above examples are just a start! See our
+           <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/examples">
+            examples
+           </a>
+           folder alongside the repository for more code examples and clients. If you would like help
+for an example, or to contribute an example,
+           <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
+            you know what to do
+           </a>
+           !
+          </p>
+         </section>
+         <section id="pull-interactions">
+          <h3 id="pull-interactions">
+           Pull Interactions
+           <a class="headerlink" href="#pull-interactions" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           Pull is simpler than push, so here is a basic example. You might need to add authentication
+here (discussed in the
+           <span class="xref myst">
+            next section
+           </span>
+           .
+          </p>
+          <details>
+           <summary>
+            Example of basic pull (click to expand)
+           </summary>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">"localhost:5000/dinosaur/artifact:v1"</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">'/tmp/oras-tmp.e5itvzfi/artifact.txt'</span><span class="p">]</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           You can imagine having a custom function that will retrieve a manifest
+or blob and do custom operations on it.
+          </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="k">def</span> <span class="nf">inspect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+    <span class="c1"># Parse the name into a container</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Get the manifest with the three layers</span>
+    <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
+
+    <span class="c1"># Organize layers based on media_types</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_organize_layers</span><span class="p">(</span><span class="n">manifest</span><span class="p">)</span>
+
+    <span class="c1"># Read info.json media type, find correct blob...</span>
+    <span class="c1"># download correct blob, etc.</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           Specifically the function
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             self.get_blob
+            </span>
+           </code>
+           will allow you to do that.
+          </p>
+         </section>
+         <section id="authentication">
+          <h3 id="authentication">
+           Authentication
+           <a class="headerlink" href="#authentication" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           Here is a very basic example of logging in and out of a registry using the default (basic)
+provided client:
+          </p>
+          <details>
+           <summary>
+            Example using basic auth (click to expand)
+           </summary>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">oras.client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">password</span><span class="o">=</span><span class="s2">"myuser"</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">"myuser"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            And logout!
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="s2">"localhost:5000"</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           Here is an example of getting a GitHub user and token from the environment, and
+then doing a pull.
+          </p>
+          <details>
+           <summary>
+            Example setting and using GitHub credentials (click to expand)
+           </summary>
+           <p>
+            Given that you are pushing to GitHub packages (which has support for ORAS)
+and perhaps are running in a GitHub action, you might want to get these credentials from the environment:
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="c1"># We will need GitHub personal access token or token</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GITHUB_USER"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">password</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN and GITHUB_USER are required in the environment."</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Then you can run your custom functions that use these user and password credentials,
+either inspecting a particular unique resource identifier or using
+your lookup of archives (paths and media types) to push:
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="c1"># Pull Example</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">MyProvider</span><span class="p">()</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="s2">"ghcr.io/wolfv/conda-forge/linux-64/xtensor:0.9.0-0"</span><span class="p">)</span>
+
+<span class="c1"># Push Example</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">Registry</span><span class="p">()</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+<span class="n">archives</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz"</span><span class="p">:</span> <span class="s2">"application/vnd.oci.image.layer.v1.tar+gzip"</span><span class="p">,</span>
+    <span class="s2">"/tmp/pakages-tmp.q6amnrkq/sbom.json"</span><span class="p">:</span> <span class="s2">"application/vnd.cyclonedx"</span><span class="p">}</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s2">"ghcr.io/vsoch/excellent-dinosaur:latest"</span><span class="p">,</span> <span class="n">archives</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           The above examples supplement our official
+           <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/examples">
+            examples folder
+           </a>
+           .
+Please let us know if you need an additional example or help with your client!
+          </p>
+         </section>
+         <section id="debugging">
+          <h3 id="debugging">
+           Debugging
+           <a class="headerlink" href="#debugging" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <blockquote>
+           <div>
+            <p>
+             Can I see more debug information?
+            </p>
+           </div>
+          </blockquote>
+          <p>
+           Yes! Try using setup_logger with debug set to true:
+          </p>
+          <div class="highlight-default notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">setup_logger</span><span class="p">,</span> <span class="n">logger</span>
+<span class="n">setup_logger</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">'This is my debug message!'</span><span class="p">)</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           More verbose output should appear.
+          </p>
+          <blockquote>
+           <div>
+            <p>
+             I get unauthorized when trying to login to an Amazon ECR Registry
+            </p>
+           </div>
+          </blockquote>
+          <p>
+           Note that for
+           <a class="reference external" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html">
+            Amazon ECR
+           </a>
+           you might need to login per the instructions at the link provided. If you look at your
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             ~/.docker/config.json
+            </span>
+           </code>
+           and see
+that there is a “credsStore” section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn’t support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you’ve done
+this correctly, you should see an “auth” key under a hostname under “auths” in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper. Finally, it would be cool if we supported these external stores! If you
+want to contribute this or help think about how to do it, @vsoch would be happy to help.
+          </p>
+         </section>
+        </section>
+        <section id="custom-clients">
+         <h2 id="custom-clients">
+          Custom Clients
+          <a class="headerlink" href="#custom-clients" title="Permalink to this heading">
+           ¶
+          </a>
+         </h2>
+         <p>
+          The benefit of Oras Python is that you can create a subclass that easily implements
+a registry, and then allows you to do custom interactions. In addition to the starter
+examples above, we provide a directory of
+          <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/examples">
+           examples
+          </a>
+          that you can start from. Please
+          <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
+           let us know
+          </a>
+          if you need help with your custom client, or would like to request a custom example.
+         </p>
+         <p>
+          See the
+          <a class="reference internal" href="developer-guide.html">
+           <span class="doc std std-doc">
+            Developer Guide
+           </span>
+          </a>
+          for development tasks like running tests
+and working on these docs!
+         </p>
+        </section>
+       </section>
+      </article>
+     </div>
+    </div>
+   </main>
+  </div>
+  <footer class="md-footer">
+   <div class="md-footer-nav">
+    <nav class="md-footer-nav__inner md-grid">
+     <a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="installation.html" rel="prev" title="Installation">
+      <div class="md-flex__cell md-flex__cell--shrink">
+       <i class="md-icon md-icon--arrow-back md-footer-nav__button">
+       </i>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+       <span class="md-flex__ellipsis">
+        <span class="md-footer-nav__direction">
+         Previous
+        </span>
+        Installation
+       </span>
+      </div>
+     </a>
+     <a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="developer-guide.html" rel="next" title="Developer Guide">
+      <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+       <span class="md-flex__ellipsis">
+        <span class="md-footer-nav__direction">
+         Next
+        </span>
+        Developer Guide
+       </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+       <i class="md-icon md-icon--arrow-forward md-footer-nav__button">
+       </i>
+      </div>
+     </a>
+    </nav>
+   </div>
+   <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+     <div class="md-footer-copyright">
+      <div class="md-footer-copyright__highlight">
+       © Copyright 2022, Oras Python Developers.
+      </div>
+      Last updated on
+              Dec 10, 2022.
+      <br/>
+      Created using
+      <a href="http://www.sphinx-doc.org/">
+       Sphinx
+      </a>
+      5.3.0.
+             and
+      <a href="https://github.com/bashtage/sphinx-material/">
+       Material for
+              Sphinx
+      </a>
+     </div>
+    </div>
+   </div>
+  </footer>
+  <script src="../_static/javascripts/application.js">
+  </script>
+  <script>
+   app.initialize({version: "1.0.4", url: {base: ".."}})
+  </script>
+ </body>
+</html>

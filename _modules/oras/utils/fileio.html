@@ -247,13 +247,8 @@
          </div>
          <ul class="md-nav__list">
           <li class="md-nav__item">
-           <a class="md-nav__link" href="https://oras.land/client_libraries/1_python/">
-            Getting Started
-           </a>
-          </li>
-          <li class="md-nav__item">
            <a class="md-nav__link" href="../../../getting_started/index.html">
-            Developer Guide
+            Guides
            </a>
           </li>
           <li class="md-nav__item">
@@ -318,6 +313,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
 
 
@@ -329,6 +325,22 @@
     <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dest_name</span><span class="p">,</span> <span class="s2">"w:gz"</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
         <span class="n">tar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_dir</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">dest_name</span></div>
+
+
+<div class="viewcode-block" id="workdir"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.workdir">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">workdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Provide context for a working directory, e.g.,</span>
+
+<span class="sd">    with workdir(name):</span>
+<span class="sd">       # do stuff</span>
+<span class="sd">    """</span>
+    <span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">here</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="readline"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.readline">[docs]</a><span class="k">def</span> <span class="nf">readline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

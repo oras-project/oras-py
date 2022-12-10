@@ -68,7 +68,7 @@
   <link href="_static/favicon.ico" rel="shortcut icon"/>
   <link href="genindex.html" rel="index" title="Index"/>
   <link href="search.html" rel="search" title="Search"/>
-  <link href="getting_started/index.html" rel="next" title="Developer Guide"/>
+  <link href="getting_started/index.html" rel="next" title="Guides"/>
   <!-- Social: Facebook / Open Graph -->
   <title>
    Oras Python
@@ -244,13 +244,8 @@
          </div>
          <ul class="md-nav__list">
           <li class="md-nav__item">
-           <a class="md-nav__link" href="https://oras.land/client_libraries/1_python/">
-            Getting Started
-           </a>
-          </li>
-          <li class="md-nav__item">
            <a class="md-nav__link" href="getting_started/index.html">
-            Developer Guide
+            Guides
            </a>
           </li>
           <li class="md-nav__item">
@@ -318,39 +313,38 @@ to
          <a class="reference external" href="https://github.com/opencontainers/oci-conformance">
           OCI Conformant
          </a>
-         registries. This is a Python client for that.
+         registries. This is a Python SDK for that.
         </p>
         <div class="highlight-console notranslate">
          <div class="highlight">
           <pre><span></span><span class="gp"># </span>Install the client
-<span class="gp">$ </span>pip install  oras
-
-<span class="gp"># </span>Login to an OCI registry
-<span class="gp">$ </span>oras-py login -u myuser -p mypass localhost:5000
-
-<span class="gp"># </span>Prepare an artifact!
-<span class="go">echo "hello dinosaur" &gt; artifact.txt</span>
-
-<span class="gp"># </span>Push it..
-<span class="gp">$ </span>oras-py push localhost:5000/dinosaur/artifact:v1 <span class="se">\</span>
---manifest-config /dev/null:application/vnd.acme.rocket.config <span class="se">\</span>
-./artifact.txt
-<span class="go">Successfully pushed localhost:5000/dinosaur/artifact:v1</span>
-
-<span class="gp"># </span>And pull again
-<span class="gp">$ </span>rm -f artifact.txt <span class="c1"># first delete the file</span>
-<span class="gp">$ </span>oras-py pull localhost:5000/dinosaur/artifact:v1
+<span class="gp">$ </span>pip install oras
 </pre>
          </div>
         </div>
         <p>
-         To get started, see the
-         <a class="reference external" href="https://oras.land/client_libraries/1_python/">
-          oras.land getting started
-guide
-         </a>
-         or if you
-are a developer, see the links below. Would you like to
+         And then within Python:
+        </p>
+        <div class="highlight-python notranslate">
+         <div class="highlight">
+          <pre><span></span><span class="c1"># Create a basic client</span>
+<span class="kn">import</span> <span class="nn">oras.client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">password</span><span class="o">=</span><span class="s2">"myuser"</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">"myuser"</span><span class="p">)</span>
+
+<span class="c1"># Push</span>
+<span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">"artifact.txt"</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s2">"ghcr.io/avocados/dinosaur/artifact:v1"</span><span class="p">)</span>
+<span class="n">Successfully</span> <span class="n">pushed</span> <span class="n">ghcr</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">avocados</span><span class="o">/</span><span class="n">dinosaur</span><span class="o">/</span><span class="n">artifact</span><span class="p">:</span><span class="n">v1</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">201</span><span class="p">]</span><span class="o">&gt;</span>
+
+<span class="c1"># Pull</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">"localhost:5000/dinosaur/artifact:v1"</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">'/tmp/oras-tmp.e5itvzfi/artifact.txt'</span><span class="p">]</span>
+</pre>
+         </div>
+        </div>
+        <p>
+         To get started, see the links below. Would you like to
 request a feature or contribute?
          <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
           Open an issue
@@ -360,19 +354,38 @@ request a feature or contribute?
         <div class="toctree-wrapper compound">
          <ul>
           <li class="toctree-l1">
-           <a class="reference external" href="https://oras.land/client_libraries/1_python/">
-            Getting Started
-           </a>
-          </li>
-          <li class="toctree-l1">
            <a class="reference internal" href="getting_started/index.html">
-            Developer Guide
+            Guides
            </a>
+           <ul>
+            <li class="toctree-l2">
+             <a class="reference internal" href="getting_started/installation.html">
+              Installation
+             </a>
+            </li>
+            <li class="toctree-l2">
+             <a class="reference internal" href="getting_started/user-guide.html">
+              User Guide
+             </a>
+            </li>
+            <li class="toctree-l2">
+             <a class="reference internal" href="getting_started/developer-guide.html">
+              Developer Guide
+             </a>
+            </li>
+           </ul>
           </li>
           <li class="toctree-l1">
            <a class="reference internal" href="contributing.html">
             Contributing
            </a>
+           <ul>
+            <li class="toctree-l2">
+             <a class="reference internal" href="contributing.html#pull-request-process">
+              Pull Request Process
+             </a>
+            </li>
+           </ul>
           </li>
           <li class="toctree-l1">
            <a class="reference internal" href="about/license.html">
@@ -404,13 +417,13 @@ request a feature or contribute?
   <footer class="md-footer">
    <div class="md-footer-nav">
     <nav class="md-footer-nav__inner md-grid">
-     <a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="getting_started/index.html" rel="next" title="Developer Guide">
+     <a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="getting_started/index.html" rel="next" title="Guides">
       <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
        <span class="md-flex__ellipsis">
         <span class="md-footer-nav__direction">
          Next
         </span>
-        Developer Guide
+        Guides
        </span>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">

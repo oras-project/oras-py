@@ -38,7 +38,7 @@
   </script>
   <link href="../_static/images/oras.png" rel="apple-touch-icon"/>
   <title>
-   Developer Guide — Oras Python
+   Guides — Oras Python
   </title>
   <link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
   <link href="../_static/material.css" rel="stylesheet" type="text/css"/>
@@ -133,7 +133,7 @@
         Oras Python
        </span>
        <span class="md-header-nav__topic">
-        Developer Guide
+        Guides
        </span>
       </div>
      </div>
@@ -245,17 +245,12 @@
          </div>
          <ul class="md-nav__list">
           <li class="md-nav__item">
-           <a class="md-nav__link" href="https://oras.land/client_libraries/1_python/">
-            Getting Started
-           </a>
-          </li>
-          <li class="md-nav__item">
            <input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
            <label class="md-nav__link md-nav__link--active" for="__toc">
-            Developer Guide
+            Guides
            </label>
            <a class="md-nav__link md-nav__link--active" href="#">
-            Developer Guide
+            Guides
            </a>
            <nav class="md-nav md-nav--secondary">
             <ul class="md-nav__list" data-md-scrollfix="">
@@ -270,6 +265,11 @@
             <li class="md-nav__item">
              <a class="md-nav__link" href="installation.html">
               Installation
+             </a>
+            </li>
+            <li class="md-nav__item">
+             <a class="md-nav__link" href="user-guide.html">
+              User Guide
              </a>
             </li>
             <li class="md-nav__item">
@@ -325,9 +325,9 @@
      </div>
      <div class="md-content">
       <article class="md-content__inner md-typeset" role="main">
-       <section id="developer-guide">
+       <section id="guides">
         <h1 id="getting-started-index--page-root">
-         Developer Guide
+         Guides
          <a class="headerlink" href="#getting-started-index--page-root" title="Permalink to this heading">
           ¶
          </a>
@@ -335,13 +335,8 @@
         <p>
          Oras Python is a Python SDK for OCI registry as Storage (ORAS). You
 should be able to easily pull and push artifacts from Python and build
-your own custom interactions. The main getting started docs can be found
-on
-         <a class="reference external" href="https://oras.land/client_libraries/1_python/">
-          oras.land Python’s page
-         </a>
-         and the developer
-user guide (and more detailed examples) can be found here. If you have
+your own custom interactions. The primary user guide and developer docs
+can be found here. If you have
 any questions or issues, please
          <a class="reference external" href="https://github.com/oras-project/oras-py/issues">
           let us know
@@ -367,10 +362,59 @@ any questions or issues, please
            </ul>
           </li>
           <li class="toctree-l1">
+           <a class="reference internal" href="user-guide.html">
+            User Guide
+           </a>
+           <ul>
+            <li class="toctree-l2">
+             <a class="reference internal" href="user-guide.html#local-development-registry">
+              Local Development Registry
+             </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="user-guide.html#create-a-client-class">
+                Create a Client Class
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="user-guide.html#push-interactions">
+                Push Interactions
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="user-guide.html#pull-interactions">
+                Pull Interactions
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="user-guide.html#authentication">
+                Authentication
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="user-guide.html#debugging">
+                Debugging
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toctree-l2">
+             <a class="reference internal" href="user-guide.html#custom-clients">
+              Custom Clients
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toctree-l1">
            <a class="reference internal" href="developer-guide.html">
             Developer Guide
            </a>
            <ul>
+            <li class="toctree-l2">
+             <a class="reference internal" href="developer-guide.html#running-tests">
+              Running Tests
+             </a>
+            </li>
             <li class="toctree-l2">
              <a class="reference internal" href="developer-guide.html#code-linting">
               Code Linting
@@ -394,43 +438,6 @@ any questions or issues, please
               <li class="toctree-l3">
                <a class="reference internal" href="developer-guide.html#docstrings">
                 Docstrings
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toctree-l2">
-             <a class="reference internal" href="developer-guide.html#running-tests">
-              Running Tests
-             </a>
-            </li>
-            <li class="toctree-l2">
-             <a class="reference internal" href="developer-guide.html#creating-a-custom-client">
-              Creating a Custom Client
-             </a>
-             <ul>
-              <li class="toctree-l3">
-               <a class="reference internal" href="developer-guide.html#the-registry-client">
-                The Registry Client
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="developer-guide.html#pull-interactions">
-                Pull Interactions
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="developer-guide.html#push-interactions">
-                Push Interactions
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="developer-guide.html#instantiate">
-                Instantiate
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="developer-guide.html#debugging">
-                Debugging
                </a>
               </li>
              </ul>
