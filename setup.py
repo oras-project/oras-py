@@ -103,5 +103,4 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3 :: Only",
             "Programming Language :: Python :: 3.7",
         ],
-        entry_points={"console_scripts": ["oras-py=oras.cli:run"]},
     )
