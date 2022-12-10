@@ -1132,17 +1132,18 @@ Please let us know if you need an additional example or help with your client!
            </div>
           </blockquote>
           <p>
-           Yes! Try adding
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             --debug
-            </span>
-           </code>
-           <em>
-            after
-           </em>
-           any command like pull, push, login, etc. More verbose
-output should appear. If we need further verbosity, please open an issue and it can be added.
+           Yes! Try using setup_logger with debug set to true:
+          </p>
+          <div class="highlight-default notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">setup_logger</span><span class="p">,</span> <span class="n">logger</span>
+<span class="n">setup_logger</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">'This is my debug message!'</span><span class="p">)</span>
+</pre>
+           </div>
+          </div>
+          <p>
+           More verbose output should appear.
           </p>
           <blockquote>
            <div>
