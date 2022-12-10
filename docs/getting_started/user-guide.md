@@ -1,0 +1,514 @@
+# User Guide
+
+Oras Python is a Python SDK that will allow you to create applications in Python
+that can do traditional push and pull commands to interact with a custom set of
+artifacts. As of version 0.1.0 we no longer provide a default client alongside
+oras Python, and if you need a client you should use [oras](https://github.com/oras-project/oras) in Go.
+This user guide will walk you through these various steps, and point you to
+relevant examples. Please [open an issue](https://github.com/oras-project/oras-py/issues) if
+you have a question or otherwise need help with your specific implementation,
+or jump to our [developer guide](developer-guide.md) to learn about running tests
+or contributing to the project. If you want to create your own client, you likely want to:
+
+
+ 1. Start a local registry (described below), or have access to an ORAS [supported registry](https://oras.land/implementors/#docker-distribution)
+ 2. Decide on the context for your code (e.g., it's easy to start with Python functions in a single file and move to a client setup if appropriate for your tool)
+ 3. Subclass the `oras.provider.Registry` for your custom class (examples below!)
+ 4. Add custom functions to push, pull, or create manifests / layers
+ 5. Provide authentication, if required.
+
+
+## Local Development Registry
+
+It's often helpful to develop with a local registry running.
+If you want to deploy a local testing registry (without auth), you can do:
+
+
+```bash
+$ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
+```
+
+And add the `-d` for detached.  If you are brave and want to try basic auth:
+
+```bash
+# This is an htpassword file, "b" means bcrypt
+htpasswd -cB -b auth.htpasswd myuser mypass
+```
+
+> ⚠️ The server below will work to login with basic auth, but you won't be able to issue tokens.
+
+```bash
+# And start the registry with authentication
+docker run -it --rm -p 5000:5000 \
+    -v $(pwd)/auth.htpasswd:/etc/docker/registry/auth.htpasswd \
+    -e REGISTRY_AUTH="{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}" \
+    ghcr.io/oras-project/registry:latest
+```
+
+### Create a Client Class
+
+Your most basic registry (that will mimic the default can be created
+like this:
+
+```python
+import oras.provider
+
+class MyProvider(oras.provider.Registry):
+    pass
+```
+
+If you want to also have the default `login` and `logout` functions, you
+should wrap the `oras.client.OrasClient` instead:
+
+```python
+import oras.client
+
+class MyProvider(oras.client.OrasClient):
+    pass
+```
+
+If you don't use this class, it's recommended to set basic auth with
+`self.set_basic_auth(username, password)`, which is provided by `oras.provider.Registry`.
+Also note that we currently just have one provider type (the `Registry`) and if you
+have an idea for a request or custom provider, please [let us know](https://github.com/oras-project/oras-py/issues).
+
+
+### Push Interactions
+
+Let's start with a very basic push interaction, and this one
+follows [the example here](https://oras.land/cli/1_pushing/).
+
+<details>
+
+<summary>Example of basic push (click to expand)</summary>
+
+We are assuming an `artifact.txt` in the present working directory.
+
+```python
+client = oras.client.OrasClient(insecure=True)
+client.push(files=["artifact.txt"], target="localhost:5000/dinosaur/artifact:v1")
+Successfully pushed localhost:5000/dinosaur/artifact:v1
+Out[4]: <Response [201]>
+```
+
+</details>
+
+This next example has a similar design to what the `oras.provider.Registry` provides,
+but we are allowing better customization of content types and overriding
+the default "push" function. This example maintains providing archives
+as a lookup of paths and media types, and assumes annotations provided
+conform to what the ORAS command line client expects (e.g., groups like `$config`).
+
+<details>
+
+<summary>Example using oras.provider.Registry (click to expand)</summary>
+
+You might start with a custom lookup of archive paths and
+media types. Let's say we start with this lookup, `archives`:
+
+```python
+archives = {
+    "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
+    "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"
+}
+```
+
+Note that since paths are unique (and media types are not) we use that
+as the dictionary key. Here is how we might then create a custom
+Registry provider to handle:
+
+1.  Creating layers from the blobs and media types
+2.  Creating a manifest with the layers, and a config
+3.  Uploading all of them
+
+Then here is how our registry client would look:
+
+```python
+import oras.oci
+import oras.defaults
+import oras.provider
+from oras.decorator import ensure_container
+
+import os
+import sys
+
+class Registry(oras.provider.Registry):
+    @ensure_container
+    def push(self, container, archives: dict, annotations=None):
+        """
+        Given a dict of layers (paths and corresponding mediaType) push.
+        """
+        # Prepare a new manifest
+        manifest = oras.oci.NewManifest()
+
+        # A lookup of annotations we can add
+        annotset = oras.oci.Annotations(annotations or {})
+
+        # Upload files as blobs
+        for blob, mediaType in archives.items():
+
+            # Must exist
+            if not os.path.exists(blob):
+                logger.exit(f"{blob} does not exist.")
+
+            # Save directory or blob name before compressing
+            blob_name = os.path.basename(blob)
+
+            # If it's a directory, we need to compress
+            cleanup_blob = False
+            if os.path.isdir(blob):
+                blob = oras.utils.make_targz(blob)
+                cleanup_blob = True
+
+            # Create a new layer from the blob
+            layer = oras.oci.NewLayer(blob, mediaType, is_dir=cleanup_blob)
+            annotations = annotset.get_annotations(blob)
+            layer["annotations"] = {oras.defaults.annotation_title: blob_name}
+            if annotations:
+                layer["annotations"].update(annotations)
+
+            # update the manifest with the new layer
+            manifest["layers"].append(layer)
+
+            # Upload the blob layer
+            response = self._upload_blob(blob, container, layer)
+            self._check_200_response(response)
+
+            # Do we need to cleanup a temporary targz?
+            if cleanup_blob and os.path.exists(blob):
+                os.remove(blob)
+
+        # Add annotations to the manifest, if provided
+        manifest_annots = annotset.get_annotations("$manifest")
+        if manifest_annots:
+            manifest["annotations"] = manifest_annots
+
+        # Prepare the manifest config (temporary or one provided)
+        config_annots = annotset.get_annotations("$config")
+        conf, config_file = oras.oci.ManifestConfig()
+
+        # Config annotations?
+        if config_annots:
+            conf["annotations"] = config_annots
+
+        # Config is just another layer blob!
+        response = self._upload_blob(config_file, container, conf)
+        self._check_200_response(response)
+
+        # Final upload of the manifest
+        manifest["config"] = conf
+        self._check_200_response(self._upload_manifest(manifest, container))
+        print(f"Successfully pushed {container}")
+        return response
+```
+
+Note that the decorator `ensure_container` simply ensures that
+the target you provide as the first argument is properly parsed for the
+remainder of the function. And the only difference between the above and the provided provider is that
+we are allowing more customization of the layers. The default oras
+client just assumes you have either a single layer or a compressed
+layer.
+
+
+</details>
+
+Here is another derivation of the first example (and example
+usage) that allows you to specify a custom path (title), media type, and annotations
+as a list of artifacts (I like this design better).
+
+
+<details>
+
+<summary>Example using oras.provider.Registry for a custom list (click to expand)</summary>
+
+This example provides a courtesy function to create your client, and also shows
+how to use `oras.utils.workdir` to ensure the upload is in context of your archive files.
+
+```python
+import os
+import sys
+
+import oras.defaults
+import oras.oci
+import oras.provider
+from oras.decorator import ensure_container
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def get_oras_client():
+    """
+    Consistent method to get an oras client
+    """
+    user = os.environ.get("ORAS_USER")
+    password = os.environ.get("ORAS_PASS")
+    reg = Registry()
+    if user and password:
+        print("Found username and password for basic auth")
+        reg.set_basic_auth(user, password)
+    else:
+        sys.exit("ORAS_USER or ORAS_PASS is missing, and required.")
+    return reg
+
+
+class Registry(oras.provider.Registry):
+    @ensure_container
+    def push(self, container, archives: list):
+        """
+        Given a list of layer metadata (paths and corresponding mediaType) push.
+        """
+        # Prepare a new manifest
+        manifest = oras.oci.NewManifest()
+
+        # Upload files as blobs
+        for item in archives:
+
+            blob = item.get("path")
+            media_type = (
+                item.get("media_type") or "org.dinosaur.tool.datatype"
+            )
+            annots = item.get("annotations") or {}
+
+            if not blob or not os.path.exists(blob):
+                logger.warning(f"Path {blob} does not exist or is not defineds.")
+                continue
+
+            # Artifact title is basename or user defined
+            blob_name = item.get("title") or os.path.basename(blob)
+
+            # If it's a directory, we need to compress
+            cleanup_blob = False
+            if os.path.isdir(blob):
+                blob = oras.utils.make_targz(blob)
+                cleanup_blob = True
+
+            # Create a new layer from the blob
+            layer = oras.oci.NewLayer(blob, media_type, is_dir=cleanup_blob)
+            logger.debug(f"Preparing layer {layer}")
+
+            # Update annotations with title we will need for extraction
+            annots.update({oras.defaults.annotation_title: blob_name})
+            layer["annotations"] = annots
+
+            # update the manifest with the new layer
+            manifest["layers"].append(layer)
+
+            # Upload the blob layer
+            logger.info(f"Uploading {blob} to {container.uri}")
+            response = self._upload_blob(blob, container, layer)
+            self._check_200_response(response)
+
+            # Do we need to cleanup a temporary targz?
+            if cleanup_blob and os.path.exists(blob):
+                os.remove(blob)
+
+        # Prepare manifest and config
+        manifest["annotations"] = defaults.default_manifest_annotations
+        conf, config_file = oras.oci.ManifestConfig()
+        conf["annotations"] = defaults.default_config_annotations
+
+        # Config is just another layer blob!
+        response = self._upload_blob(config_file, container, conf)
+        self._check_200_response(response)
+
+        # Final upload of the manifest
+        manifest["config"] = conf
+        self._check_200_response(self._upload_manifest(manifest, container))
+        print(f"Successfully pushed {container}")
+        return response
+```
+
+And here is an example of how you might assemble your artifacts and use the
+function above to get a client and push! 🎉️
+
+```python
+from datetime import datetime
+import oras.utils
+
+def push(uri, root):
+    """
+    Given an ORAS identifier, save artifacts to it.
+    """
+    oras_cli = get_oras_client()
+
+    # Create lookup of archives - relative path and mediatype
+    archives = []
+    now = datetime.now()
+
+    # Using os.listdir assumes we have single files at the base of our root.
+    for filename in os.listdir(root):
+
+        # use some logic here to derive the mediaType
+        media_type = "org.dinosaur.tool.datatype"
+
+        # Add some custom annotations!
+        size = os.path.getsize(os.path.join(root, filename))  # bytes
+        annotations = {"creationTime": str(now), "size": str(size)}
+        archives.append(
+            {
+                "path": filename,
+                "title": filename,
+                "media_type": media_type,
+                "annotations": annotations,
+             }
+         )
+
+    # Push should be relative to cache context
+    with oras.utils.workdir(root):
+        oras_cli.push(uri, archives)
+```
+
+</details>
+
+The above examples are just a start! See our [examples](https://github.com/oras-project/oras-py/tree/main/examples)
+folder alongside the repository for more code examples and clients. If you would like help
+for an example, or to contribute an example, [you know what to do](https://github.com/oras-project/oras-py/issues)!
+
+
+### Pull Interactions
+
+Pull is simpler than push, so here is a basic example. You might need to add authentication
+here (discussed in the [next section](#authentication).
+
+<details>
+
+<summary>Example of basic pull (click to expand)</summary>
+
+
+```python
+res = client.pull(target="localhost:5000/dinosaur/artifact:v1")
+['/tmp/oras-tmp.e5itvzfi/artifact.txt']
+```
+
+</details>
+
+You can imagine having a custom function that will retrieve a manifest
+or blob and do custom operations on it.
+
+```python
+def inspect(self, name):
+
+    # Parse the name into a container
+    container = self.get_container(name)
+
+    # Get the manifest with the three layers
+    manifest = self.get_manifest(container)
+
+    # Organize layers based on media_types
+    layers = self._organize_layers(manifest)
+
+    # Read info.json media type, find correct blob...
+    # download correct blob, etc.
+```
+
+Specifically the function `self.get_blob` will allow you to do that.
+
+
+### Authentication
+
+Here is a very basic example of logging in and out of a registry using the default (basic)
+provided client:
+
+<details>
+
+<summary>Example using basic auth (click to expand)</summary>
+
+
+```python
+import oras.client
+client = oras.client.OrasClient()
+client.login(password="myuser", username="myuser", insecure=True)
+```
+
+And logout!
+
+```python
+client.logout("localhost:5000")
+```
+
+</details>
+
+Here is an example of getting a GitHub user and token from the environment, and
+then doing a pull.
+
+<details>
+
+<summary>Example setting and using GitHub credentials (click to expand)</summary>
+
+Given that you are pushing to GitHub packages (which has support for ORAS)
+and perhaps are running in a GitHub action, you might want to get these credentials from the environment:
+
+```python
+# We will need GitHub personal access token or token
+token = os.environ.get("GITHUB_TOKEN")
+password = os.environ.get("GITHUB_USER")
+
+if not password or not user:
+    sys.exit("GITHUB_TOKEN and GITHUB_USER are required in the environment.")
+```
+
+Then you can run your custom functions that use these user and password credentials,
+either inspecting a particular unique resource identifier or using
+your lookup of archives (paths and media types) to push:
+
+```python
+# Pull Example
+reg = MyProvider()
+reg.set_basic_auth(user, password)
+reg.inspect("ghcr.io/wolfv/conda-forge/linux-64/xtensor:0.9.0-0")
+
+# Push Example
+reg = Registry()
+reg.set_basic_auth(user, token)
+archives = {
+    "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
+    "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"}
+reg.push("ghcr.io/vsoch/excellent-dinosaur:latest", archives)
+```
+
+</details>
+
+The above examples supplement our official [examples folder](https://github.com/oras-project/oras-py/tree/main/examples).
+Please let us know if you need an additional example or help with your client!
+
+
+### Debugging
+
+> Can I see more debug information?
+
+Yes! Try using setup_logger with debug set to true:
+
+```
+from oras.logger import setup_logger, logger
+setup_logger(quiet=False, debug=True)
+logger.debug('This is my debug message!')
+```
+
+More verbose output should appear.
+
+
+> I get unauthorized when trying to login to an Amazon ECR Registry
+
+Note that for [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html)
+you might need to login per the instructions at the link provided. If you look at your `~/.docker/config.json` and see
+that there is a "credsStore" section that is populated, you might also need to comment this out
+while using oras-py. Oras-py currently doesn't support reading external credential stores, so you will
+need to comment it out, login again, and then try your request. To sanity check that you've done
+this correctly, you should see an "auth" key under a hostname under "auths" in this file with a base64
+encoded string (this is actually your username and password!) An empty dictionary there indicates that you
+are using a helper. Finally, it would be cool if we supported these external stores! If you
+want to contribute this or help think about how to do it, @vsoch would be happy to help.
+
+
+
+## Custom Clients
+
+The benefit of Oras Python is that you can create a subclass that easily implements
+a registry, and then allows you to do custom interactions. In addition to the starter
+examples above, we provide a directory of [examples](https://github.com/oras-project/oras-py/tree/main/examples)
+that you can start from. Please [let us know](https://github.com/oras-project/oras-py/issues)
+if you need help with your custom client, or would like to request a custom example.
+
+See the [Developer Guide](developer-guide.md) for development tasks like running tests
+and working on these docs!

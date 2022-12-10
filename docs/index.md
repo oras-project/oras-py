@@ -6,38 +6,36 @@ Welcome to Oras Python!
 
 OCI Registry as Storage enables client libraries to push OCI Artifacts
 to [OCI Conformant](https://github.com/opencontainers/oci-conformance)
-registries. This is a Python client for that.
+registries. This is a Python SDK for that.
 
-``` console
+```console
 # Install the client
-$ pip install  oras
-
-# Login to an OCI registry
-$ oras-py login -u myuser -p mypass localhost:5000
-
-# Prepare an artifact!
-echo "hello dinosaur" > artifact.txt
-
-# Push it..
-$ oras-py push localhost:5000/dinosaur/artifact:v1 \
---manifest-config /dev/null:application/vnd.acme.rocket.config \
-./artifact.txt
-Successfully pushed localhost:5000/dinosaur/artifact:v1
-
-# And pull again
-$ rm -f artifact.txt # first delete the file
-$ oras-py pull localhost:5000/dinosaur/artifact:v1
+$ pip install oras
 ```
 
-To get started, see the [oras.land getting started
-guide](https://oras.land/client_libraries/1_python/) or if you
-are a developer, see the links below. Would you like to
-request a feature or contribute?
-[Open an issue](https://github.com/oras-project/oras-py/issues).
+And then within Python:
+
+```python
+# Create a basic client
+import oras.client
+client = oras.client.OrasClient()
+client.login(password="myuser", username="myuser")
+
+# Push
+client.push(files=["artifact.txt"], target="ghcr.io/avocados/dinosaur/artifact:v1")
+Successfully pushed ghcr.io/avocados/dinosaur/artifact:v1
+Out[4]: <Response [201]>
+
+# Pull
+res = client.pull(target="localhost:5000/dinosaur/artifact:v1")
+['/tmp/oras-tmp.e5itvzfi/artifact.txt']
+```
+
+To get started, see the links below. Would you like to
+request a feature or contribute? [Open an issue](https://github.com/oras-project/oras-py/issues).
 
 ```{toctree}
-:maxdepth: 1
-Getting Started <https://oras.land/client_libraries/1_python/>
+:maxdepth: 2
 getting_started/index.md
 contributing.md
 about/license

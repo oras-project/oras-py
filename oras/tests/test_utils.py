@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 
 import json
 import os
+import pathlib
 import shutil
 
 import pytest
@@ -23,6 +24,16 @@ def test_write_read_files(tmp_path):
 
     content = utils.read_file(tmpfile)
     assert content == "hello!"
+
+
+def test_workdir(tmp_path):
+    print("Testing utils.workdir")
+    noodle_base = os.path.join(tmp_path, "noodles")
+    os.makedirs(noodle_base)
+    pathlib.Path(os.path.join(noodle_base, "pasta.txt")).touch()
+    assert "pasta.txt" not in os.listdir()
+    with utils.workdir(noodle_base):
+        assert "pasta.txt" in os.listdir()
 
 
 def test_write_bad_json(tmp_path):

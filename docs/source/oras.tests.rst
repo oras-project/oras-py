@@ -12,6 +12,14 @@ oras.tests.test\_oras module
    :undoc-members:
    :show-inheritance:
 
+oras.tests.test\_provider module
+--------------------------------
+
+.. automodule:: oras.tests.test_provider
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 oras.tests.test\_utils module
 -----------------------------
 
