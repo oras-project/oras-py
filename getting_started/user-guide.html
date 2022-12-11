@@ -290,6 +290,11 @@
                       </a>
                      </li>
                      <li class="md-nav__item">
+                      <a class="md-nav__link" href="#creating-oci-objects">
+                       Creating OCI Objects
+                      </a>
+                     </li>
+                     <li class="md-nav__item">
                       <a class="md-nav__link" href="#push-interactions">
                        Push Interactions
                       </a>
@@ -385,6 +390,11 @@
                 <li class="md-nav__item">
                  <a class="md-nav__link" href="#create-a-client-class">
                   Create a Client Class
+                 </a>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#creating-oci-objects">
+                  Creating OCI Objects
                  </a>
                 </li>
                 <li class="md-nav__item">
@@ -632,6 +642,147 @@ have an idea for a request or custom provider, please
            .
           </p>
          </section>
+         <section id="creating-oci-objects">
+          <h3 id="creating-oci-objects">
+           Creating OCI Objects
+           <a class="headerlink" href="#creating-oci-objects" title="Permalink to this heading">
+            ¶
+           </a>
+          </h3>
+          <p>
+           If you need to make a config, a manifest, or layers for it, we have helper functions to
+support that!
+          </p>
+          <details>
+           <summary>
+            Example of creating a config (click to expand)
+           </summary>
+           <p>
+            This is an empty config, size 0 to /dev/null.
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">oras.oci</span>
+
+<span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">()</span>
+</pre>
+            </div>
+           </div>
+           <div class="highlight-console notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="gp"># </span>conf
+<span class="go">{</span>
+<span class="go">    "mediaType": "application/vnd.unknown.config.v1+json",</span>
+<span class="go">    "size": 0,</span>
+<span class="go">    "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"</span>
+<span class="go">}</span>
+
+<span class="gp"># </span>config_file
+<span class="go">/dev/null</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Here is a config for a file that you already have existing:
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">(</span><span class="s1">'/tmp/config.json'</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+           <div class="highlight-console notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="gp"># </span>conf
+<span class="go">{</span>
+<span class="go">    "mediaType": "application/vnd.unknown.config.v1+json",</span>
+<span class="go">    "size": 3891,</span>
+<span class="go">    "digest": "sha256:1192142acbf7ac7578906407f5a28820c4ff69937000558613c2d9ec56db370a"</span>
+<span class="go">}</span>
+
+<span class="gp"># </span>config_file
+<span class="go">/tmp/config.json</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           Before you can use them to populate a manifest, you need layers!
+          </p>
+          <details>
+           <summary>
+            Example of creating layers (click to expand)
+           </summary>
+           <p>
+            Let’s say we start with a list of files “blobs” and a custom media type:
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">oras.oci</span>
+<span class="kn">import</span> <span class="nn">oras.defaults</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">"org.dinosaur.tools.blobish"</span><span class="p">)</span>
+
+    <span class="c1"># This is important so oras clients can derive the relative name you want to download to</span>
+    <span class="c1"># Using basename assumes a flat directory of files - it doesn't have to be.</span>
+    <span class="c1"># You can add more annotations here!</span>
+    <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">blob</span><span class="p">)}</span>
+    <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Next read the manifest example to see what to do with these layers! Note that our
+push examples also have this in full.
+           </p>
+          </details>
+          <p>
+           Finally, assuming you have some layers, let’s wrap a manifest around them.
+          </p>
+          <details>
+           <summary>
+            Example of creating a manifest (click to expand)
+           </summary>
+           <p>
+            This is fairly straight forward!
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">oras.oci</span>
+
+<span class="c1"># Prepare a new manifest</span>
+<span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
+
+<span class="c1"># update the manifest with layers</span>
+<span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span> <span class="o">=</span> <span class="n">layers</span>
+
+<span class="c1"># Note that you can add annotations to the manifest too</span>
+<span class="n">manifest</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'org.dinosaur.tool.food'</span><span class="p">:</span> <span class="s1">'avocado'</span><span class="p">}</span>
+
+<span class="c1"># Add your previously created config to it!</span>
+<span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
+</pre>
+            </div>
+           </div>
+           <p>
+            Given a client, you would use
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              self.upload_manifest(manifest,
+             </span>
+             <span class="pre">
+              package)
+             </span>
+            </code>
+            to push your manifest,
+where package is the complete unique resource identifier. Note that
+you should do blobs (layers) and the config first.
+           </p>
+          </details>
+         </section>
          <section id="push-interactions">
           <h3 id="push-interactions">
            Push Interactions
@@ -691,7 +842,7 @@ conform to what the ORAS command line client expects (e.g., groups like
           </p>
           <details>
            <summary>
-            Example using oras.provider.Registry (click to expand)
+            Example of custom push (click to expand)
            </summary>
            <p>
             You might start with a custom lookup of archive paths and
@@ -786,7 +937,7 @@ Registry provider to handle:
             <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 
             <span class="c1"># Upload the blob layer</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
             <span class="c1"># Do we need to cleanup a temporary targz?</span>
@@ -807,7 +958,7 @@ Registry provider to handle:
             <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_annots</span>
 
         <span class="c1"># Config is just another layer blob!</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
         <span class="c1"># Final upload of the manifest</span>
@@ -840,7 +991,7 @@ as a list of artifacts (I like this design better).
           </p>
           <details>
            <summary>
-            Example using oras.provider.Registry for a custom list (click to expand)
+            Example of custom push with more intuitive list (click to expand)
            </summary>
            <p>
             This example provides a courtesy function to create your client, and also shows
@@ -925,7 +1076,7 @@ how to use
 
             <span class="c1"># Upload the blob layer</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Uploading </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">uri</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
             <span class="c1"># Do we need to cleanup a temporary targz?</span>
@@ -938,7 +1089,7 @@ how to use
         <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">default_config_annotations</span>
 
         <span class="c1"># Config is just another layer blob!</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
         <span class="c1"># Final upload of the manifest</span>
@@ -1062,7 +1213,83 @@ or blob and do custom operations on it.
              self.get_blob
             </span>
            </code>
-           will allow you to do that.
+           will allow you to do that, or
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             self.download_blob
+            </span>
+           </code>
+           for the streaming version. Let’s now extend the clients
+shown above for “pull” to add a download ability (pull):
+          </p>
+          <details>
+           <summary>
+            Example of custom pull (click to expand)
+           </summary>
+           <p>
+            This custom pull shows how we might retrieve an ORAS artifact that
+has multiple layers, each a different content type that we might
+want to selectively download.
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">oras.defaults</span>
+<span class="kn">import</span> <span class="nn">oras.oci</span>
+<span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
+
+    <span class="nd">@ensure_container</span>
+    <span class="k">def</span> <span class="nf">download_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">download_dir</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">media_type</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Given a manifest of layers, retrieve a layer based on desired media type</span>
+<span class="sd">        """</span>
+        <span class="c1"># If you intend to call this function again, you might cache this response</span>
+        <span class="c1"># for the package of interest.</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+        <span class="c1"># Find the layer of interest! Currently we look for presence of the string</span>
+        <span class="c1"># e.g., "prices" can come from "prices" or "prices-web"</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">manifest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'layers'</span><span class="p">,</span> <span class="p">[]):</span>
+
+            <span class="c1"># E.g., google.prices or google.prices-web or aws.prices</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'mediaType'</span><span class="p">]</span> <span class="o">==</span> <span class="n">media_type</span><span class="p">:</span>
+
+                <span class="c1"># This annotation is currently the practice for a relative path to extract to</span>
+                <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_dir</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">][</span><span class="s1">'org.opencontainers.image.title'</span><span class="p">])</span>
+
+                <span class="c1"># download blob ensures we stream, otherwise get_blob would return request</span>
+                <span class="c1"># this function also handles creating the output directory if does not exist</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'digest'</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </details>
+          <p>
+           You can get creative with the above - e.g., perhaps a layer has a json file that you first
+get in memory using
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             get_blob
+            </span>
+           </code>
+           (to get the response object) and then do further parsing
+of metadata before deciding to retrieve it. Note that as of oras-py 0.1.11 download_blob
+is exposed as above. For earlier versions, you can use
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             self._download_blob
+            </span>
+           </code>
+           .
           </p>
          </section>
          <section id="authentication">
@@ -1287,7 +1514,7 @@ and working on these docs!
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 10, 2022.
+              Dec 11, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

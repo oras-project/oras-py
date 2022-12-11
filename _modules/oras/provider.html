@@ -510,9 +510,9 @@
         <span class="c1"># This is currently disabled unless the user asks for it, as</span>
         <span class="c1"># it doesn't seem to work for all registries</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">do_chunked</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_put_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chunked_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
 
         <span class="c1"># If we have an empty layer digest and the registry didn't accept, just return dummy successful response</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -575,8 +575,42 @@
             <span class="k">return</span> <span class="n">name</span>
         <span class="k">return</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">registry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span></div>
 
+    <span class="c1"># Functions to be deprecated in favor of exposed ones</span>
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">_download_blob</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">"This function is deprecated in favor of download_blob and will be removed by 0.1.2"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_put_upload</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">"This function is deprecated in favor of put_upload and will be removed by 0.1.2"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_chunked_upload</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">"This function is deprecated in favor of chunked_upload and will be removed by 0.1.2"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_upload_manifest</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">"This function is deprecated in favor of upload_manifest and will be removed by 0.1.2"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+
+    <span class="nd">@ensure_container</span>
+    <span class="k">def</span> <span class="nf">download_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -606,7 +640,7 @@
             <span class="k">raise</span> <span class="n">e</span>
         <span class="k">return</span> <span class="n">outfile</span>
 
-    <span class="k">def</span> <span class="nf">_put_upload</span><span class="p">(</span>
+<div class="viewcode-block" id="Registry.put_upload"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.put_upload">[docs]</a>    <span class="k">def</span> <span class="nf">put_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -645,7 +679,7 @@
                 <span class="n">data</span><span class="o">=</span><span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
                 <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span>
+        <span class="k">return</span> <span class="n">response</span></div>
 
     <span class="k">def</span> <span class="nf">_get_location</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
@@ -670,7 +704,7 @@
             <span class="n">session_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">session_url</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">session_url</span>
 
-    <span class="k">def</span> <span class="nf">_chunked_upload</span><span class="p">(</span>
+<div class="viewcode-block" id="Registry.chunked_upload"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.chunked_upload">[docs]</a>    <span class="k">def</span> <span class="nf">chunked_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -719,7 +753,7 @@
         <span class="n">session_url</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">append_url_params</span><span class="p">(</span>
             <span class="n">session_url</span><span class="p">,</span> <span class="p">{</span><span class="s2">"digest"</span><span class="p">:</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">]}</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">session_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">session_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -747,7 +781,7 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">_upload_manifest</span><span class="p">(</span>
+<div class="viewcode-block" id="Registry.upload_manifest"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_manifest">[docs]</a>    <span class="k">def</span> <span class="nf">upload_manifest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -765,7 +799,7 @@
             <span class="s2">"Content-Length"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">manifest</span><span class="p">)),</span>
         <span class="p">}</span>
         <span class="n">put_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">put_manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">put_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">manifest</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">put_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">manifest</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.push"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -876,7 +910,7 @@
 
         <span class="c1"># Final upload of the manifest</span>
         <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
@@ -923,14 +957,14 @@
             <span class="c1"># A directory will need to be uncompressed and moved</span>
             <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"mediaType"</span><span class="p">]</span> <span class="o">==</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_blob_dir_media_type</span><span class="p">:</span>
                 <span class="n">targz</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".tar.gz"</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">targz</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">targz</span><span class="p">)</span>
 
                 <span class="c1"># The artifact will be extracted to the correct name</span>
                 <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
 
             <span class="c1"># Anything else just extracted directly</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pulled </span><span class="si">{</span><span class="n">outfile</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
             <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">files</span></div>
@@ -1157,7 +1191,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 10, 2022.
+              Dec 11, 2022.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
