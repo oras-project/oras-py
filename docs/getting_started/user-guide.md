@@ -72,6 +72,110 @@ If you don't use this class, it's recommended to set basic auth with
 Also note that we currently just have one provider type (the `Registry`) and if you
 have an idea for a request or custom provider, please [let us know](https://github.com/oras-project/oras-py/issues).
 
+### Creating OCI Objects
+
+If you need to make a config, a manifest, or layers for it, we have helper functions to
+support that!
+
+<details>
+
+<summary>Example of creating a config (click to expand)</summary>
+
+This is an empty config, size 0 to /dev/null.
+
+```python
+import oras.oci
+
+conf, config_file = oras.oci.ManifestConfig()
+```
+```console
+# conf
+{
+    "mediaType": "application/vnd.unknown.config.v1+json",
+    "size": 0,
+    "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
+
+# config_file
+/dev/null
+```
+
+Here is a config for a file that you already have existing:
+
+```python
+conf, config_file = oras.oci.ManifestConfig('/tmp/config.json')
+```
+```console
+# conf
+{
+    "mediaType": "application/vnd.unknown.config.v1+json",
+    "size": 3891,
+    "digest": "sha256:1192142acbf7ac7578906407f5a28820c4ff69937000558613c2d9ec56db370a"
+}
+
+# config_file
+/tmp/config.json
+```
+</details>
+
+Before you can use them to populate a manifest, you need layers!
+
+<details>
+
+<summary>Example of creating layers (click to expand)</summary>
+
+Let's say we start with a list of files "blobs" and a custom media type:
+
+```python
+import os
+import oras.oci
+import oras.defaults
+
+layers = []
+for blob in blobs:
+    layer = oras.oci.NewLayer(blob, is_dir=False, media_type="org.dinosaur.tools.blobish")
+
+    # This is important so oras clients can derive the relative name you want to download to
+    # Using basename assumes a flat directory of files - it doesn't have to be.
+    # You can add more annotations here!
+    layer["annotations"] = {oras.defaults.annotation_title: os.path.basename(blob)}
+    layers.append(layer)
+```
+
+Next read the manifest example to see what to do with these layers! Note that our
+push examples also have this in full.
+
+</details>
+
+Finally, assuming you have some layers, let's wrap a manifest around them.
+
+<details>
+
+<summary>Example of creating a manifest (click to expand)</summary>
+
+This is fairly straight forward!
+
+```python
+import oras.oci
+
+# Prepare a new manifest
+manifest = oras.oci.NewManifest()
+
+# update the manifest with layers
+manifest["layers"] = layers
+
+# Note that you can add annotations to the manifest too
+manifest['annotations'] = {'org.dinosaur.tool.food': 'avocado'}
+
+# Add your previously created config to it!
+manifest["config"] = conf
+```
+
+Given a client, you would use `self.upload_manifest(manifest, package)` to push your manifest,
+where package is the complete unique resource identifier. Note that
+you should do blobs (layers) and the config first.
+
+</details>
 
 ### Push Interactions
 
@@ -101,7 +205,7 @@ conform to what the ORAS command line client expects (e.g., groups like `$config
 
 <details>
 
-<summary>Example using oras.provider.Registry (click to expand)</summary>
+<summary>Example of custom push (click to expand)</summary>
 
 You might start with a custom lookup of archive paths and
 media types. Let's say we start with this lookup, `archives`:
@@ -171,7 +275,7 @@ class Registry(oras.provider.Registry):
             manifest["layers"].append(layer)
 
             # Upload the blob layer
-            response = self._upload_blob(blob, container, layer)
+            response = self.upload_blob(blob, container, layer)
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -192,7 +296,7 @@ class Registry(oras.provider.Registry):
             conf["annotations"] = config_annots
 
         # Config is just another layer blob!
-        response = self._upload_blob(config_file, container, conf)
+        response = self.upload_blob(config_file, container, conf)
         self._check_200_response(response)
 
         # Final upload of the manifest
@@ -219,7 +323,7 @@ as a list of artifacts (I like this design better).
 
 <details>
 
-<summary>Example using oras.provider.Registry for a custom list (click to expand)</summary>
+<summary>Example of custom push with more intuitive list (click to expand)</summary>
 
 This example provides a courtesy function to create your client, and also shows
 how to use `oras.utils.workdir` to ensure the upload is in context of your archive files.
@@ -296,7 +400,7 @@ class Registry(oras.provider.Registry):
 
             # Upload the blob layer
             logger.info(f"Uploading {blob} to {container.uri}")
-            response = self._upload_blob(blob, container, layer)
+            response = self.upload_blob(blob, container, layer)
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -309,7 +413,7 @@ class Registry(oras.provider.Registry):
         conf["annotations"] = defaults.default_config_annotations
 
         # Config is just another layer blob!
-        response = self._upload_blob(config_file, container, conf)
+        response = self.upload_blob(config_file, container, conf)
         self._check_200_response(response)
 
         # Final upload of the manifest
@@ -402,8 +506,63 @@ def inspect(self, name):
     # download correct blob, etc.
 ```
 
-Specifically the function `self.get_blob` will allow you to do that.
+Specifically the function `self.get_blob` will allow you to do that, or
+`self.download_blob` for the streaming version. Let's now extend the clients
+shown above for "pull" to add a download ability (pull):
 
+<details>
+
+<summary>Example of custom pull (click to expand)</summary>
+
+This custom pull shows how we might retrieve an ORAS artifact that
+has multiple layers, each a different content type that we might
+want to selectively download.
+
+```python
+import os
+import sys
+
+import oras.defaults
+import oras.oci
+import oras.provider
+from oras.decorator import ensure_container
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class Registry(oras.provider.Registry):
+
+    @ensure_container
+    def download_layer(self, download_dir, package, media_type):
+        """
+        Given a manifest of layers, retrieve a layer based on desired media type
+        """
+        # If you intend to call this function again, you might cache this response
+        # for the package of interest.
+        manifest = self.get_manifest(package)
+
+        # Find the layer of interest! Currently we look for presence of the string
+        # e.g., "prices" can come from "prices" or "prices-web"
+        for layer in manifest.get('layers', []):
+
+            # E.g., google.prices or google.prices-web or aws.prices
+            if layer['mediaType'] == media_type:
+
+                # This annotation is currently the practice for a relative path to extract to
+                outfile = os.path.join(download_dir, layer['annotations']['org.opencontainers.image.title'])
+
+                # download blob ensures we stream, otherwise get_blob would return request
+                # this function also handles creating the output directory if does not exist
+                return self.download_blob(package, layer['digest'], outfile)
+```
+
+</details>
+
+You can get creative with the above - e.g., perhaps a layer has a json file that you first
+get in memory using `get_blob` (to get the response object) and then do further parsing
+of metadata before deciding to retrieve it. Note that as of oras-py 0.1.11 download_blob
+is exposed as above. For earlier versions, you can use `self._download_blob`.
 
 ### Authentication
 
