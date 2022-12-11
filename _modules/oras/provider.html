@@ -863,7 +863,11 @@
             <span class="c1"># Create a new layer from the blob</span>
             <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="n">media_type</span><span class="p">)</span>
             <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
-            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="p">}</span>
+
+            <span class="c1"># Always strip blob_name of path separator</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+            <span class="p">}</span>
             <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
                 <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
 
@@ -924,7 +928,7 @@
 <span class="sd">        :type allowed_media_type: list or None</span>
 <span class="sd">        :param overwrite: if output file exists, overwrite</span>
 <span class="sd">        :type overwrite: bool</span>
-<span class="sd">        :param manifest_config_ref: sav manifest config to this file</span>
+<span class="sd">        :param manifest_config_ref: save manifest config to this file</span>
 <span class="sd">        :type manifest_config_ref: str</span>
 <span class="sd">        :param outdir: output directory path</span>
 <span class="sd">        :type outdir: str</span>
@@ -947,7 +951,10 @@
             <span class="c1"># If we don't have a filename, default to digest. Hopefully does not happen</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">]</span>
-            <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+            <span class="c1"># This raises an error if there is a malicious path</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sanitize_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outfile</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">outfile</span><span class="si">}</span><span class="s2"> already exists and --keep-old-files set, will not overwrite."</span>

@@ -1239,6 +1239,7 @@ want to selectively download.
 <span class="kn">import</span> <span class="nn">oras.defaults</span>
 <span class="kn">import</span> <span class="nn">oras.oci</span>
 <span class="kn">import</span> <span class="nn">oras.provider</span>
+<span class="kn">import</span> <span class="nn">oras.utils</span>
 <span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -1248,13 +1249,16 @@ want to selectively download.
 <span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
 
     <span class="nd">@ensure_container</span>
-    <span class="k">def</span> <span class="nf">download_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">download_dir</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">media_type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">download_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">download_dir</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">media_type</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Given a manifest of layers, retrieve a layer based on desired media type</span>
 <span class="sd">        """</span>
         <span class="c1"># If you intend to call this function again, you might cache this response</span>
         <span class="c1"># for the package of interest.</span>
         <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+        <span class="c1"># Let's return a list of download paths to the user</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Find the layer of interest! Currently we look for presence of the string</span>
         <span class="c1"># e.g., "prices" can come from "prices" or "prices-web"</span>
@@ -1264,11 +1268,17 @@ want to selectively download.
             <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'mediaType'</span><span class="p">]</span> <span class="o">==</span> <span class="n">media_type</span><span class="p">:</span>
 
                 <span class="c1"># This annotation is currently the practice for a relative path to extract to</span>
-                <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_dir</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">][</span><span class="s1">'org.opencontainers.image.title'</span><span class="p">])</span>
+                <span class="n">artifact</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">][</span><span class="s1">'org.opencontainers.image.title'</span><span class="p">]</span>
+
+                <span class="c1"># This raises an error if there is a malicious path</span>
+                <span class="n">outfile</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sanitize_path</span><span class="p">(</span><span class="n">download_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_dir</span><span class="p">,</span> <span class="n">artifact</span><span class="p">))</span>
 
                 <span class="c1"># download blob ensures we stream, otherwise get_blob would return request</span>
                 <span class="c1"># this function also handles creating the output directory if does not exist</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'digest'</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s1">'digest'</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+                <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">paths</span>
 </pre>
             </div>
            </div>

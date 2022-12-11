@@ -327,6 +327,20 @@
     <span class="k">return</span> <span class="n">dest_name</span></div>
 
 
+<div class="viewcode-block" id="sanitize_path"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.sanitize_path">[docs]</a><span class="k">def</span> <span class="nf">sanitize_path</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Ensure a path resolves to be in the expected parent directory.</span>
+
+<span class="sd">    It can be directly there or a child, but not outside it.</span>
+<span class="sd">    We raise an error if it does not - this should not happen</span>
+<span class="sd">    """</span>
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">)</span>
+    <span class="n">test_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_dir</span> <span class="o">/</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">base_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="ow">in</span> <span class="n">test_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Filename </span><span class="si">{</span><span class="n">test_path</span><span class="si">}</span><span class="s2"> is not in </span><span class="si">{</span><span class="n">base_dir</span><span class="si">}</span><span class="s2"> directory"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">test_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span></div>
+
+
 <div class="viewcode-block" id="workdir"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.workdir">[docs]</a><span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">workdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
     <span class="sd">"""</span>
