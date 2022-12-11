@@ -629,7 +629,7 @@ class Registry:
         :type allowed_media_type: list or None
         :param overwrite: if output file exists, overwrite
         :type overwrite: bool
-        :param manifest_config_ref: sav manifest config to this file
+        :param manifest_config_ref: save manifest config to this file
         :type manifest_config_ref: str
         :param outdir: output directory path
         :type outdir: str
@@ -652,7 +652,10 @@ class Registry:
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
                 filename = layer["digest"]
-            outfile = os.path.join(outdir, filename.strip(os.sep))
+
+            # This raises an error if there is a malicious path
+            outfile = oras.utils.sanitize_path(outdir, os.path.join(outdir, filename))
+
             if not overwrite and os.path.exists(outfile):
                 logger.warning(
                     f"{outfile} already exists and --keep-old-files set, will not overwrite."

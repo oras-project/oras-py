@@ -525,6 +525,7 @@ import sys
 import oras.defaults
 import oras.oci
 import oras.provider
+import oras.utils
 from oras.decorator import ensure_container
 import logging
 
@@ -552,11 +553,11 @@ class Registry(oras.provider.Registry):
             # E.g., google.prices or google.prices-web or aws.prices
             if layer['mediaType'] == media_type:
 
-                # artifact path
+                # This annotation is currently the practice for a relative path to extract to
                 artifact = layer['annotations']['org.opencontainers.image.title']
 
-                # This annotation is currently the practice for a relative path to extract to
-                outfile = os.path.join(download_dir, artifact.strip(os.sep))
+                # This raises an error if there is a malicious path
+                outfile = oras.utils.sanitize_path(download_dir, os.path.join(download_dir, artifact))
 
                 # download blob ensures we stream, otherwise get_blob would return request
                 # this function also handles creating the output directory if does not exist

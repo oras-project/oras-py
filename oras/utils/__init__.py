@@ -13,6 +13,7 @@ from .fileio import (
     read_json,
     readline,
     recursive_find,
+    sanitize_path,
     workdir,
     write_file,
     write_json,

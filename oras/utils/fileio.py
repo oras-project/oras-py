@@ -28,6 +28,20 @@ def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     return dest_name
 
 
+def sanitize_path(expected_dir, path):
+    """
+    Ensure a path resolves to be in the expected parent directory.
+
+    It can be directly there or a child, but not outside it.
+    We raise an error if it does not - this should not happen
+    """
+    base_dir = pathlib.Path(expected_dir)
+    test_path = (base_dir / path).resolve()
+    if not base_dir.resolve() in test_path.resolve().parents:
+        raise Exception(f"Filename {test_path} is not in {base_dir} directory")
+    return str(test_path.resolve())
+
+
 @contextmanager
 def workdir(dirname):
     """
