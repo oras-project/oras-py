@@ -534,13 +534,16 @@ logger = logging.getLogger(__name__)
 class Registry(oras.provider.Registry):
 
     @ensure_container
-    def download_layer(self, download_dir, package, media_type):
+    def download_layers(self, download_dir, package, media_type):
         """
         Given a manifest of layers, retrieve a layer based on desired media type
         """
         # If you intend to call this function again, you might cache this response
         # for the package of interest.
         manifest = self.get_manifest(package)
+
+        # Let's return a list of download paths to the user
+        paths = []
 
         # Find the layer of interest! Currently we look for presence of the string
         # e.g., "prices" can come from "prices" or "prices-web"
@@ -557,7 +560,10 @@ class Registry(oras.provider.Registry):
 
                 # download blob ensures we stream, otherwise get_blob would return request
                 # this function also handles creating the output directory if does not exist
-                return self.download_blob(package, layer['digest'], outfile)
+                path = self.download_blob(package, layer['digest'], outfile)
+                paths.append(path)
+
+        return paths
 ```
 
 </details>
