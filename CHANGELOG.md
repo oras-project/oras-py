@@ -14,6 +14,10 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - exposing download_blob to the user since it uses streaming (0.1.11)
+   - adding developer examples for pull.
+   - start deprecation for _download_blob, _put_upload, _chunked_upload, _upload_manifest
+     in favor of equivalent public functions.
  - moving of docs to fully be here with extended examples (0.1.1)
    - addition of oras.utils.workdir to provide local context
  - clients are removed from Python SDK in favor of examples (0.1.0)

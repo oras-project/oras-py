@@ -211,9 +211,9 @@ class Registry:
         # This is currently disabled unless the user asks for it, as
         # it doesn't seem to work for all registries
         if not do_chunked:
-            response = self._put_upload(blob, container, layer)
+            response = self.put_upload(blob, container, layer)
         else:
-            response = self._chunked_upload(blob, container, layer)
+            response = self.chunked_upload(blob, container, layer)
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
         if (
@@ -276,8 +276,42 @@ class Registry:
             return name
         return oras.container.Container(name, registry=self.hostname)
 
+    # Functions to be deprecated in favor of exposed ones
     @ensure_container
     def _download_blob(
+        self, container: Union[str, oras.container.Container], digest: str, outfile: str
+    ) -> str:
+        logger.warning(
+            "This function is deprecated in favor of download_blob and will be removed by 0.1.2"
+        )
+        return self.download_blob(container, digest, outfile)
+
+    def _put_upload(
+        self, blob: str, container: oras.container.Container, layer: dict
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of put_upload and will be removed by 0.1.2"
+        )
+        return self.put_upload(blob, container, layer)
+
+    def _chunked_upload(
+        self, blob: str, container: oras.container.Container, layer: dict
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of chunked_upload and will be removed by 0.1.2"
+        )
+        return self.chunked_upload(blob, container, layer)
+
+    def _upload_manifest(
+        self, manifest: dict, container: oras.container.Container
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of upload_manifest and will be removed by 0.1.2"
+        )
+        return self.upload_manifest(manifest, container)
+
+    @ensure_container
+    def download_blob(
         self, container: Union[str, oras.container.Container], digest: str, outfile: str
     ) -> str:
         """
@@ -307,7 +341,7 @@ class Registry:
             raise e
         return outfile
 
-    def _put_upload(
+    def put_upload(
         self, blob: str, container: oras.container.Container, layer: dict
     ) -> requests.Response:
         """
@@ -371,7 +405,7 @@ class Registry:
             session_url = f"{prefix}{session_url}"
         return session_url
 
-    def _chunked_upload(
+    def chunked_upload(
         self, blob: str, container: oras.container.Container, layer: dict
     ) -> requests.Response:
         """
@@ -448,7 +482,7 @@ class Registry:
         except Exception:
             pass
 
-    def _upload_manifest(
+    def upload_manifest(
         self, manifest: dict, container: oras.container.Container
     ) -> requests.Response:
         """
@@ -577,7 +611,7 @@ class Registry:
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self._upload_manifest(manifest, container))
+        self._check_200_response(self.upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
         return response
 
@@ -624,14 +658,14 @@ class Registry:
             # A directory will need to be uncompressed and moved
             if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
                 targz = oras.utils.get_tmpfile(suffix=".tar.gz")
-                self._download_blob(container, layer["digest"], targz)
+                self.download_blob(container, layer["digest"], targz)
 
                 # The artifact will be extracted to the correct name
                 oras.utils.extract_targz(targz, os.path.dirname(outfile))
 
             # Anything else just extracted directly
             else:
-                self._download_blob(container, layer["digest"], outfile)
+                self.download_blob(container, layer["digest"], outfile)
             logger.info(f"Successfully pulled {outfile}.")
             files.append(outfile)
         return files
