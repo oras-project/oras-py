@@ -10,12 +10,6 @@ OCI Registry as Storage enables libraries to push OCI Artifacts to [OCI Conforma
 
 See our ⭐️ [Documentation](https://oras-project.github.io/oras-py/) ⭐️ to get started.
 
-## TODO
-
- - add example (custom) GitHub client
- - need to have git commit, state, added to defaults on install/release. See [here](https://github.com/oras-project/oras/blob/main/Makefile).
- - todo we haven't added path traversal, or cacheRoot to pull
- - environment variables like `ORAS_CACHE`
 
 ## Code of Conduct
 
