@@ -564,7 +564,11 @@ class Registry:
             # Create a new layer from the blob
             layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
             annotations = annotset.get_annotations(blob)
-            layer["annotations"] = {oras.defaults.annotation_title: blob_name}
+
+            # Always strip blob_name of path separator
+            layer["annotations"] = {
+                oras.defaults.annotation_title: blob_name.strip(os.sep)
+            }
             if annotations:
                 layer["annotations"].update(annotations)
 
@@ -648,7 +652,7 @@ class Registry:
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
                 filename = layer["digest"]
-            outfile = os.path.join(outdir, filename)
+            outfile = os.path.join(outdir, filename.strip(os.sep))
             if not overwrite and os.path.exists(outfile):
                 logger.warning(
                     f"{outfile} already exists and --keep-old-files set, will not overwrite."
