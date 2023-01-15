@@ -22,6 +22,14 @@ oras.auth module
    :undoc-members:
    :show-inheritance:
 
+oras.client module
+------------------
+
+.. automodule:: oras.client
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 oras.container module
 ---------------------
 
