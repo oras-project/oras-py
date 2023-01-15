@@ -301,7 +301,7 @@ class Registry(oras.provider.Registry):
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self._upload_manifest(manifest, container))
+        self._check_200_response(self.upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
         return response
 ```
@@ -375,7 +375,7 @@ class Registry(oras.provider.Registry):
             annots = item.get("annotations") or {}
 
             if not blob or not os.path.exists(blob):
-                logger.warning(f"Path {blob} does not exist or is not defineds.")
+                logger.warning(f"Path {blob} does not exist or is not defined.")
                 continue
 
             # Artifact title is basename or user defined
@@ -407,10 +407,10 @@ class Registry(oras.provider.Registry):
             if cleanup_blob and os.path.exists(blob):
                 os.remove(blob)
 
-        # Prepare manifest and config
-        manifest["annotations"] = defaults.default_manifest_annotations
+        # Prepare manifest and config (add your custom annotations here)
+        manifest["annotations"] = {}
         conf, config_file = oras.oci.ManifestConfig()
-        conf["annotations"] = defaults.default_config_annotations
+        conf["annotations"] = {}
 
         # Config is just another layer blob!
         response = self.upload_blob(config_file, container, conf)
@@ -418,7 +418,7 @@ class Registry(oras.provider.Registry):
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self._upload_manifest(manifest, container))
+        self._check_200_response(self.upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
         return response
 ```
