@@ -320,7 +320,7 @@ class Registry:
         logger.warning(
             "This function is deprecated in favor of upload_blob and will be removed by 0.1.2"
         )
-        return self._upload_blob(blob, container, layer, do_chunked)
+        return self.upload_blob(blob, container, layer, do_chunked)
 
     @ensure_container
     def download_blob(
