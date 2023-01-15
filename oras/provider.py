@@ -310,6 +310,18 @@ class Registry:
         )
         return self.upload_manifest(manifest, container)
 
+    def _upload_blob(
+        self,
+        blob: str,
+        container: Union[str, oras.container.Container],
+        layer: dict,
+        do_chunked: bool = False,
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of upload_blob and will be removed by 0.1.2"
+        )
+        return self._upload_blob(blob, container, layer, do_chunked)
+
     @ensure_container
     def download_blob(
         self, container: Union[str, oras.container.Container], digest: str, outfile: str
