@@ -181,7 +181,7 @@ class Registry:
             return ref, oras.defaults.unknown_config_media_type
         return ref.split(":", 1)
 
-    def _upload_blob(
+    def upload_blob(
         self,
         blob: str,
         container: Union[str, oras.container.Container],
@@ -577,7 +577,7 @@ class Registry:
             logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
-            response = self._upload_blob(blob, container, layer)
+            response = self.upload_blob(blob, container, layer)
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -610,7 +610,7 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        response = self._upload_blob(config_file, container, conf)
+        response = self.upload_blob(config_file, container, conf)
         self._check_200_response(response)
 
         # Final upload of the manifest
