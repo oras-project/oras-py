@@ -460,7 +460,7 @@ for using the SDK and writing clients, see our
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ make install
+           <pre><span></span>$<span class="w"> </span>make<span class="w"> </span>install
 </pre>
           </div>
          </div>
@@ -469,7 +469,7 @@ for using the SDK and writing clients, see our
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ docker run -it --rm -p <span class="m">5000</span>:5000 ghcr.io/oras-project/registry:latest
+           <pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span>ghcr.io/oras-project/registry:latest
 </pre>
           </div>
          </div>
@@ -494,7 +494,7 @@ If you want to test interactively, add an IPython import statement somewhere in 
          <div class="highlight-bash notranslate">
           <div class="highlight">
            <pre><span></span><span class="c1"># pip install IPython</span>
-import IPython
+import<span class="w"> </span>IPython
 IPython.embed<span class="o">()</span>
 </pre>
           </div>
@@ -504,8 +504,8 @@ IPython.embed<span class="o">()</span>
          </p>
          <div class="highlight-diff notranslate">
           <div class="highlight">
-           <pre><span></span><span class="gd">- pytest oras/</span><span class="w"></span>
-<span class="gi">+ pytest -xs oras/</span><span class="w"></span>
+           <pre><span></span><span class="gd">- pytest oras/</span>
+<span class="gi">+ pytest -xs oras/</span>
 </pre>
           </div>
          </div>
@@ -557,7 +557,7 @@ you can use pre-commit as follows:
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ pip install -r .github/dev-requirements.txt
+           <pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>.github/dev-requirements.txt
 </pre>
           </div>
          </div>
@@ -566,7 +566,7 @@ you can use pre-commit as follows:
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ pre-commit run --all-files
+           <pre><span></span>$<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </pre>
           </div>
          </div>
@@ -589,7 +589,7 @@ you can use pre-commit as follows:
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ pre-commit install
+           <pre><span></span>$<span class="w"> </span>pre-commit<span class="w"> </span>install
 </pre>
           </div>
          </div>
@@ -598,8 +598,8 @@ you can use pre-commit as follows:
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ make develop
-$ make lint
+           <pre><span></span>$<span class="w"> </span>make<span class="w"> </span>develop
+$<span class="w"> </span>make<span class="w"> </span>lint
 </pre>
           </div>
          </div>
@@ -648,14 +648,14 @@ dependencies:
           </p>
           <div class="highlight-console notranslate">
            <div class="highlight">
-            <pre><span></span><span class="gp"># </span>In main oras-py folder <span class="o">(</span>oras-py is needed to build docs<span class="o">)</span>
-<span class="gp">$ </span>pip install -e .
+            <pre><span></span><span class="gp"># </span>In<span class="w"> </span>main<span class="w"> </span>oras-py<span class="w"> </span>folder<span class="w"> </span><span class="o">(</span>oras-py<span class="w"> </span>is<span class="w"> </span>needed<span class="w"> </span>to<span class="w"> </span>build<span class="w"> </span>docs<span class="o">)</span>
+<span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 
-<span class="gp"># </span>Now docs dependencies
+<span class="gp"># </span>Now<span class="w"> </span>docs<span class="w"> </span>dependencies
 <span class="go">cd docs</span>
 <span class="go">pip install -r requrements.txt</span>
 
-<span class="gp"># </span>Build the docs into _build/html
+<span class="gp"># </span>Build<span class="w"> </span>the<span class="w"> </span>docs<span class="w"> </span>into<span class="w"> </span>_build/html
 <span class="go">make html</span>
 </pre>
            </div>
@@ -689,7 +689,7 @@ server to preview:
           </p>
           <div class="highlight-console notranslate">
            <div class="highlight">
-            <pre><span></span><span class="gp">$ </span>python -m http.server <span class="m">9999</span>
+            <pre><span></span><span class="gp">$ </span>python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">9999</span>
 </pre>
            </div>
           </div>
@@ -778,7 +778,7 @@ functions from oras-py source code.
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

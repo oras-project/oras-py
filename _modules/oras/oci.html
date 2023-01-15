@@ -321,7 +321,7 @@
 
 
 <div class="viewcode-block" id="Annotations"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations">[docs]</a><span class="k">class</span> <span class="nc">Annotations</span><span class="p">:</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new set of annotations</span>
 <span class="sd">    """</span>
 
@@ -330,7 +330,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Annotations.add"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add key/value pairs to a named section.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">section</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">:</span>
@@ -344,7 +344,7 @@
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Annotation file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Annotations.get_annotations"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.get_annotations">[docs]</a>    <span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given the name (a relative path or named section) get annotations</span>
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">section</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
@@ -357,7 +357,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new Layer</span>
 
 <span class="sd">        :param blob_path: the path of the blob for the layer</span>
@@ -371,7 +371,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Layer.set_media_type"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.set_media_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_media_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Vary the media type to be directory or default layer</span>
 
 <span class="sd">        :param media_type: media type for the blob (optional)</span>
@@ -386,7 +386,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">media_type</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_blob_media_type</span></div>
 
 <div class="viewcode-block" id="Layer.to_dict"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return a dictionary representation of the layer</span>
 <span class="sd">        """</span>
         <span class="n">layer</span> <span class="o">=</span> <span class="p">{</span>
@@ -401,7 +401,7 @@
 <div class="viewcode-block" id="NewLayer"><a class="viewcode-back" href="../../source/oras.html#oras.oci.NewLayer">[docs]</a><span class="k">def</span> <span class="nf">NewLayer</span><span class="p">(</span>
     <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Courtesy function to create and retrieve a layer as dict</span>
 
 <span class="sd">    :param blob_path: the path of the blob for the layer</span>
@@ -417,7 +417,7 @@
 <div class="viewcode-block" id="ManifestConfig"><a class="viewcode-back" href="../../source/oras.html#oras.oci.ManifestConfig">[docs]</a><span class="k">def</span> <span class="nf">ManifestConfig</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write an empty config, if one is not provided</span>
 
 <span class="sd">    :param path: the path of the manifest config, if exists.</span>
@@ -446,7 +446,7 @@
 
 
 <div class="viewcode-block" id="NewManifest"><a class="viewcode-back" href="../../source/oras.html#oras.oci.NewManifest">[docs]</a><span class="k">def</span> <span class="nf">NewManifest</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get an empty manifest config.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">EmptyManifest</span><span class="p">)</span></div>
@@ -469,7 +469,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

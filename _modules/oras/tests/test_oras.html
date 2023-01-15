@@ -319,7 +319,7 @@
 
 
 <div class="viewcode-block" id="setup_module"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.setup_module">[docs]</a><span class="k">def</span> <span class="nf">setup_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ensure the registry port and host is in the environment.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">registry_host</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">registry_port</span><span class="p">:</span>
@@ -336,7 +336,7 @@
 
 
 <div class="viewcode-block" id="test_basic_oras"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_oras">[docs]</a><span class="k">def</span> <span class="nf">test_basic_oras</span><span class="p">():</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras (without authentication)</span>
 <span class="sd">    """</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -345,7 +345,7 @@
 
 <div class="viewcode-block" id="test_login_logout"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_login_logout">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="ow">not</span> <span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"basic auth is needed for login/logout"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_login_logout</span><span class="p">():</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Login and logout are all we can test with basic auth!</span>
 <span class="sd">    """</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -358,7 +358,7 @@
 
 <div class="viewcode-block" id="test_basic_push_pull"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_push_pull">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_basic_push_pull</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras (without authentication)</span>
 <span class="sd">    """</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -395,7 +395,7 @@
 
 <div class="viewcode-block" id="test_directory_push_pull"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_directory_push_pull">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_directory_push_pull</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test push and pull for directory</span>
 <span class="sd">    """</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -430,7 +430,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

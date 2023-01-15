@@ -523,7 +523,7 @@ If you want to deploy a local testing registry (without auth), you can do:
          </p>
          <div class="highlight-bash notranslate">
           <div class="highlight">
-           <pre><span></span>$ docker run -it --rm -p <span class="m">5000</span>:5000 ghcr.io/oras-project/registry:latest
+           <pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span>ghcr.io/oras-project/registry:latest
 </pre>
           </div>
          </div>
@@ -539,7 +539,7 @@ If you want to deploy a local testing registry (without auth), you can do:
          <div class="highlight-bash notranslate">
           <div class="highlight">
            <pre><span></span><span class="c1"># This is an htpassword file, "b" means bcrypt</span>
-htpasswd -cB -b auth.htpasswd myuser mypass
+htpasswd<span class="w"> </span>-cB<span class="w"> </span>-b<span class="w"> </span>auth.htpasswd<span class="w"> </span>myuser<span class="w"> </span>mypass
 </pre>
           </div>
          </div>
@@ -553,10 +553,10 @@ htpasswd -cB -b auth.htpasswd myuser mypass
          <div class="highlight-bash notranslate">
           <div class="highlight">
            <pre><span></span><span class="c1"># And start the registry with authentication</span>
-docker run -it --rm -p <span class="m">5000</span>:5000 <span class="se">\</span>
-    -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/auth.htpasswd:/etc/docker/registry/auth.htpasswd <span class="se">\</span>
-    -e <span class="nv">REGISTRY_AUTH</span><span class="o">=</span><span class="s2">"{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"</span> <span class="se">\</span>
-    ghcr.io/oras-project/registry:latest
+docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/auth.htpasswd:/etc/docker/registry/auth.htpasswd<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">REGISTRY_AUTH</span><span class="o">=</span><span class="s2">"{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>ghcr.io/oras-project/registry:latest
 </pre>
           </div>
          </div>
@@ -901,7 +901,7 @@ Registry provider to handle:
 <span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">archives</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a dict of layers (paths and corresponding mediaType) push.</span>
 <span class="sd">        """</span>
         <span class="c1"># Prepare a new manifest</span>
@@ -1018,7 +1018,7 @@ how to use
 
 
 <span class="k">def</span> <span class="nf">get_oras_client</span><span class="p">():</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Consistent method to get an oras client</span>
 <span class="sd">    """</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_USER"</span><span class="p">)</span>
@@ -1035,7 +1035,7 @@ how to use
 <span class="k">class</span> <span class="nc">Registry</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">):</span>
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">archives</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a list of layer metadata (paths and corresponding mediaType) push.</span>
 <span class="sd">        """</span>
         <span class="c1"># Prepare a new manifest</span>
@@ -1110,7 +1110,7 @@ function above to get a client and push! 🎉️
 <span class="kn">import</span> <span class="nn">oras.utils</span>
 
 <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given an ORAS identifier, save artifacts to it.</span>
 <span class="sd">    """</span>
     <span class="n">oras_cli</span> <span class="o">=</span> <span class="n">get_oras_client</span><span class="p">()</span>
@@ -1250,7 +1250,7 @@ want to selectively download.
 
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">download_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">download_dir</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">media_type</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a manifest of layers, retrieve a layer based on desired media type</span>
 <span class="sd">        """</span>
         <span class="c1"># If you intend to call this function again, you might cache this response</span>
@@ -1524,7 +1524,7 @@ and working on these docs!
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

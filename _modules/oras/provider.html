@@ -318,7 +318,7 @@
 
 
 <div class="viewcode-block" id="Registry"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry">[docs]</a><span class="k">class</span> <span class="nc">Registry</span><span class="p">:</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Direct interactions with an OCI registry.</span>
 
 <span class="sd">    This could also be called a "provider" when we add in the "copy" logic</span>
@@ -326,7 +326,7 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new registry provider.</span>
 
 <span class="sd">        :param hostname: the registry hostname (optional)</span>
@@ -343,7 +343,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Registry.logout"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If auths are loaded, remove a hostname.</span>
 
 <span class="sd">        :param hostname: the registry hostname to remove</span>
@@ -370,7 +370,7 @@
         <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
         <span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Load configs to discover credentials for a specific container.</span>
 
 <span class="sd">        This is typically just called once. We always add the default Docker</span>
@@ -388,7 +388,7 @@
                 <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">_load_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Look for and load a named authentication token.</span>
 
 <span class="sd">        :param hostname: the registry hostname to look for</span>
@@ -413,7 +413,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Registry.set_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.set_basic_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set basic authentication.</span>
 
 <span class="sd">        :param username: the user account name</span>
@@ -425,7 +425,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Basic </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.set_token_auth"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.set_token_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_token_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set token authentication.</span>
 
 <span class="sd">        :param token: the bearer token</span>
@@ -435,7 +435,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Bearer </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.reset_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.reset_basic_auth">[docs]</a>    <span class="k">def</span> <span class="nf">reset_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given we have basic auth, reset it.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="s2">"Authorization"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
@@ -444,7 +444,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">set_header</span><span class="p">(</span><span class="s2">"Authorization"</span><span class="p">,</span> <span class="s2">"Basic </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.set_header"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.set_header">[docs]</a>    <span class="k">def</span> <span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Courtesy function to set a header</span>
 
 <span class="sd">        :param name: header name to set</span>
@@ -455,7 +455,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span></div>
 
     <span class="k">def</span> <span class="nf">_validate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Ensure a blob path is in the present working directory or below.</span>
 
 <span class="sd">        :param path: the path to validate</span>
@@ -464,7 +464,7 @@
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_manifest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse an optional manifest config, e.g:</span>
 
 <span class="sd">        Examples</span>
@@ -480,14 +480,14 @@
             <span class="k">return</span> <span class="n">ref</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">unknown_config_media_type</span>
         <span class="k">return</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_upload_blob</span><span class="p">(</span>
+<div class="viewcode-block" id="Registry.upload_blob"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_blob">[docs]</a>    <span class="k">def</span> <span class="nf">upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
         <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Prepare and upload a blob.</span>
 
 <span class="sd">        Sizes &gt; 1024 are uploaded via a chunked approach (post, patch+, put)</span>
@@ -521,13 +521,13 @@
         <span class="p">):</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">()</span>
             <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
-        <span class="k">return</span> <span class="n">response</span>
+        <span class="k">return</span> <span class="n">response</span></div>
 
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
 <span class="sd">        :param container:  parsed container URI</span>
@@ -546,7 +546,7 @@
         <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">head</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a blob for a package.</span>
 
 <span class="sd">        :param container:  parsed container URI</span>
@@ -565,7 +565,7 @@
 <div class="viewcode-block" id="Registry.get_container"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_container">[docs]</a>    <span class="k">def</span> <span class="nf">get_container</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Courtesy function to get a container from a URI.</span>
 
 <span class="sd">        :param name: unique resource identifier to parse</span>
@@ -609,11 +609,23 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_upload_blob</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
+        <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">"This function is deprecated in favor of upload_blob and will be removed by 0.1.2"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">do_chunked</span><span class="p">)</span>
+
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">download_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Stream download a blob into an output file.</span>
 
 <span class="sd">        This function is a wrapper around get_blob.</span>
@@ -643,7 +655,7 @@
 <div class="viewcode-block" id="Registry.put_upload"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.put_upload">[docs]</a>    <span class="k">def</span> <span class="nf">put_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Upload to a registry via put.</span>
 
 <span class="sd">        :param blob: path to blob to upload</span>
@@ -684,7 +696,7 @@
     <span class="k">def</span> <span class="nf">_get_location</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse the location header and ensure it includes a hostname.</span>
 <span class="sd">        This currently assumes if there isn't a hostname, we are pushing to</span>
 <span class="sd">        the same registry hostname of the original request.</span>
@@ -707,7 +719,7 @@
 <div class="viewcode-block" id="Registry.chunked_upload"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.chunked_upload">[docs]</a>    <span class="k">def</span> <span class="nf">chunked_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Upload via a chunked upload.</span>
 
 <span class="sd">        :param blob: path to blob to upload</span>
@@ -756,7 +768,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">session_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Helper function to ensure some flavor of 200</span>
 
 <span class="sd">        :param response: request response to inspect</span>
@@ -767,7 +779,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_response_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a failed request, look for OCI formatted error messages.</span>
 
 <span class="sd">        :param response: request response to inspect</span>
@@ -784,7 +796,7 @@
 <div class="viewcode-block" id="Registry.upload_manifest"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_manifest">[docs]</a>    <span class="k">def</span> <span class="nf">upload_manifest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Read a manifest file and upload it.</span>
 
 <span class="sd">        :param manifest: manifest to upload</span>
@@ -802,7 +814,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">put_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">manifest</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.push"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Push a set of files to a target</span>
 
 <span class="sd">        :param config_path: path to a config file</span>
@@ -876,7 +888,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="c1"># Upload the blob layer</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
             <span class="c1"># Do we need to cleanup a temporary targz?</span>
@@ -909,7 +921,7 @@
 
         <span class="c1"># Config is just another layer blob!</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing config </span><span class="si">{</span><span class="n">conf</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
         <span class="c1"># Final upload of the manifest</span>
@@ -919,7 +931,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="Registry.pull"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Pull an artifact from a target</span>
 
 <span class="sd">        :param config_path: path to a config file</span>
@@ -982,7 +994,7 @@
         <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
         <span class="n">allowed_media_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a manifest for a package.</span>
 
 <span class="sd">        :param container:  parsed container URI</span>
@@ -1009,7 +1021,7 @@
         <span class="n">json</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Do a request. This is a wrapper around requests to handle retry auth.</span>
 
 <span class="sd">        :param url: the URL to issue the request to</span>
@@ -1071,7 +1083,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="Registry.authenticate_request"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.authenticate_request">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">originalResponse</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Authenticate Request</span>
 <span class="sd">        Given a response, look for a Www-Authenticate header to parse.</span>
 
@@ -1147,7 +1159,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Registry.request_anonymous_token"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.request_anonymous_token">[docs]</a>    <span class="k">def</span> <span class="nf">request_anonymous_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">authHeader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given no basic auth, fall back to trying to request an anonymous token.</span>
 
 <span class="sd">        Returns: boolean if headers have been updated with token.</span>
@@ -1198,7 +1210,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

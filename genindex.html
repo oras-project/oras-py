@@ -399,6 +399,12 @@
          </strong>
         </a>
         |
+        <a href="#V">
+         <strong>
+          V
+         </strong>
+        </a>
+        |
         <a href="#W">
          <strong>
           W
@@ -709,9 +715,16 @@
             </a>
            </li>
            <li>
-            <a href="source/oras.html#oras.provider.Registry.get_tags">
-             get_tags() (oras.provider.Registry method)
+            <a href="source/oras.html#oras.client.OrasClient.get_tags">
+             get_tags() (oras.client.OrasClient method)
             </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.get_tags">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
            </li>
            <li>
             <a href="source/oras.utils.html#oras.utils.fileio.get_tmpdir">
@@ -827,29 +840,43 @@
              </li>
             </ul>
            </li>
-          </ul>
-         </td>
-         <td style="width: 33%; vertical-align: top;">
-          <ul>
            <li>
             <a href="source/oras.html#oras.logger.Logger.location">
              location() (oras.logger.Logger method)
             </a>
            </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
            <li>
             <a href="source/oras.html#oras.logger.Logger">
              Logger (class in oras.logger)
             </a>
            </li>
            <li>
-            <a href="source/oras.main.html#oras.main.login.DockerClient.login">
-             login() (oras.main.login.DockerClient method)
+            <a href="source/oras.html#oras.client.OrasClient.login">
+             login() (oras.client.OrasClient method)
             </a>
+            <ul>
+             <li>
+              <a href="source/oras.main.html#oras.main.login.DockerClient.login">
+               (oras.main.login.DockerClient method)
+              </a>
+             </li>
+            </ul>
            </li>
            <li>
-            <a href="source/oras.html#oras.provider.Registry.logout">
-             logout() (oras.provider.Registry method)
+            <a href="source/oras.html#oras.client.OrasClient.logout">
+             logout() (oras.client.OrasClient method)
             </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.logout">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
            </li>
           </ul>
          </td>
@@ -893,6 +920,11 @@
              <li>
               <a href="source/oras.html#module-oras.auth">
                oras.auth
+              </a>
+             </li>
+             <li>
+              <a href="source/oras.html#module-oras.client">
+               oras.client
               </a>
              </li>
              <li>
@@ -1039,6 +1071,16 @@
             </ul>
            </li>
            <li>
+            oras.client
+            <ul>
+             <li>
+              <a href="source/oras.html#module-oras.client">
+               module
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li>
             oras.container
             <ul>
              <li>
@@ -1108,6 +1150,10 @@
              </li>
             </ul>
            </li>
+          </ul>
+         </td>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
            <li>
             oras.provider
             <ul>
@@ -1118,10 +1164,6 @@
              </li>
             </ul>
            </li>
-          </ul>
-         </td>
-         <td style="width: 33%; vertical-align: top;">
-          <ul>
            <li>
             oras.schemas
             <ul>
@@ -1212,6 +1254,11 @@
              </li>
             </ul>
            </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient">
+             OrasClient (class in oras.client)
+            </a>
+           </li>
           </ul>
          </td>
         </tr>
@@ -1243,19 +1290,33 @@
              progress() (oras.logger.Logger method)
             </a>
            </li>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.pull">
+             pull() (oras.client.OrasClient method)
+            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.pull">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
+           </li>
           </ul>
          </td>
          <td style="width: 33%; vertical-align: top;">
           <ul>
            <li>
-            <a href="source/oras.html#oras.provider.Registry.pull">
-             pull() (oras.provider.Registry method)
+            <a href="source/oras.html#oras.client.OrasClient.push">
+             push() (oras.client.OrasClient method)
             </a>
-           </li>
-           <li>
-            <a href="source/oras.html#oras.provider.Registry.push">
-             push() (oras.provider.Registry method)
-            </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.push">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
            </li>
            <li>
             <a href="source/oras.html#oras.container.Container.put_manifest_url">
@@ -1354,9 +1415,16 @@
             </a>
            </li>
            <li>
-            <a href="source/oras.html#oras.provider.Registry.set_basic_auth">
-             set_basic_auth() (oras.provider.Registry method)
+            <a href="source/oras.html#oras.client.OrasClient.set_basic_auth">
+             set_basic_auth() (oras.client.OrasClient method)
             </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.set_basic_auth">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
            </li>
            <li>
             <a href="source/oras.html#oras.provider.Registry.set_header">
@@ -1383,9 +1451,16 @@
             </a>
            </li>
            <li>
-            <a href="source/oras.html#oras.provider.Registry.set_token_auth">
-             set_token_auth() (oras.provider.Registry method)
+            <a href="source/oras.html#oras.client.OrasClient.set_token_auth">
+             set_token_auth() (oras.client.OrasClient method)
             </a>
+            <ul>
+             <li>
+              <a href="source/oras.html#oras.provider.Registry.set_token_auth">
+               (oras.provider.Registry method)
+              </a>
+             </li>
+            </ul>
            </li>
            <li>
             <a href="source/oras.html#oras.logger.setup_logger">
@@ -1516,6 +1591,11 @@
          <td style="width: 33%; vertical-align: top;">
           <ul>
            <li>
+            <a href="source/oras.html#oras.provider.Registry.upload_blob">
+             upload_blob() (oras.provider.Registry method)
+            </a>
+           </li>
+           <li>
             <a href="source/oras.html#oras.container.Container.upload_blob_url">
              upload_blob_url() (oras.container.Container method)
             </a>
@@ -1532,6 +1612,22 @@
            <li>
             <a href="source/oras.html#oras.container.Container.uri">
              uri (oras.container.Container property)
+            </a>
+           </li>
+          </ul>
+         </td>
+        </tr>
+       </table>
+       <h2 id="V">
+        V
+       </h2>
+       <table class="indextable genindextable" style="width: 100%">
+        <tr>
+         <td style="width: 33%; vertical-align: top;">
+          <ul>
+           <li>
+            <a href="source/oras.html#oras.client.OrasClient.version">
+             version() (oras.client.OrasClient method)
             </a>
            </li>
           </ul>
@@ -1611,7 +1707,7 @@
        © Copyright 2022, Oras Python Developers.
       </div>
       Last updated on
-              Dec 11, 2022.
+              Jan 15, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
