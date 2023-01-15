@@ -963,7 +963,7 @@ Registry provider to handle:
 
         <span class="c1"># Final upload of the manifest</span>
         <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span>
 </pre>
@@ -1051,7 +1051,7 @@ how to use
             <span class="n">annots</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">blob</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Path </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist or is not defineds."</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Path </span><span class="si">{</span><span class="n">blob</span><span class="si">}</span><span class="s2"> does not exist or is not defined."</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="c1"># Artifact title is basename or user defined</span>
@@ -1083,10 +1083,10 @@ how to use
             <span class="k">if</span> <span class="n">cleanup_blob</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
 
-        <span class="c1"># Prepare manifest and config</span>
-        <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_annotations</span>
+        <span class="c1"># Prepare manifest and config (add your custom annotations here)</span>
+        <span class="n">manifest</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">conf</span><span class="p">,</span> <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">ManifestConfig</span><span class="p">()</span>
-        <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">default_config_annotations</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Config is just another layer blob!</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
@@ -1094,7 +1094,7 @@ how to use
 
         <span class="c1"># Final upload of the manifest</span>
         <span class="n">manifest</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully pushed </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span>
 </pre>
