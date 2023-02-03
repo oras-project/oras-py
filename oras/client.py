@@ -103,7 +103,7 @@ class OrasClient:
         :param N: number of tags
         :type N: int
         """
-        return self.remote.get_tags(name, N=N).json()
+        return self.remote.get_tags(name, N=N)
 
     def push(self, *args, **kwargs):
         """

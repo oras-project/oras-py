@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
+import urllib
 from typing import List, Optional, Tuple, Union
 
 import jsonschema
@@ -236,8 +237,34 @@ class Registry:
         :param N: number of tags
         :type N: int
         """
-        tags_url = f"{self.prefix}://{container.tags_url(N)}"  # type: ignore
-        return self.do_request(tags_url, "GET", headers=self.headers)
+        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+
+        tags: List[str] = []
+        has_next_link = True
+        # get all tags using the pagination
+        while len(tags) < N and has_next_link:
+            res = self.do_request(tags_url, "GET", headers=self.headers)
+
+            # raise before trying to get `json` value
+            res.raise_for_status()
+
+            if res.headers.get("Link"):
+                link = res.headers.get("Link")
+                # if we have a next link, that looks something like:
+                # </v2/channel-mirrors/conda-forge/linux-64/arrow-cpp/tags/list?last=2.0.0-py37h5a62f8a_45_cuda&n=100000000>; rel="next"
+                # we want to extract the url and get the rest of the tags
+                assert link.endswith('; rel="next"')
+                next_link = link[link.find("<") + 1 : link.find(">")]
+                query = urllib.parse.urlparse(next_link).query
+                tags_url = f"{self.prefix}://{container.tags_url(query=query)}"  # type: ignore
+            else:
+                has_next_link = False
+
+            # if the package does not exist, the response is an
+            # {"errors":[{"code":"NAME_UNKNOWN","message":"repository name not known to registry"}]}
+            tags += res.json().get("tags", [])
+
+        return tags
 
     @ensure_container
     def get_blob(
@@ -548,7 +575,6 @@ class Registry:
 
         # Upload files as blobs
         for blob in kwargs.get("files", []):
-
             # You can provide a blob + content type
             if ":" in str(blob):
                 blob, media_type = str(blob).split(":", 1)
@@ -809,7 +835,6 @@ class Registry:
         h = oras.auth.parse_auth_header(authHeaderRaw)
 
         if "Authorization" not in headers:
-
             # First try to request an anonymous token
             logger.debug("No Authorization, requesting anonymous token")
             if self.request_anonymous_token(h):

@@ -72,9 +72,7 @@ def test_basic_push_pull(tmp_path):
 
     # Test getting tags
     tags = client.get_tags(target)
-    for key in ["name", "tags"]:
-        assert key in tags
-    assert "v1" in tags["tags"]
+    assert "v1" in tags
 
     # Test pulling elsewhere
     files = client.pull(target=target, outdir=tmp_path)
@@ -92,6 +90,17 @@ def test_basic_push_pull(tmp_path):
     # This should work because we aren't checking paths
     res = client.push(files=[artifact], target=target, disable_path_validation=True)
     assert res.status_code == 201
+
+
+def test_get_many_tags():
+    """
+    Test getting many tags
+    """
+    client = oras.client.OrasClient(hostname="ghcr.io", insecure=False)
+    tags = client.get_tags(
+        "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=100000
+    )
+    assert len(tags) > 1000
 
 
 @pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")

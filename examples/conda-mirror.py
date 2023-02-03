@@ -33,7 +33,6 @@ class CondaMirror(oras.provider.Registry):
     }
 
     def inspect(self, name):
-
         # Parse the name into a container
         container = self.get_container(name)
 
