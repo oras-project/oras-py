@@ -30,7 +30,6 @@ repos:
         language: python
         types: [python]
         entry: mypy
-        args: []
 
       - id: flake8
         name: flake8
