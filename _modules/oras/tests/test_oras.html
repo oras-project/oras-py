@@ -371,9 +371,7 @@
 
     <span class="c1"># Test getting tags</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"tags"</span><span class="p">]:</span>
-        <span class="k">assert</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tags</span>
-    <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">[</span><span class="s2">"tags"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">tags</span>
 
     <span class="c1"># Test pulling elsewhere</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span>
@@ -391,6 +389,40 @@
     <span class="c1"># This should work because we aren't checking paths</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">disable_path_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span></div>
+
+
+<div class="viewcode-block" id="test_get_many_tags"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_many_tags">[docs]</a><span class="k">def</span> <span class="nf">test_get_many_tags</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Test getting many tags</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"ghcr.io"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Test getting tags with a limit set</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span>
+        <span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1005</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1005</span>
+
+    <span class="c1"># This should retrieve all tags (defaults to -1)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1500</span>
+
+    <span class="c1"># Same result (assuming doesn't change in small seconds between)</span>
+    <span class="n">same_tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span>
+        <span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">same_tags</span><span class="p">))</span>
+
+    <span class="c1"># None defaults to -1 too</span>
+    <span class="n">same_tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span>
+        <span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">same_tags</span><span class="p">))</span>
+
+    <span class="c1"># Small number of tags</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">same_tags</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span></div>
 
 
 <div class="viewcode-block" id="test_directory_push_pull"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_directory_push_pull">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
@@ -427,10 +459,10 @@
     <div class="md-footer-meta__inner md-grid">
      <div class="md-footer-copyright">
       <div class="md-footer-copyright__highlight">
-       © Copyright 2022, Oras Python Developers.
+       © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jan 15, 2023.
+              Feb 04, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

@@ -393,16 +393,16 @@
         <span class="c1"># Otherwise return a string that can be printed</span>
         <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">"</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">versions</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span></div>
 
-<div class="viewcode-block" id="OrasClient.get_tags"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="OrasClient.get_tags"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
 <span class="sd">        :param name: container URI to parse</span>
 <span class="sd">        :type name: str</span>
-<span class="sd">        :param N: number of tags</span>
+<span class="sd">        :param N: number of tags (-1 to get all tags)</span>
 <span class="sd">        :type N: int</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OrasClient.push"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -536,10 +536,10 @@
     <div class="md-footer-meta__inner md-grid">
      <div class="md-footer-copyright">
       <div class="md-footer-copyright__highlight">
-       © Copyright 2022, Oras Python Developers.
+       © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jan 15, 2023.
+              Feb 04, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
