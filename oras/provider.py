@@ -227,23 +227,30 @@ class Registry:
 
     @ensure_container
     def get_tags(
-        self, container: Union[str, oras.container.Container], N: int = 10_000
+        self, container: Union[str, oras.container.Container], N: Optional[int] = None
     ) -> List[str]:
         """
         Retrieve tags for a package.
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: number of tags, -1 for all
-        :type N: int
+        :param N: limit number of tags, None for all (default)
+        :type N: Optional[int]
         """
-        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+        retrieve_all = N is None
+        if not N:
+            n_tags = 10_000
+        else:
+            n_tags = N
+        tags_url = f"{self.prefix}://{container.tags_url(N=n_tags)}"  # type: ignore
         tags: List[str] = []
 
         def extract_tags(response: requests.Response) -> bool:
             json = response.json()
-            tags.extend(json.get("tags", []))
-            return len(tags) < N or N == -1
+            new_tags = json.get("tags", [])
+            tags.extend(new_tags)
+            # return true if we should continue
+            return len(new_tags) and (retrieve_all or len(tags) < n_tags)
 
         self._do_paginated_request(tags_url, callable=extract_tags)
         return tags
