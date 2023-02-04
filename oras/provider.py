@@ -227,36 +227,33 @@ class Registry:
 
     @ensure_container
     def get_tags(
-        self, container: Union[str, oras.container.Container], N: int = -1
+        self, container: Union[str, oras.container.Container], N=None
     ) -> List[str]:
         """
         Retrieve tags for a package.
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: limit number of tags, -1 for all (default)
+        :param N: limit number of tags, None for all (default)
         :type N: Optional[int]
         """
-        # -1 is a flag for retrieving all, if set we use arbitrarily high number
-        retrieve_all = N == -1
-        N = N if (N and N > 0) else 10_0000
-
+        retrieve_all = N is None
         tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
         tags: List[str] = []
 
-        def extract_tags(response: requests.Response) -> bool:
+        def extract_tags(response: requests.Response):
             """
             Determine if we should continue based on new tags and under limit.
             """
             json = response.json()
             new_tags = json.get("tags", [])
             tags.extend(new_tags)
-            return bool(len(new_tags) and (retrieve_all or len(tags) < N))
+            return len(new_tags) and (retrieve_all or len(tags) < N)
 
         self._do_paginated_request(tags_url, callable=extract_tags)
 
         # If we got a longer set than was asked for
-        if len(tags) > N:
+        if N is not None and len(tags) > N:
             tags = tags[:N]
         return tags
 
@@ -270,7 +267,6 @@ class Registry:
         the callable returns True, we continue to the next page, otherwise
         we stop.
         """
-
         # Save the base url to add parameters to, assuming only the params change
         parts = urllib.parse.urlparse(url)
         base_url = f"{parts.scheme}://{parts.netloc}"

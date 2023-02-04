@@ -54,7 +54,9 @@ class Container:
     def upload_blob_url(self) -> str:
         return f"{self.registry}/v2/{self.api_prefix}/blobs/uploads/"
 
-    def tags_url(self, N=10_000) -> str:
+    def tags_url(self, N=None) -> str:
+        if N is None:
+            return f"{self.registry}/v2/{self.api_prefix}/tags/list"
         return f"{self.registry}/v2/{self.api_prefix}/tags/list?n={N}"
 
     def put_manifest_url(self) -> str:

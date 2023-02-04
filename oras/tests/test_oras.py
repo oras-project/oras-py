@@ -104,17 +104,11 @@ def test_get_many_tags():
     )
     assert len(tags) == 1005
 
-    # This should retrieve all tags (defaults to -1)
+    # This should retrieve all tags (defaults to None)
     tags = client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp")
     assert len(tags) > 1500
 
-    # Same result (assuming doesn't change in small seconds between)
-    same_tags = client.get_tags(
-        "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=-1
-    )
-    assert not set(tags).difference(set(same_tags))
-
-    # None defaults to -1 too
+    # Same result if explicitly set
     same_tags = client.get_tags(
         "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=None
     )
