@@ -227,32 +227,37 @@ class Registry:
 
     @ensure_container
     def get_tags(
-        self, container: Union[str, oras.container.Container], N: Optional[int] = None
+        self, container: Union[str, oras.container.Container], N: int = -1
     ) -> List[str]:
         """
         Retrieve tags for a package.
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: limit number of tags, None for all (default)
+        :param N: limit number of tags, -1 for all (default)
         :type N: Optional[int]
         """
-        retrieve_all = N is None
-        if not N:
-            n_tags = 10_000
-        else:
-            n_tags = N
-        tags_url = f"{self.prefix}://{container.tags_url(N=n_tags)}"  # type: ignore
+        # -1 is a flag for retrieving all, if set we use arbitrarily high number
+        retrieve_all = N == -1
+        N = N if (N and N > 0) else 10_0000
+
+        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
         tags: List[str] = []
 
         def extract_tags(response: requests.Response) -> bool:
+            """
+            Determine if we should continue based on new tags and under limit.
+            """
             json = response.json()
             new_tags = json.get("tags", [])
             tags.extend(new_tags)
-            # return true if we should continue
-            return len(new_tags) and (retrieve_all or len(tags) < n_tags)
+            return bool(len(new_tags) and (retrieve_all or len(tags) < N))
 
         self._do_paginated_request(tags_url, callable=extract_tags)
+
+        # If we got a longer set than was asked for
+        if len(tags) > N:
+            tags = tags[:N]
         return tags
 
     def _do_paginated_request(

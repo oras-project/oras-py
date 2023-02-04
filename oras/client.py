@@ -94,13 +94,13 @@ class OrasClient:
         # Otherwise return a string that can be printed
         return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
 
-    def get_tags(self, name: str, N: int = 10_000) -> List[str]:
+    def get_tags(self, name: str, N: int = -1) -> List[str]:
         """
         Retrieve tags for a package.
 
         :param name: container URI to parse
         :type name: str
-        :param N: number of tags
+        :param N: number of tags (-1 to get all tags)
         :type N: int
         """
         return self.remote.get_tags(name, N=N)
