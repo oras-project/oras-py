@@ -75,6 +75,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/18201513?v=4"
             ]
+        },
+        {
+            "login": "wolfv",
+            "name": "Wolf Vollprecht",
+            "contributions": [
+                "code"
+            ],
+            "profile": "wolfv.github.io",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/885054?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
