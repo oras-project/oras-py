@@ -5,7 +5,7 @@ __license__ = "Apache-2.0"
 import copy
 import os
 import urllib
-from typing import List, Optional, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 import jsonschema
 import requests
@@ -234,73 +234,54 @@ class Registry:
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: number of tags
+        :param N: number of tags, -1 for all
         :type N: int
         """
         tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
-        return self.do_paginated_request(tags_url, N=N, unwrap="tags")
+        tags: List[str] = []
 
-    def _get_response_links(self, response: requests.Response) -> dict:
-        """
-        Get a named or all response links.
+        def extract_tags(response: requests.Response) -> bool:
+            json = response.json()
+            tags.extend(json.get("tags", []))
+            return len(tags) < N or N == -1
 
-        response.links does not seem reliable to always parse, so we
-        revert to using the raw requests library to parse the headers.
-        """
-        # The links header to parse (empty if None)
-        link_header = response.headers.get("Link")
-        if not link_header:
-            return {}
-        links = requests.utils.parse_header_links(
-            link_header.rstrip(">").replace(">,<", ",<")
-        )
-        return {x["rel"]: x["url"] for x in links}
+        self._do_paginated_request(tags_url, callable=extract_tags)
+        return tags
 
-    def do_paginated_request(
-        self,
-        url: str,
-        N: int = 10_000,
-        unwrap: Optional[str] = None,
-        headers: Optional[dict] = None,
-    ) -> List:
+    def _do_paginated_request(
+        self, url: str, callable: Callable[[requests.Response], bool]
+    ):
         """
         Paginate a request for a URL.
 
-        We look for the "Link" header to get the next URL to ping. If provided,
-        we "unwrap" the provided field in the response json.
+        We look for the "Link" header to get the next URL to ping. If
+        the callable returns True, we continue to the next page, otherwise
+        we stop.
         """
-        results: List[str] = []
-        has_next_link = True
-        headers = headers or self.headers
 
         # Save the base url to add parameters to, assuming only the params change
-        query = urllib.parse.urlparse(url).query
-        base_url = url.replace("?" + query, "")
+        parts = urllib.parse.urlparse(url)
+        base_url = f"{parts.scheme}://{parts.netloc}"
 
         # get all results using the pagination
-        while len(results) < N and has_next_link:
+        while True:
             response = self.do_request(url, "GET", headers=self.headers)
 
             # Check 200 response, show errors if any
             self._check_200_response(response)
-            link = self._get_response_links(response).get("next")
 
-            new_results = response.json()
-            if unwrap:
-                new_results = new_results.get(unwrap)
-            if new_results:
-                results += new_results
+            want_more = callable(response)
+            if not want_more:
+                break
+
+            link = response.links.get("next", {}).get("url")
 
             # Get the next link
             if not link:
-                has_next_link = False
                 break
 
-            # get query parameters to continue with next set of tags
-            query = urllib.parse.urlparse(link).query
-            url = f"{base_url}?{query}"
-
-        return results
+            # use link + base url to continue with next page
+            url = f"{base_url}{link}"
 
     @ensure_container
     def get_blob(
