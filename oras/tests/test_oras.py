@@ -72,9 +72,7 @@ def test_basic_push_pull(tmp_path):
 
     # Test getting tags
     tags = client.get_tags(target)
-    for key in ["name", "tags"]:
-        assert key in tags
-    assert "v1" in tags["tags"]
+    assert "v1" in tags
 
     # Test pulling elsewhere
     files = client.pull(target=target, outdir=tmp_path)
@@ -92,6 +90,40 @@ def test_basic_push_pull(tmp_path):
     # This should work because we aren't checking paths
     res = client.push(files=[artifact], target=target, disable_path_validation=True)
     assert res.status_code == 201
+
+
+def test_get_many_tags():
+    """
+    Test getting many tags
+    """
+    client = oras.client.OrasClient(hostname="ghcr.io", insecure=False)
+
+    # Test getting tags with a limit set
+    tags = client.get_tags(
+        "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=1005
+    )
+    assert len(tags) == 1005
+
+    # This should retrieve all tags (defaults to -1)
+    tags = client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp")
+    assert len(tags) > 1500
+
+    # Same result (assuming doesn't change in small seconds between)
+    same_tags = client.get_tags(
+        "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=-1
+    )
+    assert not set(tags).difference(set(same_tags))
+
+    # None defaults to -1 too
+    same_tags = client.get_tags(
+        "channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=None
+    )
+    assert not set(tags).difference(set(same_tags))
+
+    # Small number of tags
+    tags = client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=10)
+    assert not set(tags).difference(set(same_tags))
+    assert len(tags) == 10
 
 
 @pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")

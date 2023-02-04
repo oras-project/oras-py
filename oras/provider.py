@@ -4,7 +4,8 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
-from typing import List, Optional, Tuple, Union
+import urllib
+from typing import Callable, List, Optional, Tuple, Union
 
 import jsonschema
 import requests
@@ -226,18 +227,73 @@ class Registry:
 
     @ensure_container
     def get_tags(
-        self, container: Union[str, oras.container.Container], N: int = 10_000
+        self, container: Union[str, oras.container.Container], N: int = -1
     ) -> List[str]:
         """
         Retrieve tags for a package.
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: number of tags
-        :type N: int
+        :param N: limit number of tags, -1 for all (default)
+        :type N: Optional[int]
         """
-        tags_url = f"{self.prefix}://{container.tags_url(N)}"  # type: ignore
-        return self.do_request(tags_url, "GET", headers=self.headers)
+        # -1 is a flag for retrieving all, if set we use arbitrarily high number
+        retrieve_all = N == -1
+        N = N if (N and N > 0) else 10_0000
+
+        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+        tags: List[str] = []
+
+        def extract_tags(response: requests.Response) -> bool:
+            """
+            Determine if we should continue based on new tags and under limit.
+            """
+            json = response.json()
+            new_tags = json.get("tags", [])
+            tags.extend(new_tags)
+            return bool(len(new_tags) and (retrieve_all or len(tags) < N))
+
+        self._do_paginated_request(tags_url, callable=extract_tags)
+
+        # If we got a longer set than was asked for
+        if len(tags) > N:
+            tags = tags[:N]
+        return tags
+
+    def _do_paginated_request(
+        self, url: str, callable: Callable[[requests.Response], bool]
+    ):
+        """
+        Paginate a request for a URL.
+
+        We look for the "Link" header to get the next URL to ping. If
+        the callable returns True, we continue to the next page, otherwise
+        we stop.
+        """
+
+        # Save the base url to add parameters to, assuming only the params change
+        parts = urllib.parse.urlparse(url)
+        base_url = f"{parts.scheme}://{parts.netloc}"
+
+        # get all results using the pagination
+        while True:
+            response = self.do_request(url, "GET", headers=self.headers)
+
+            # Check 200 response, show errors if any
+            self._check_200_response(response)
+
+            want_more = callable(response)
+            if not want_more:
+                break
+
+            link = response.links.get("next", {}).get("url")
+
+            # Get the next link
+            if not link:
+                break
+
+            # use link + base url to continue with next page
+            url = f"{base_url}{link}"
 
     @ensure_container
     def get_blob(
@@ -548,7 +604,6 @@ class Registry:
 
         # Upload files as blobs
         for blob in kwargs.get("files", []):
-
             # You can provide a blob + content type
             if ":" in str(blob):
                 blob, media_type = str(blob).split(":", 1)
@@ -809,7 +864,6 @@ class Registry:
         h = oras.auth.parse_auth_header(authHeaderRaw)
 
         if "Authorization" not in headers:
-
             # First try to request an anonymous token
             logger.debug("No Authorization, requesting anonymous token")
             if self.request_anonymous_token(h):

@@ -45,7 +45,6 @@ def test_write_bad_json(tmp_path):
 
 
 def test_write_json(tmp_path):
-
     good_json = {"Wakkawakkawakka": [True, "2", 3]}
     tmpfile = str(tmp_path / "good_json_file.txt")
 

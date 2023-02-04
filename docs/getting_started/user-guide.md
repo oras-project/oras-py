@@ -177,6 +177,30 @@ you should do blobs (layers) and the config first.
 
 </details>
 
+### Tags
+
+We provide a simple "get_tags" function to make it easy to instantiate a client and ask for tags from
+a registry. Let's say we want to get tags from conda-forge. We could create a client:
+
+```python
+import oras.client
+
+client = oras.client.OrasClient(hostname="ghcr.io", insecure=False)
+```
+
+And then ask for either a specific number of tags:
+
+```python
+tags = client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=1005)
+```
+
+Or more likely, just ask for all tags (the default).
+
+```python
+tags = client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp")
+```
+You can read more about how registries provide tags [at the distribution spec](https://github.com/opencontainers/distribution-spec/blob/067a0f5b0e256583bb9a088f72cba85ed043d1d2/spec.md?plain=1#L471-L513).
+
 ### Push Interactions
 
 Let's start with a very basic push interaction, and this one
