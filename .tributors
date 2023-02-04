@@ -27,5 +27,11 @@
         "name": "Matt Warner",
         "bio": "Matt Warner",
         "blog": "https://github.com/magelisk"
+    },
+    "wolfv": {
+        "name": "Wolf Vollprecht",
+        "email": "w.vollprecht@gmail.com",
+        "bio": "prefix.dev |\r\nPackage Management, Robotics and Jupyter",
+        "blog": "wolfv.github.io"
     }
 }
