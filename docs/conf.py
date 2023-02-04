@@ -28,7 +28,7 @@ FORCE_CLASSIC = FORCE_CLASSIC in ("1", "true")
 project = "Oras Python"
 html_title = "Oras Python"
 
-copyright = "2022, Oras Python Developers"
+copyright = "2023, Oras Python Developers"
 author = "@vsoch"
 
 # The full version, including alpha/beta/rc tags

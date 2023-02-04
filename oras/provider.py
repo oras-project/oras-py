@@ -238,33 +238,69 @@ class Registry:
         :type N: int
         """
         tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+        return self.do_paginated_request(tags_url, N=N, unwrap="tags")
 
-        tags: List[str] = []
+    def _get_response_links(self, response: requests.Response) -> dict:
+        """
+        Get a named or all response links.
+
+        response.links does not seem reliable to always parse, so we
+        revert to using the raw requests library to parse the headers.
+        """
+        # The links header to parse (empty if None)
+        link_header = response.headers.get("Link")
+        if not link_header:
+            return {}
+        links = requests.utils.parse_header_links(
+            link_header.rstrip(">").replace(">,<", ",<")
+        )
+        return {x["rel"]: x["url"] for x in links}
+
+    def do_paginated_request(
+        self,
+        url: str,
+        N: int = 10_000,
+        unwrap: Optional[str] = None,
+        headers: Optional[dict] = None,
+    ) -> List:
+        """
+        Paginate a request for a URL.
+
+        We look for the "Link" header to get the next URL to ping. If provided,
+        we "unwrap" the provided field in the response json.
+        """
+        results: List[str] = []
         has_next_link = True
-        # get all tags using the pagination
-        while len(tags) < N and has_next_link:
-            res = self.do_request(tags_url, "GET", headers=self.headers)
+        headers = headers or self.headers
 
-            # raise before trying to get `json` value
-            res.raise_for_status()
+        # Save the base url to add parameters to, assuming only the params change
+        query = urllib.parse.urlparse(url).query
+        base_url = url.replace("?" + query, "")
 
-            if res.headers.get("Link"):
-                link = res.headers.get("Link")
-                # if we have a next link, that looks something like:
-                # </v2/channel-mirrors/conda-forge/linux-64/arrow-cpp/tags/list?last=2.0.0-py37h5a62f8a_45_cuda&n=100000000>; rel="next"
-                # we want to extract the url and get the rest of the tags
-                assert link.endswith('; rel="next"')
-                next_link = link[link.find("<") + 1 : link.find(">")]
-                query = urllib.parse.urlparse(next_link).query
-                tags_url = f"{self.prefix}://{container.tags_url(query=query)}"  # type: ignore
-            else:
+        # get all results using the pagination
+        while len(results) < N and has_next_link:
+            response = self.do_request(url, "GET", headers=self.headers)
+
+            # Check 200 response, show errors if any
+            self._check_200_response(response)
+            link = self._get_response_links(response).get("next")
+
+            new_results = response.json()
+            if unwrap:
+                new_results = new_results.get(unwrap)
+            if new_results:
+                results += new_results
+
+            # Get the next link
+            if not link:
                 has_next_link = False
+                break
 
-            # if the package does not exist, the response is an
-            # {"errors":[{"code":"NAME_UNKNOWN","message":"repository name not known to registry"}]}
-            tags += res.json().get("tags", [])
+            # get query parameters to continue with next set of tags
+            query = urllib.parse.urlparse(link).query
+            url = f"{base_url}?{query}"
 
-        return tags
+        return results
 
     @ensure_container
     def get_blob(
