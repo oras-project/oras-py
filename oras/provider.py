@@ -246,7 +246,7 @@ class Registry:
             Determine if we should continue based on new tags and under limit.
             """
             json = response.json()
-            new_tags = json.get("tags", [])
+            new_tags = json.get("tags") or []
             tags.extend(new_tags)
             return len(new_tags) and (retrieve_all or len(tags) < N)
 
