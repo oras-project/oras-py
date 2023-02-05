@@ -353,7 +353,9 @@
 <div class="viewcode-block" id="Container.upload_blob_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.upload_blob_url">[docs]</a>    <span class="k">def</span> <span class="nf">upload_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/blobs/uploads/"</span></div>
 
-<div class="viewcode-block" id="Container.tags_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.tags_url">[docs]</a>    <span class="k">def</span> <span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Container.tags_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.tags_url">[docs]</a>    <span class="k">def</span> <span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list"</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list?n=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">"</span></div>
 
 <div class="viewcode-block" id="Container.put_manifest_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.put_manifest_url">[docs]</a>    <span class="k">def</span> <span class="nf">put_manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -429,7 +431,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 04, 2023.
+              Feb 05, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

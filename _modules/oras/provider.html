@@ -526,36 +526,33 @@
 
     <span class="nd">@ensure_container</span>
     <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
 <span class="sd">        :param container:  parsed container URI</span>
 <span class="sd">        :type container: oras.container.Container or str</span>
-<span class="sd">        :param N: limit number of tags, -1 for all (default)</span>
+<span class="sd">        :param N: limit number of tags, None for all (default)</span>
 <span class="sd">        :type N: Optional[int]</span>
 <span class="sd">        """</span>
-        <span class="c1"># -1 is a flag for retrieving all, if set we use arbitrarily high number</span>
-        <span class="n">retrieve_all</span> <span class="o">=</span> <span class="n">N</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="ow">and</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10_0000</span>
-
+        <span class="n">retrieve_all</span> <span class="o">=</span> <span class="n">N</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="n">tags_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">tags_url</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
         <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">def</span> <span class="nf">extract_tags</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">extract_tags</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">"""</span>
 <span class="sd">            Determine if we should continue based on new tags and under limit.</span>
 <span class="sd">            """</span>
             <span class="n">json</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-            <span class="n">new_tags</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tags"</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">new_tags</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tags"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
             <span class="n">tags</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_tags</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_tags</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">retrieve_all</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_tags</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">retrieve_all</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_do_paginated_request</span><span class="p">(</span><span class="n">tags_url</span><span class="p">,</span> <span class="n">callable</span><span class="o">=</span><span class="n">extract_tags</span><span class="p">)</span>
 
         <span class="c1"># If we got a longer set than was asked for</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">N</span><span class="p">:</span>
             <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span><span class="p">[:</span><span class="n">N</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">tags</span>
 
@@ -569,7 +566,6 @@
 <span class="sd">        the callable returns True, we continue to the next page, otherwise</span>
 <span class="sd">        we stop.</span>
 <span class="sd">        """</span>
-
         <span class="c1"># Save the base url to add parameters to, assuming only the params change</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">base_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">parts</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">parts</span><span class="o">.</span><span class="n">netloc</span><span class="si">}</span><span class="s2">"</span>
@@ -1264,7 +1260,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 04, 2023.
+              Feb 05, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

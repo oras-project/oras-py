@@ -403,17 +403,11 @@
     <span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1005</span>
 
-    <span class="c1"># This should retrieve all tags (defaults to -1)</span>
+    <span class="c1"># This should retrieve all tags (defaults to None)</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1500</span>
 
-    <span class="c1"># Same result (assuming doesn't change in small seconds between)</span>
-    <span class="n">same_tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span>
-        <span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=-</span><span class="mi">1</span>
-    <span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">same_tags</span><span class="p">))</span>
-
-    <span class="c1"># None defaults to -1 too</span>
+    <span class="c1"># Same result if explicitly set</span>
     <span class="n">same_tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span>
         <span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
@@ -462,7 +456,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 04, 2023.
+              Feb 05, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
