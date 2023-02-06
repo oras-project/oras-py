@@ -36,6 +36,7 @@ jobs:
       env:
         registry_host: localhost
         registry_port: ${{ job.services.registry.ports[5000] }}
+        REGISTRY_STORAGE_DELETE_ENABLED: "true"
       run: |
         export PATH="/usr/share/miniconda/bin:$PATH"
         source activate oras

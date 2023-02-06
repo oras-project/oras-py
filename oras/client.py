@@ -105,6 +105,25 @@ class OrasClient:
         """
         return self.remote.get_tags(name, N=N)
 
+    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
+        """
+        Delete one or more tags for a unique resource identifier.
+
+        Returns those successfully deleted.
+
+        :param name: container URI to parse
+        :type name: str
+        :param tags: single or multiple tags name to delete
+        :type N: string or list
+        """
+        if isinstance(tags, str):
+            tags = [tags]
+        deleted = []
+        for tag in tags:
+            if self.remote.delete_tag(name, tag):
+                deleted.append(tag)
+        return deleted
+
     def push(self, *args, **kwargs):
         """
         Push a container to the remote.

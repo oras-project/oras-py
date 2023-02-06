@@ -23,6 +23,7 @@ jobs:
           registry_port: 5000
           with_auth: true
           REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
+          REGISTRY_STORAGE_DELETE_ENABLED: "true"
         run: |
            htpasswd -cB -b auth.htpasswd myuser mypass
            cp auth.htpasswd /etc/docker/registry/auth.htpasswd
