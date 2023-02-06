@@ -1,6 +1,7 @@
 name: Release Python Package
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
