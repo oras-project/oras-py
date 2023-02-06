@@ -231,8 +231,8 @@ class Registry:
 
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param N: limit number of tags, None for all (default)
-        :type N: Optional[int]
+        :param tag: name of tag to delete
+        :type tag: str
         """
         logger.debug(f"Deleting tag {tag} for {container}")
 
