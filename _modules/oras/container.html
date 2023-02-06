@@ -358,11 +358,17 @@
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list"</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list?n=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">"</span></div>
 
-<div class="viewcode-block" id="Container.put_manifest_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.put_manifest_url">[docs]</a>    <span class="k">def</span> <span class="nf">put_manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/manifests/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span></div>
+<div class="viewcode-block" id="Container.manifest_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.manifest_url">[docs]</a>    <span class="k">def</span> <span class="nf">manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Get the manifest url for a specific tag, or the one for this container.</span>
 
-<div class="viewcode-block" id="Container.get_manifest_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.get_manifest_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/manifests/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span></div>
+<span class="sd">        The tag provided can also correspond to a digest.</span>
+
+<span class="sd">        :param tag: an optional tag to provide (if not provided defaults to container)</span>
+<span class="sd">        :type tag: None or str</span>
+<span class="sd">        """</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/manifests/</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span>
@@ -431,7 +437,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 05, 2023.
+              Feb 06, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

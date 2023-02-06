@@ -311,11 +311,14 @@
 
 <span class="kn">import</span> <span class="nn">oras.auth</span>
 <span class="kn">import</span> <span class="nn">oras.container</span>
+<span class="kn">import</span> <span class="nn">oras.decorator</span> <span class="k">as</span> <span class="nn">decorator</span>
 <span class="kn">import</span> <span class="nn">oras.oci</span>
 <span class="kn">import</span> <span class="nn">oras.schemas</span>
 <span class="kn">import</span> <span class="nn">oras.utils</span>
-<span class="kn">from</span> <span class="nn">oras.decorator</span> <span class="kn">import</span> <span class="n">ensure_container</span>
 <span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="c1"># container type can be string or container</span>
+<span class="n">container_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Registry"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry">[docs]</a><span class="k">class</span> <span class="nc">Registry</span><span class="p">:</span>
@@ -365,12 +368,8 @@
                 <span class="k">return</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"You are not logged in to </span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
-    <span class="nd">@ensure_container</span>
-    <span class="k">def</span> <span class="nf">load_configs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
-        <span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
+    <span class="k">def</span> <span class="nf">load_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Load configs to discover credentials for a specific container.</span>
 
@@ -484,7 +483,7 @@
 <div class="viewcode-block" id="Registry.upload_blob"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_blob">[docs]</a>    <span class="k">def</span> <span class="nf">upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
@@ -524,10 +523,42 @@
             <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-    <span class="nd">@ensure_container</span>
-    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
+    <span class="k">def</span> <span class="nf">delete_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Delete a tag for a container.</span>
+
+<span class="sd">        :param container:  parsed container URI</span>
+<span class="sd">        :type container: oras.container.Container or str</span>
+<span class="sd">        :param tag: name of tag to delete</span>
+<span class="sd">        :type tag: str</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deleting tag </span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">head_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># get digest of manifest to delete</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span>
+            <span class="n">head_url</span><span class="p">,</span>
+            <span class="s2">"HEAD"</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">"application/vnd.oci.image.manifest.v1+json"</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot find tag </span><span class="si">{</span><span class="n">container</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">digest</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Docker-Content-Digest"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">digest</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Expected to find Docker-Content-Digest header."</span><span class="p">)</span>
+
+        <span class="n">delete_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">delete_url</span><span class="p">,</span> <span class="s2">"DELETE"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">202</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Delete was not successful: {response.json()}"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
+    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
@@ -590,10 +621,10 @@
             <span class="c1"># use link + base url to continue with next page</span>
             <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base_url</span><span class="si">}{</span><span class="n">link</span><span class="si">}</span><span class="s2">"</span>
 
-    <span class="nd">@ensure_container</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
     <span class="k">def</span> <span class="nf">get_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">head</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -614,9 +645,7 @@
         <span class="n">blob_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">get_blob_url</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">blob_url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Registry.get_container"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_container">[docs]</a>    <span class="k">def</span> <span class="nf">get_container</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
+<div class="viewcode-block" id="Registry.get_container"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_container">[docs]</a>    <span class="k">def</span> <span class="nf">get_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">container_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Courtesy function to get a container from a URI.</span>
 
@@ -628,9 +657,9 @@
         <span class="k">return</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">registry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span></div>
 
     <span class="c1"># Functions to be deprecated in favor of exposed ones</span>
-    <span class="nd">@ensure_container</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
     <span class="k">def</span> <span class="nf">_download_blob</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">"This function is deprecated in favor of download_blob and will be removed by 0.1.2"</span>
@@ -664,7 +693,7 @@
     <span class="k">def</span> <span class="nf">_upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
@@ -673,9 +702,9 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">do_chunked</span><span class="p">)</span>
 
-    <span class="nd">@ensure_container</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
     <span class="k">def</span> <span class="nf">download_blob</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Stream download a blob into an output file.</span>
@@ -862,8 +891,12 @@
             <span class="s2">"Content-Type"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_media_type</span><span class="p">,</span>
             <span class="s2">"Content-Length"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">manifest</span><span class="p">)),</span>
         <span class="p">}</span>
-        <span class="n">put_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">put_manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">put_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">manifest</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>  <span class="c1"># noqa</span>
+            <span class="s2">"PUT"</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">manifest</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Registry.push"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -1039,11 +1072,9 @@
             <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">files</span></div>
 
-    <span class="nd">@ensure_container</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
     <span class="k">def</span> <span class="nf">get_manifest</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">],</span>
-        <span class="n">allowed_media_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">allowed_media_type</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a manifest for a package.</span>
@@ -1056,14 +1087,16 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed_media_type</span><span class="p">:</span>
             <span class="n">allowed_media_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_media_type</span><span class="p">]</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">";"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_media_type</span><span class="p">)}</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">get_manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s2">"GET"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+        <span class="n">get_manifest</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">get_manifest</span><span class="p">,</span> <span class="s2">"GET"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="n">manifest</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">oras</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">manifest</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">manifest</span>
 
-<div class="viewcode-block" id="Registry.do_request"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.do_request">[docs]</a>    <span class="k">def</span> <span class="nf">do_request</span><span class="p">(</span>
+    <span class="nd">@decorator</span><span class="o">.</span><span class="n">classretry</span>
+    <span class="k">def</span> <span class="nf">do_request</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"GET"</span><span class="p">,</span>
@@ -1131,7 +1164,7 @@
                 <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">response</span></div>
+        <span class="k">return</span> <span class="n">response</span>
 
 <div class="viewcode-block" id="Registry.authenticate_request"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.authenticate_request">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">originalResponse</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -1260,7 +1293,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 05, 2023.
+              Feb 06, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

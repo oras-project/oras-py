@@ -369,10 +369,6 @@
     <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">]</span>
 
-    <span class="c1"># Test getting tags</span>
-    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">tags</span>
-
     <span class="c1"># Test pulling elsewhere</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
@@ -389,6 +385,29 @@
     <span class="c1"># This should work because we aren't checking paths</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">disable_path_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span></div>
+
+
+<div class="viewcode-block" id="test_get_delete_tags"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_delete_tags">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_get_delete_tags</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Test creationg, getting, and deleting tags.</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">artifact</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s2">"artifact.txt"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">]</span>
+
+    <span class="c1"># Test getting tags</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">tags</span>
+
+    <span class="c1"># Test deleting not-existence tag</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"v1-boop-boop"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"v1"</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">tags</span></div>
 
 
 <div class="viewcode-block" id="test_get_many_tags"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_many_tags">[docs]</a><span class="k">def</span> <span class="nf">test_get_many_tags</span><span class="p">():</span>
@@ -456,7 +475,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 05, 2023.
+              Feb 06, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
