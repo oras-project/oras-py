@@ -59,11 +59,17 @@ class Container:
             return f"{self.registry}/v2/{self.api_prefix}/tags/list"
         return f"{self.registry}/v2/{self.api_prefix}/tags/list?n={N}"
 
-    def put_manifest_url(self) -> str:
-        return f"{self.registry}/v2/{self.api_prefix}/manifests/{self.tag}"
+    def manifest_url(self, tag: Optional[str] = None) -> str:
+        """
+        Get the manifest url for a specific tag, or the one for this container.
 
-    def get_manifest_url(self) -> str:
-        return f"{self.registry}/v2/{self.api_prefix}/manifests/{self.tag}"
+        The tag provided can also correspond to a digest.
+
+        :param tag: an optional tag to provide (if not provided defaults to container)
+        :type tag: None or str
+        """
+        tag = tag or self.tag
+        return f"{self.registry}/v2/{self.api_prefix}/manifests/{tag}"
 
     def __str__(self) -> str:
         return self.uri

@@ -70,10 +70,6 @@ def test_basic_push_pull(tmp_path):
     res = client.push(files=[artifact], target=target)
     assert res.status_code in [200, 201]
 
-    # Test getting tags
-    tags = client.get_tags(target)
-    assert "v1" in tags
-
     # Test pulling elsewhere
     files = client.pull(target=target, outdir=tmp_path)
     assert len(files) == 1
@@ -90,6 +86,29 @@ def test_basic_push_pull(tmp_path):
     # This should work because we aren't checking paths
     res = client.push(files=[artifact], target=target, disable_path_validation=True)
     assert res.status_code == 201
+
+
+@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
+def test_get_delete_tags(tmp_path):
+    """
+    Test creationg, getting, and deleting tags.
+    """
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    artifact = os.path.join(here, "artifact.txt")
+    assert os.path.exists(artifact)
+
+    res = client.push(files=[artifact], target=target)
+    assert res.status_code in [200, 201]
+
+    # Test getting tags
+    tags = client.get_tags(target)
+    assert "v1" in tags
+
+    # Test deleting not-existence tag
+    assert not client.delete_tags(target, "v1-boop-boop")
+    assert "v1" in client.delete_tags(target, "v1")
+    tags = client.get_tags(target)
+    assert not tags
 
 
 def test_get_many_tags():

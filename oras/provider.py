@@ -12,11 +12,14 @@ import requests
 
 import oras.auth
 import oras.container
+import oras.decorator as decorator
 import oras.oci
 import oras.schemas
 import oras.utils
-from oras.decorator import ensure_container
 from oras.logger import logger
+
+# container type can be string or container
+container_type = Union[str, oras.container.Container]
 
 
 class Registry:
@@ -66,12 +69,8 @@ class Registry:
                 return
         logger.info(f"You are not logged in to {hostname}")
 
-    @ensure_container
-    def load_configs(
-        self,
-        container: Union[str, oras.container.Container],
-        configs: Optional[list] = None,
-    ):
+    @decorator.ensure_container
+    def load_configs(self, container: container_type, configs: Optional[list] = None):
         """
         Load configs to discover credentials for a specific container.
 
@@ -185,7 +184,7 @@ class Registry:
     def upload_blob(
         self,
         blob: str,
-        container: Union[str, oras.container.Container],
+        container: container_type,
         layer: dict,
         do_chunked: bool = False,
     ) -> requests.Response:
@@ -225,10 +224,42 @@ class Registry:
             response.status_code = 200
         return response
 
-    @ensure_container
-    def get_tags(
-        self, container: Union[str, oras.container.Container], N=None
-    ) -> List[str]:
+    @decorator.ensure_container
+    def delete_tag(self, container: container_type, tag: str) -> bool:
+        """
+        Delete a tag for a container.
+
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param tag: name of tag to delete
+        :type tag: str
+        """
+        logger.debug(f"Deleting tag {tag} for {container}")
+
+        head_url = f"{self.prefix}://{container.manifest_url(tag)}"  # type: ignore
+
+        # get digest of manifest to delete
+        response = self.do_request(
+            head_url,
+            "HEAD",
+            headers={"Accept": "application/vnd.oci.image.manifest.v1+json"},
+        )
+        if response.status_code == 404:
+            logger.error(f"Cannot find tag {container}:{tag}")
+            return False
+
+        digest = response.headers.get("Docker-Content-Digest")
+        if not digest:
+            raise RuntimeError("Expected to find Docker-Content-Digest header.")
+
+        delete_url = f"{self.prefix}://{container.manifest_url(digest)}"  # type: ignore
+        response = self.do_request(delete_url, "DELETE")
+        if response.status_code != 202:
+            raise RuntimeError("Delete was not successful: {response.json()}")
+        return True
+
+    @decorator.ensure_container
+    def get_tags(self, container: container_type, N=None) -> List[str]:
         """
         Retrieve tags for a package.
 
@@ -291,10 +322,10 @@ class Registry:
             # use link + base url to continue with next page
             url = f"{base_url}{link}"
 
-    @ensure_container
+    @decorator.ensure_container
     def get_blob(
         self,
-        container: Union[str, oras.container.Container],
+        container: container_type,
         digest: str,
         stream: bool = False,
         head: bool = False,
@@ -315,9 +346,7 @@ class Registry:
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
         return self.do_request(blob_url, method, headers=self.headers, stream=stream)
 
-    def get_container(
-        self, name: Union[str, oras.container.Container]
-    ) -> oras.container.Container:
+    def get_container(self, name: container_type) -> oras.container.Container:
         """
         Courtesy function to get a container from a URI.
 
@@ -329,9 +358,9 @@ class Registry:
         return oras.container.Container(name, registry=self.hostname)
 
     # Functions to be deprecated in favor of exposed ones
-    @ensure_container
+    @decorator.ensure_container
     def _download_blob(
-        self, container: Union[str, oras.container.Container], digest: str, outfile: str
+        self, container: container_type, digest: str, outfile: str
     ) -> str:
         logger.warning(
             "This function is deprecated in favor of download_blob and will be removed by 0.1.2"
@@ -365,7 +394,7 @@ class Registry:
     def _upload_blob(
         self,
         blob: str,
-        container: Union[str, oras.container.Container],
+        container: container_type,
         layer: dict,
         do_chunked: bool = False,
     ) -> requests.Response:
@@ -374,9 +403,9 @@ class Registry:
         )
         return self.upload_blob(blob, container, layer, do_chunked)
 
-    @ensure_container
+    @decorator.ensure_container
     def download_blob(
-        self, container: Union[str, oras.container.Container], digest: str, outfile: str
+        self, container: container_type, digest: str, outfile: str
     ) -> str:
         """
         Stream download a blob into an output file.
@@ -563,8 +592,12 @@ class Registry:
             "Content-Type": oras.defaults.default_manifest_media_type,
             "Content-Length": str(len(manifest)),
         }
-        put_url = f"{self.prefix}://{container.put_manifest_url()}"
-        return self.do_request(put_url, "PUT", headers=headers, json=manifest)
+        return self.do_request(
+            f"{self.prefix}://{container.manifest_url()}",  # noqa
+            "PUT",
+            headers=headers,
+            json=manifest,
+        )
 
     def push(self, *args, **kwargs) -> requests.Response:
         """
@@ -740,11 +773,9 @@ class Registry:
             files.append(outfile)
         return files
 
-    @ensure_container
+    @decorator.ensure_container
     def get_manifest(
-        self,
-        container: Union[str, oras.container.Container],
-        allowed_media_type: list = None,
+        self, container: container_type, allowed_media_type: list = None
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -757,13 +788,15 @@ class Registry:
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
-        url = f"{self.prefix}://{container.get_manifest_url()}"  # type: ignore
-        response = self.do_request(url, "GET", headers=headers)
+
+        get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
+        response = self.do_request(get_manifest, "GET", headers=headers)
         self._check_200_response(response)
         manifest = response.json()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         return manifest
 
+    @decorator.classretry
     def do_request(
         self,
         url: str,
