@@ -245,7 +245,7 @@ class Registry:
             headers={"Accept": "application/vnd.oci.image.manifest.v1+json"},
         )
         if response.status_code == 404:
-            logger.error("Cannot find tag {container}:{tag}")
+            logger.error(f"Cannot find tag {container}:{tag}")
             return False
 
         digest = response.headers.get("Docker-Content-Digest")
