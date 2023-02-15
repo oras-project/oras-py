@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png](https://raw.githubusercontent.com/oras-project/oras-www/main/docs/assets/images/oras.png)
@@ -35,6 +35,9 @@ tool to generate a contributors graphic below.
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bridgetkromhout"><img src="https://avatars.githubusercontent.com/u/2104453?v=4?s=100" width="100px;" alt="Bridget Kromhout"/><br /><sub><b>Bridget Kromhout</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=bridgetkromhout" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/magelisk"><img src="https://avatars.githubusercontent.com/u/18201513?v=4?s=100" width="100px;" alt="Matt Warner"/><br /><sub><b>Matt Warner</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=magelisk" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="wolfv.github.io"><img src="https://avatars.githubusercontent.com/u/885054?v=4?s=100" width="100px;" alt="Wolf Vollprecht"/><br /><sub><b>Wolf Vollprecht</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=wolfv" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shizhMSFT"><img src="https://avatars.githubusercontent.com/u/32161882?v=4?s=100" width="100px;" alt="Shiwei Zhang"/><br /><sub><b>Shiwei Zhang</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=shizhMSFT" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

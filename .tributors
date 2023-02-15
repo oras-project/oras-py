@@ -2,7 +2,8 @@
     "SteveLasker": {
         "name": "Steve Lasker",
         "bio": "OCI TOB Member, PM Architect for Azure Container Registry, balancing tech and the great outdoors",
-        "blog": "http://SteveLasker.blog"
+        "blog": "http://SteveLasker.blog",
+        "orcid": "0000-0003-2999-4873"
     },
     "vsoch": {
         "name": "Vanessasaurus",
@@ -33,5 +34,11 @@
         "email": "w.vollprecht@gmail.com",
         "bio": "prefix.dev |\r\nPackage Management, Robotics and Jupyter",
         "blog": "wolfv.github.io"
+    },
+    "shizhMSFT": {
+        "name": "Shiwei Zhang",
+        "email": "shizh@microsoft.com",
+        "bio": "Happy Hacking",
+        "blog": "https://github.com/shizhMSFT"
     }
 }

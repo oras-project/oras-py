@@ -86,6 +86,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/885054?v=4"
             ]
+        },
+        {
+            "login": "shizhMSFT",
+            "name": "Shiwei Zhang",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/shizhMSFT",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/32161882?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
