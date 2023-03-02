@@ -493,7 +493,7 @@ class Registry:
             return session_url
 
         # Some registries do not return the full registry hostname
-        prefix = f"{self.prefix}://{container.registry}"
+        prefix = f"{self.prefix}"
         if not session_url.startswith(prefix):
             session_url = f"{prefix}{session_url}"
         return session_url
