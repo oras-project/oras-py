@@ -492,8 +492,9 @@ class Registry:
         if not session_url:
             return session_url
 
-        # Some registries do not return the full registry hostname
-        prefix = f"{self.prefix}"
+        # Some registries do not return the full registry hostname.  Check that 
+        # the url starts with a protocol scheme
+        prefix = "http"
         if not session_url.startswith(prefix):
             session_url = f"{prefix}{session_url}"
         return session_url
