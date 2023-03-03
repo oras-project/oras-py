@@ -493,7 +493,8 @@ class Registry:
             return session_url
 
         # Some registries do not return the full registry hostname.  Check that 
-        # the url starts with a protocol scheme
+        # the url starts with a protocol scheme, change tracked with:
+        # https://github.com/oras-project/oras-py/issues/78
         prefix = "http"
         if not session_url.startswith(prefix):
             session_url = f"{prefix}{session_url}"
