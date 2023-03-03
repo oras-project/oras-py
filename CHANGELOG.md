@@ -13,6 +13,9 @@ and **Merged pull requests**. Critical items to know are:
 
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
+## [0.1.17](https://github.com/oras-project/oras-py/tree/main) (0.1.17)
+  - patch fix to correct session url pattern, closes issue [78](https://github.com/oras-project/oras-py/issues/78)
+
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
  - add support for tag deletion and retry decorators (0.1.16)
  - bugfix that pagination sets upper limit of 10K (0.1.15)
