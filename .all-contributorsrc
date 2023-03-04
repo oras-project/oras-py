@@ -97,6 +97,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/32161882?v=4"
             ]
+        },
+        {
+            "login": "jhlmco",
+            "name": "jhlmco",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/jhlmco",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/126677738?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
