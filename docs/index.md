@@ -1,6 +1,6 @@
 # Oras Python
 
-![Oras Python Logo](https://github.com/oras-project/oras-www/blob/main/static/img/oras.png)
+![Oras Python Logo](https://github.com/oras-project/oras-py/blob/main/docs/images/oras.png)
 
 Welcome to Oras Python!
 
