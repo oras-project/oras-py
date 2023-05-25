@@ -108,6 +108,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/126677738?v=4"
             ]
+        },
+        {
+            "login": "Ananya2003Gupta",
+            "name": "Ananya Gupta",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/Ananya2003Gupta",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/90386813?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

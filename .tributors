@@ -44,5 +44,10 @@
     "jhlmco": {
         "name": "jhlmco",
         "blog": "https://github.com/jhlmco"
+    },
+    "Ananya2003Gupta": {
+        "name": "Ananya Gupta",
+        "bio": " A tech geek who is trying and testing different programming languages, frameworks as well as technologies and playing around with them to create something new.",
+        "blog": "https://github.com/Ananya2003Gupta"
     }
 }
