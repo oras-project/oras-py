@@ -110,6 +110,7 @@ class Registry:
             elif not auth:
                 return False
             self._basic_auth = auth
+            self.set_header("Authorization", "Basic %s" % self._basic_auth)
             return True
         return False
 
@@ -791,6 +792,7 @@ class Registry:
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
+        headers.update(self.headers)
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
