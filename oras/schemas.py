@@ -36,7 +36,7 @@ layer.update(layerProperties)
 
 manifestProperties = {
     "schemaVersion": {"type": "number"},
-    "subject": {"type": ["null", "string"]},
+    "subject": {"type": ["null", "object"]},
     "mediaType": {"type": "string"},
     "layers": {"type": "array", "items": layerProperties},
     "config": layerProperties,
