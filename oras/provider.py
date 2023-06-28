@@ -5,6 +5,7 @@ __license__ = "Apache-2.0"
 import copy
 import os
 import urllib
+from http.cookiejar import DefaultCookiePolicy
 from typing import Callable, List, Optional, Tuple, Union
 
 import jsonschema
@@ -58,6 +59,11 @@ class Registry:
 
         if not tls_verify:
             requests.packages.urllib3.disable_warnings()  # type: ignore
+
+        # Ignore all cookies: some registries try to set one
+        # and take it as a sign they are talking to a browser,
+        # trying to set further CSRF cookies (Harbor is such a case)
+        self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
 
     def logout(self, hostname: str):
         """
