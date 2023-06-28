@@ -5,6 +5,7 @@ __license__ = "Apache-2.0"
 import copy
 import os
 import urllib
+from dataclasses import asdict, dataclass
 from http.cookiejar import DefaultCookiePolicy
 from typing import Callable, List, Optional, Tuple, Union
 
@@ -22,6 +23,13 @@ from oras.utils.fileio import PathAndOptionalContent
 
 # container type can be string or container
 container_type = Union[str, oras.container.Container]
+
+
+@dataclass
+class Subject:
+    mediaType: str
+    digest: str
+    size: int
 
 
 class Registry:
@@ -641,6 +649,8 @@ class Registry:
         :type manifest_annotations: dict
         :param target: target location to push to
         :type target: str
+        :param subject: optional subject reference
+        :type subject: Subject
         """
         container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
@@ -717,6 +727,10 @@ class Registry:
             manifest_annots.update(custom_annots)
         if manifest_annots:
             manifest["annotations"] = manifest_annots
+
+        subject = kwargs.get("subject")
+        if subject:
+            manifest["subject"] = asdict(subject)
 
         # Prepare the manifest config (temporary or one provided)
         manifest_config = kwargs.get("manifest_config")
