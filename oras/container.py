@@ -68,7 +68,10 @@ class Container:
         :param tag: an optional tag to provide (if not provided defaults to container)
         :type tag: None or str
         """
-        tag = tag or self.tag
+
+        # an explicitly defined tag has precedence over everything,
+        # but from the already defined ones, prefer the digest for consistency.
+        tag = tag or (self.digest or self.tag)
         return f"{self.registry}/v2/{self.api_prefix}/manifests/{tag}"
 
     def __str__(self) -> str:
