@@ -4,7 +4,6 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
-import platform
 from typing import Dict, Optional, Tuple
 
 import jsonschema
@@ -129,10 +128,7 @@ def ManifestConfig(
     """
     # Create an empty config if we don't have one
     if not path or not os.path.exists(path):
-        if platform.system() == "Windows":
-            path = "nul"
-        else:
-            path = "/dev/null"
+        path = os.devnull
         conf = {
             "mediaType": media_type or oras.defaults.unknown_config_media_type,
             "size": 0,

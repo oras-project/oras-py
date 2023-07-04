@@ -4,7 +4,6 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
-import platform
 import urllib
 from typing import Callable, List, Optional, Tuple, Union
 
@@ -431,10 +430,7 @@ class Registry:
         # Allow an empty layer to fail and return /dev/null
         except Exception as e:
             if digest == oras.defaults.blank_hash:
-                if platform.system() == "Windows":
-                    return "nul"
-                else:
-                    return "/dev/null"
+                return os.devnull
             raise e
         return outfile
 
