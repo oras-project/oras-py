@@ -423,7 +423,7 @@
 <span class="sd">    """</span>
     <span class="c1"># Create an empty config if we don't have one</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="s2">"/dev/null"</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">devnull</span>
         <span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"mediaType"</span><span class="p">:</span> <span class="n">media_type</span> <span class="ow">or</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">unknown_config_media_type</span><span class="p">,</span>
             <span class="s2">"size"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -465,13 +465,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 25, 2023.
+              Jul 05, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      6.2.1.
+      7.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

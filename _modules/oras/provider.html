@@ -725,7 +725,7 @@
         <span class="c1"># Allow an empty layer to fail and return /dev/null</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">digest</span> <span class="o">==</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">blank_hash</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s2">"/dev/null"</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">devnull</span>
             <span class="k">raise</span> <span class="n">e</span>
         <span class="k">return</span> <span class="n">outfile</span>
 
@@ -1292,13 +1292,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 25, 2023.
+              Jul 05, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      6.2.1.
+      7.0.1.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
