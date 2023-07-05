@@ -430,7 +430,7 @@ class Registry:
         # Allow an empty layer to fail and return /dev/null
         except Exception as e:
             if digest == oras.defaults.blank_hash:
-                return "/dev/null"
+                return os.devnull
             raise e
         return outfile
 

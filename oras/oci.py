@@ -128,7 +128,7 @@ def ManifestConfig(
     """
     # Create an empty config if we don't have one
     if not path or not os.path.exists(path):
-        path = "/dev/null"
+        path = os.devnull
         conf = {
             "mediaType": media_type or oras.defaults.unknown_config_media_type,
             "size": 0,
