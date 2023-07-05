@@ -119,6 +119,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/90386813?v=4"
             ]
+        },
+        {
+            "login": "sunnycarter",
+            "name": "sunnycarter",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/sunnycarter",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/36891339?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

@@ -33,7 +33,8 @@
         "name": "Wolf Vollprecht",
         "email": "w.vollprecht@gmail.com",
         "bio": "prefix.dev |\r\nPackage Management, Robotics and Jupyter",
-        "blog": "wolfv.github.io"
+        "blog": "wolfv.github.io",
+        "orcid": "0009-0005-5928-2713"
     },
     "shizhMSFT": {
         "name": "Shiwei Zhang",
@@ -49,5 +50,9 @@
         "name": "Ananya Gupta",
         "bio": " A tech geek who is trying and testing different programming languages, frameworks as well as technologies and playing around with them to create something new.",
         "blog": "https://github.com/Ananya2003Gupta"
+    },
+    "sunnycarter": {
+        "name": "sunnycarter",
+        "blog": "https://github.com/sunnycarter"
     }
 }
