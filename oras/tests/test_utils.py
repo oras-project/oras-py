@@ -107,26 +107,26 @@ def test_print_json():
 def test_split_path_and_content():
     """
     Test split path and content function.
-    
+
     Function has additional logic for Windows - this isn't included in these tests as
     they don't usually run on Windows.
-    """    
+    """
     testref = "path/to/config:application/vnd.oci.image.config.v1+json"
-    ref, content_type = utils.split_path_and_content(testref)
-    assert ref == "path/to/config"
-    assert content_type == "application/vnd.oci.image.config.v1+json"
+    path_content = utils.split_path_and_content(testref)
+    assert path_content.path == "path/to/config"
+    assert path_content.content == "application/vnd.oci.image.config.v1+json"
 
     testref = "/dev/null:application/vnd.oci.image.config.v1+json"
-    ref, content_type = utils.split_path_and_content(testref)
-    assert ref == "/dev/null"
-    assert content_type == "application/vnd.oci.image.config.v1+json"
+    path_content = utils.split_path_and_content(testref)
+    assert path_content.path == "/dev/null"
+    assert path_content.content == "application/vnd.oci.image.config.v1+json"
 
     testref = "/dev/null"
-    ref, content_type = utils.split_path_and_content(testref)
-    assert ref == "/dev/null"
-    assert not content_type
+    path_content = utils.split_path_and_content(testref)
+    assert path_content.path == "/dev/null"
+    assert not path_content.content
 
     testref = "path/to/config.json"
-    ref, content_type = utils.split_path_and_content(testref)
-    assert ref == "path/to/config.json"
-    assert not content_type
+    path_content = utils.split_path_and_content(testref)
+    assert path_content.path == "path/to/config.json"
+    assert not path_content.content

@@ -8,9 +8,9 @@ import sys
 import pytest
 
 import oras.client
+import oras.defaults
 import oras.provider
 import oras.utils
-import oras.defaults
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -87,7 +87,7 @@ def test_parse_manifest():
     """
     Test parse manifest function.
 
-    Parse manifest function has additional logic for Windows - this isn't included in 
+    Parse manifest function has additional logic for Windows - this isn't included in
     these tests as they don't usually run on Windows.
     """
     testref = "path/to/config:application/vnd.oci.image.config.v1+json"
