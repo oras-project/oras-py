@@ -312,6 +312,7 @@
 <span class="kn">import</span> <span class="nn">oras.schemas</span>
 <span class="kn">import</span> <span class="nn">oras.utils</span>
 <span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">oras.utils.fileio</span> <span class="kn">import</span> <span class="n">PathAndOptionalContent</span>
 
 <span class="c1"># container type can be string or container</span>
 <span class="n">container_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span>
@@ -459,9 +460,9 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_parse_manifest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">_parse_manifest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Parse an optional manifest config, e.g:</span>
+<span class="sd">        Parse an optional manifest config.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -471,10 +472,13 @@
 
 <span class="sd">        :param ref: the manifest reference to parse (examples above)</span>
 <span class="sd">        :type ref: str</span>
+<span class="sd">        :return - A Tuple of the path and the content-type, using the default unknown</span>
+<span class="sd">                  config media type if none found in the reference</span>
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ref</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ref</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">unknown_config_media_type</span>
-        <span class="k">return</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">path_content</span><span class="p">:</span> <span class="n">PathAndOptionalContent</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">split_path_and_content</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path_content</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="n">path_content</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">unknown_config_media_type</span>
+        <span class="k">return</span> <span class="n">path_content</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">path_content</span><span class="o">.</span><span class="n">content</span>
 
 <div class="viewcode-block" id="Registry.upload_blob"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_blob">[docs]</a>    <span class="k">def</span> <span class="nf">upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -932,8 +936,11 @@
         <span class="c1"># Upload files as blobs</span>
         <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"files"</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="c1"># You can provide a blob + content type</span>
-            <span class="k">if</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                <span class="n">blob</span><span class="p">,</span> <span class="n">media_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">path_content</span><span class="p">:</span> <span class="n">PathAndOptionalContent</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">split_path_and_content</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">blob</span> <span class="o">=</span> <span class="n">path_content</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">media_type</span> <span class="o">=</span> <span class="n">path_content</span><span class="o">.</span><span class="n">content</span>
 
             <span class="c1"># Must exist</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
@@ -1292,7 +1299,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 05, 2023.
+              Jul 06, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

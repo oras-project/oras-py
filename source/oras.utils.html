@@ -314,6 +314,15 @@
               <nav class="md-nav">
                <ul class="md-nav__list">
                 <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.utils.fileio.PathAndOptionalContent">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    PathAndOptionalContent
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
                  <a class="md-nav__link" href="#oras.utils.fileio.copyfile">
                   <code class="docutils literal notranslate">
                    <span class="pre">
@@ -458,6 +467,15 @@
                  </a>
                 </li>
                 <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.utils.fileio.split_path_and_content">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    split_path_and_content()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
                  <a class="md-nav__link" href="#oras.utils.fileio.workdir">
                   <code class="docutils literal notranslate">
                    <span class="pre">
@@ -578,6 +596,121 @@
            ¶
           </a>
          </h2>
+         <dl class="py class">
+          <dt class="sig sig-object py" id="oras.utils.fileio.PathAndOptionalContent">
+           <em class="property">
+            <span class="pre">
+             class
+            </span>
+            <span class="w">
+            </span>
+           </em>
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.utils.fileio.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             PathAndOptionalContent
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              path
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              content
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+             <span class="w">
+             </span>
+             <span class="p">
+              <span class="pre">
+               |
+              </span>
+             </span>
+             <span class="w">
+             </span>
+             <span class="pre">
+              None
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="o">
+             <span class="pre">
+              =
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="default_value">
+             <span class="pre">
+              None
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../_modules/oras/utils/fileio.html#PathAndOptionalContent">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.utils.fileio.PathAndOptionalContent" title="Permalink to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Bases:
+            <code class="xref py py-class docutils literal notranslate">
+             <span class="pre">
+              object
+             </span>
+            </code>
+           </p>
+           <p>
+            Class for holding a path reference and optional content parsed from a string.
+           </p>
+          </dd>
+         </dl>
          <dl class="py function">
           <dt class="sig sig-object py" id="oras.utils.fileio.copyfile">
            <span class="sig-prename descclassname">
@@ -2401,6 +2534,126 @@ We raise an error if it does not - this should not happen
           </dd>
          </dl>
          <dl class="py function">
+          <dt class="sig sig-object py" id="oras.utils.fileio.split_path_and_content">
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.utils.fileio.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             split_path_and_content
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              ref
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <span class="sig-return">
+            <span class="sig-return-icon">
+             →
+            </span>
+            <span class="sig-return-typehint">
+             <a class="reference internal" href="#oras.utils.fileio.PathAndOptionalContent" title="oras.utils.fileio.PathAndOptionalContent">
+              <span class="pre">
+               PathAndOptionalContent
+              </span>
+             </a>
+            </span>
+           </span>
+           <a class="reference internal" href="../_modules/oras/utils/fileio.html#split_path_and_content">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.utils.fileio.split_path_and_content" title="Permalink to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Parse a string containing a path and an optional content
+           </p>
+           <section id="examples">
+            <h3 id="examples">
+             Examples
+             <a class="headerlink" href="#examples" title="Permalink to this heading">
+              ¶
+             </a>
+            </h3>
+            <p>
+             &lt;path&gt;:&lt;content-type&gt;
+path/to/config:application/vnd.oci.image.config.v1+json
+/dev/null:application/vnd.oci.image.config.v1+json
+C:myconfig:application/vnd.oci.image.config.v1+json
+            </p>
+            <p>
+             Or,
+&lt;path&gt;
+/dev/null
+C:myconfig
+            </p>
+            <dl class="field-list simple">
+             <dt class="field-odd">
+              param ref
+              <span class="colon">
+               :
+              </span>
+             </dt>
+             <dd class="field-odd">
+              <p>
+               the manifest reference to parse (examples above)
+              </p>
+             </dd>
+             <dt class="field-even">
+              type ref
+              <span class="colon">
+               :
+              </span>
+             </dt>
+             <dd class="field-even">
+              <p>
+               str
+              </p>
+             </dd>
+            </dl>
+            <dl class="simple">
+             <dt>
+              : return: A Tuple of the path in the reference, and the content-type if one found,
+             </dt>
+             <dd>
+              <p>
+               otherwise None.
+              </p>
+             </dd>
+            </dl>
+           </section>
+          </dd>
+         </dl>
+         <dl class="py function">
           <dt class="sig sig-object py" id="oras.utils.fileio.workdir">
            <span class="sig-prename descclassname">
             <span class="pre">
@@ -3214,7 +3467,7 @@ We raise an error if it does not - this should not happen
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 05, 2023.
+              Jul 06, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
