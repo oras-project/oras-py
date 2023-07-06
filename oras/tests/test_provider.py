@@ -8,6 +8,7 @@ import sys
 import pytest
 
 import oras.client
+import oras.defaults
 import oras.provider
 import oras.utils
 
@@ -80,3 +81,38 @@ def test_annotated_registry_push(tmp_path):
         res = client.push(
             files=[artifact], target=target, annotation_file=annotation_file
         )
+
+
+def test_parse_manifest():
+    """
+    Test parse manifest function.
+
+    Parse manifest function has additional logic for Windows - this isn't included in
+    these tests as they don't usually run on Windows.
+    """
+    testref = "path/to/config:application/vnd.oci.image.config.v1+json"
+    remote = oras.provider.Registry(hostname=registry, insecure=True)
+    ref, content_type = remote._parse_manifest_ref(testref)
+    assert ref == "path/to/config"
+    assert content_type == "application/vnd.oci.image.config.v1+json"
+
+    testref = "path/to/config:application/vnd.oci.image.config.v1+json:extra"
+    remote = oras.provider.Registry(hostname=registry, insecure=True)
+    ref, content_type = remote._parse_manifest_ref(testref)
+    assert ref == "path/to/config"
+    assert content_type == "application/vnd.oci.image.config.v1+json:extra"
+
+    testref = "/dev/null:application/vnd.oci.image.manifest.v1+json"
+    ref, content_type = remote._parse_manifest_ref(testref)
+    assert ref == "/dev/null"
+    assert content_type == "application/vnd.oci.image.manifest.v1+json"
+
+    testref = "/dev/null"
+    ref, content_type = remote._parse_manifest_ref(testref)
+    assert ref == "/dev/null"
+    assert content_type == oras.defaults.unknown_config_media_type
+
+    testref = "path/to/config.json"
+    ref, content_type = remote._parse_manifest_ref(testref)
+    assert ref == "path/to/config.json"
+    assert content_type == oras.defaults.unknown_config_media_type

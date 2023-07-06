@@ -18,6 +18,14 @@ from contextlib import contextmanager
 from typing import Generator, Optional, TextIO, Union
 
 
+class PathAndOptionalContent:
+    """Class for holding a path reference and optional content parsed from a string."""
+
+    def __init__(self, path: str, content: Optional[str] = None):
+        self.path = path
+        self.content = content
+
+
 def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     """
     Make a targz (compressed) archive from a source directory.
@@ -315,3 +323,52 @@ def read_json(filename: str, mode: str = "r") -> dict:
     :type mode: str
     """
     return json.loads(read_file(filename))
+
+
+def split_path_and_content(ref: str) -> PathAndOptionalContent:
+    """
+    Parse a string containing a path and an optional content
+
+    Examples
+    --------
+    <path>:<content-type>
+    path/to/config:application/vnd.oci.image.config.v1+json
+    /dev/null:application/vnd.oci.image.config.v1+json
+    C:\\myconfig:application/vnd.oci.image.config.v1+json
+
+    Or,
+    <path>
+    /dev/null
+    C:\\myconfig
+
+    :param ref: the manifest reference to parse (examples above)
+    :type ref: str
+    : return: A Tuple of the path in the reference, and the content-type if one found,
+              otherwise None.
+    """
+    if ":" not in ref:
+        return PathAndOptionalContent(ref, None)
+
+    if pathlib.Path(ref).drive:
+        # Running on Windows and Path has Windows drive letter in it, it definitely has
+        # one colon and could have two or feasibly more, e.g.
+        # C:\test.tar
+        # C:\test.tar:application/vnd.oci.image.layer.v1.tar
+        # C:\test.tar:application/vnd.oci.image.layer.v1.tar:somethingelse
+        #
+        # This regex matches two colons in the string and returns everything before
+        # the second colon as the "path" group and everything after the second colon
+        # as the "context" group.
+        # i.e.
+        # (C:\test.tar):(application/vnd.oci.image.layer.v1.tar)
+        # (C:\test.tar):(application/vnd.oci.image.layer.v1.tar:somethingelse)
+        # But C:\test.tar along will not match and we just return it as is.
+        path_and_content = re.search(r"(?P<path>.*?:.*?):(?P<content>.*)", ref)
+        if path_and_content:
+            return PathAndOptionalContent(
+                path_and_content.group("path"), path_and_content.group("content")
+            )
+        return PathAndOptionalContent(ref, None)
+    else:
+        path_content_list = ref.split(":", 1)
+        return PathAndOptionalContent(path_content_list[0], path_content_list[1])

@@ -14,6 +14,7 @@ from .fileio import (
     readline,
     recursive_find,
     sanitize_path,
+    split_path_and_content,
     workdir,
     write_file,
     write_json,
