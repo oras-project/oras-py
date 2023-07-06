@@ -102,3 +102,31 @@ def test_print_json():
     print("Testing utils.print_json")
     result = utils.print_json({1: 1})
     assert result == '{\n    "1": 1\n}'
+
+
+def test_split_path_and_content():
+    """
+    Test split path and content function.
+    
+    Function has additional logic for Windows - this isn't included in these tests as
+    they don't usually run on Windows.
+    """    
+    testref = "path/to/config:application/vnd.oci.image.config.v1+json"
+    ref, content_type = utils.split_path_and_content(testref)
+    assert ref == "path/to/config"
+    assert content_type == "application/vnd.oci.image.config.v1+json"
+
+    testref = "/dev/null:application/vnd.oci.image.config.v1+json"
+    ref, content_type = utils.split_path_and_content(testref)
+    assert ref == "/dev/null"
+    assert content_type == "application/vnd.oci.image.config.v1+json"
+
+    testref = "/dev/null"
+    ref, content_type = utils.split_path_and_content(testref)
+    assert ref == "/dev/null"
+    assert not content_type
+
+    testref = "path/to/config.json"
+    ref, content_type = utils.split_path_and_content(testref)
+    assert ref == "path/to/config.json"
+    assert not content_type

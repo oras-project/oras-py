@@ -164,9 +164,9 @@ class Registry:
         """
         return os.getcwd() in os.path.abspath(path)
 
-    def _parse_manifest_ref(self, ref: str) -> Union[Tuple[str, str], List[str]]:
+    def _parse_manifest_ref(self, ref: str) -> Tuple[str, str]:
         """
-        Parse an optional manifest config, e.g:
+        Parse an optional manifest config.
 
         Examples
         --------
@@ -176,10 +176,13 @@ class Registry:
 
         :param ref: the manifest reference to parse (examples above)
         :type ref: str
+        :return - A Tuple of the path and the content-type, using the default unknown
+                  config media type if none found in the reference
         """
-        if ":" not in ref:
-            return ref, oras.defaults.unknown_config_media_type
-        return ref.split(":", 1)
+        ref, content = oras.utils.split_path_and_content(ref)
+        if not content:
+            content = oras.defaults.unknown_config_media_type
+        return ref, content
 
     def upload_blob(
         self,
@@ -637,8 +640,7 @@ class Registry:
         # Upload files as blobs
         for blob in kwargs.get("files", []):
             # You can provide a blob + content type
-            if ":" in str(blob):
-                blob, media_type = str(blob).split(":", 1)
+            blob, media_type = oras.utils.split_path_and_content(str(blob))
 
             # Must exist
             if not os.path.exists(blob):
