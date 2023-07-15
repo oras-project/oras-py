@@ -54,5 +54,10 @@
     "sunnycarter": {
         "name": "sunnycarter",
         "blog": "https://github.com/sunnycarter"
+    },
+    "mariusbertram": {
+        "name": "Marius Bertram",
+        "email": "marius@brtrm.de",
+        "blog": "https://github.com/mariusbertram"
     }
 }

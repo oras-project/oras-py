@@ -130,6 +130,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/36891339?v=4"
             ]
+        },
+        {
+            "login": "mariusbertram",
+            "name": "Marius Bertram",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/mariusbertram",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/10505884?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
