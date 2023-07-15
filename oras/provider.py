@@ -352,7 +352,7 @@ class Registry:
         """
         method = "GET" if not head else "HEAD"
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
-        return self.do_request(blob_url, method, headers=self.headers, stream=stream )
+        return self.do_request(blob_url, method, headers=self.headers, stream=stream)
 
     def get_container(self, name: container_type) -> oras.container.Container:
         """
@@ -862,7 +862,7 @@ class Registry:
                 data=data,
                 json=json,
                 headers=headers,
-                stream=stream
+                stream=stream,
             )
 
         # Fallback to using Authorization if already required
@@ -877,7 +877,7 @@ class Registry:
                 data=data,
                 json=json,
                 headers=headers,
-                stream=stream
+                stream=stream,
             )
 
         return response
