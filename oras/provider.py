@@ -47,6 +47,10 @@ class Registry:
         self.token: Optional[str] = None
         self._auths: dict = {}
         self._basic_auth = None
+        self._insecure = insecure
+
+        if insecure:
+            requests.packages.urllib3.disable_warnings()
 
     def logout(self, hostname: str):
         """
@@ -247,6 +251,7 @@ class Registry:
             head_url,
             "HEAD",
             headers={"Accept": "application/vnd.oci.image.manifest.v1+json"},
+            insecure=self._insecure
         )
         if response.status_code == 404:
             logger.error(f"Cannot find tag {container}:{tag}")
@@ -257,7 +262,7 @@ class Registry:
             raise RuntimeError("Expected to find Docker-Content-Digest header.")
 
         delete_url = f"{self.prefix}://{container.manifest_url(digest)}"  # type: ignore
-        response = self.do_request(delete_url, "DELETE")
+        response = self.do_request(delete_url, "DELETE", insecure=self._insecure)
         if response.status_code != 202:
             raise RuntimeError("Delete was not successful: {response.json()}")
         return True
@@ -308,7 +313,7 @@ class Registry:
 
         # get all results using the pagination
         while True:
-            response = self.do_request(url, "GET", headers=self.headers)
+            response = self.do_request(url, "GET", headers=self.headers, insecure=self._insecure)
 
             # Check 200 response, show errors if any
             self._check_200_response(response)
@@ -348,7 +353,7 @@ class Registry:
         """
         method = "GET" if not head else "HEAD"
         blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
-        return self.do_request(blob_url, method, headers=self.headers, stream=stream)
+        return self.do_request(blob_url, method, headers=self.headers, stream=stream, insecure=self._insecure )
 
     def get_container(self, name: container_type) -> oras.container.Container:
         """
@@ -454,7 +459,7 @@ class Registry:
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream"}
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
-        r = self.do_request(upload_url, "POST", headers=headers)
+        r = self.do_request(upload_url, "POST", headers=headers, insecure=self._insecure)
 
         # Location should be in the header
         session_url = self._get_location(r, container)
@@ -476,6 +481,7 @@ class Registry:
                 method="PUT",
                 data=fd.read(),
                 headers=headers,
+                insecure=self._insecure
             )
         return response
 
@@ -521,7 +527,7 @@ class Registry:
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
-        r = self.do_request(upload_url, "POST", headers=headers)
+        r = self.do_request(upload_url, "POST", headers=headers, insecure=self._insecure)
 
         # Location should be in the header
         session_url = self._get_location(r, container)
@@ -547,14 +553,14 @@ class Registry:
                 headers.update(self.headers)
                 start = end + 1
                 self._check_200_response(
-                    self.do_request(session_url, "PATCH", data=chunk, headers=headers)
+                    self.do_request(session_url, "PATCH", data=chunk, headers=headers, insecure=self._insecure)
                 )
 
         # Finally, issue a PUT request to close blob
         session_url = oras.utils.append_url_params(
             session_url, {"digest": layer["digest"]}
         )
-        return self.do_request(session_url, "PUT", headers=self.headers)
+        return self.do_request(session_url, "PUT", headers=self.headers, insecure=self._insecure)
 
     def _check_200_response(self, response: requests.Response):
         """
@@ -604,6 +610,7 @@ class Registry:
             "PUT",
             headers=headers,
             json=manifest,
+            insecure=self._insecure
         )
 
     def push(self, *args, **kwargs) -> requests.Response:
@@ -800,7 +807,7 @@ class Registry:
         headers = {"Accept": ";".join(allowed_media_type)}
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
-        response = self.do_request(get_manifest, "GET", headers=headers)
+        response = self.do_request(get_manifest, "GET", headers=headers, insecure=self._insecure)
         self._check_200_response(response)
         manifest = response.json()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
@@ -815,6 +822,7 @@ class Registry:
         headers: dict = None,
         json: dict = None,
         stream: bool = False,
+        insecure: bool = False
     ):
         """
         Do a request. This is a wrapper around requests to handle retry auth.
@@ -831,6 +839,8 @@ class Registry:
         :type json: dict
         :param stream: stream the responses
         :type stream: bool
+        :param insecure: allow insecure connections
+        :type insecure: bool
         """
         headers = headers or {}
 
@@ -842,6 +852,7 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
+            verify=not insecure
         )
 
         # A 401 response is a request for authentication
@@ -858,6 +869,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=not insecure
             )
 
         # Fallback to using Authorization if already required
@@ -873,6 +885,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=not insecure
             )
 
         return response
