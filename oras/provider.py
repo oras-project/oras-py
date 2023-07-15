@@ -47,6 +47,10 @@ class Registry:
         self.token: Optional[str] = None
         self._auths: dict = {}
         self._basic_auth = None
+        self._insecure = insecure
+
+        if insecure:
+            requests.packages.urllib3.disable_warnings()  # type: ignore
 
     def logout(self, hostname: str):
         """
@@ -842,6 +846,7 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
+            verify=not self._insecure,
         )
 
         # A 401 response is a request for authentication
