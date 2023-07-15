@@ -846,7 +846,7 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
-            verify=not self._insecure
+            verify=not self._insecure,
         )
 
         # A 401 response is a request for authentication
