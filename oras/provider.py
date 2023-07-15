@@ -50,7 +50,7 @@ class Registry:
         self._insecure = insecure
 
         if insecure:
-            requests.packages.urllib3.disable_warnings()
+            requests.packages.urllib3.disable_warnings()  # type: ignore
 
     def logout(self, hostname: str):
         """

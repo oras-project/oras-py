@@ -16,7 +16,7 @@ LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
     ("jsonschema", {"min_version": None}),
-    ("requests", {"min_version": "2.28.2"}),
+    ("requests", {"min_version": None}),
 )
 
 TESTS_REQUIRES = (
