@@ -338,6 +338,9 @@
 <span class="sd">    It can be directly there or a child, but not outside it.</span>
 <span class="sd">    We raise an error if it does not - this should not happen</span>
 <span class="sd">    """</span>
+    <span class="c1"># It's OK to pull to PWD exactly</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">)</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">)</span>
     <span class="n">base_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">)</span>
     <span class="n">test_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_dir</span> <span class="o">/</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">base_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="ow">in</span> <span class="n">test_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
@@ -686,7 +689,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 15, 2023.
+              Jul 20, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
