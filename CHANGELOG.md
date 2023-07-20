@@ -14,11 +14,12 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
-  - Ensure insecure is passed to provider class (0.1.20)
-  - patch fix for blob upload Windows, closes issue [93](https://github.com/oras-project/oras-py/issues/93) (0.1.19)
-  - patch fix for empty manifest config on Windows, closes issue [90](https://github.com/oras-project/oras-py/issues/90) (0.1.18)
-  - patch fix to correct session url pattern, closes issue [78](https://github.com/oras-project/oras-py/issues/78) (0.1.17)
-  - add support for tag deletion and retry decorators (0.1.16)
+ - Allow to pull exactly to PWD (0.1.21)
+ - Ensure insecure is passed to provider class (0.1.20)
+ - patch fix for blob upload Windows, closes issue [93](https://github.com/oras-project/oras-py/issues/93) (0.1.19)
+ - patch fix for empty manifest config on Windows, closes issue [90](https://github.com/oras-project/oras-py/issues/90) (0.1.18)
+ - patch fix to correct session url pattern, closes issue [78](https://github.com/oras-project/oras-py/issues/78) (0.1.17)
+ - add support for tag deletion and retry decorators (0.1.16)
  - bugfix that pagination sets upper limit of 10K (0.1.15)
  - pagination for tags (and general function for pagination) (0.1.14)
  - expose upload_blob function to be consistent (0.1.13)
