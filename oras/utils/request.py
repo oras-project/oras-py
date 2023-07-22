@@ -51,13 +51,13 @@ def append_url_params(url: str, params: dict) -> str:
     return urlparse.urlunparse(updated)
 
 
-def get_docker_client(insecure: bool = False, **kwargs):
+def get_docker_client(tls_verify: bool = True, **kwargs):
     """
     Get a docker client.
 
-    :param tls : enable tls
-    :type tls: bool
+    :param tls_verify : enable tls
+    :type tls_verify: bool
     """
     import docker
 
-    return docker.DockerClient(tls=not insecure, **kwargs)
+    return docker.DockerClient(tls=tls_verify, **kwargs)

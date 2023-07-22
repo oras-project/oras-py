@@ -30,6 +30,7 @@ class OrasClient:
         hostname: Optional[str] = None,
         registry: Optional[oras.provider.Registry] = None,
         insecure: bool = False,
+        tls_verify: bool = True,
     ):
         """
         Create an ORAS client.
@@ -43,7 +44,7 @@ class OrasClient:
         :param insecure: use http instead of https
         :type insecure: bool
         """
-        self.remote = registry or oras.provider.Registry(hostname, insecure)
+        self.remote = registry or oras.provider.Registry(hostname, insecure, tls_verify)
 
     def __repr__(self) -> str:
         return str(self)
@@ -142,6 +143,7 @@ class OrasClient:
         password: str,
         password_stdin: bool = False,
         insecure: bool = False,
+        tls_verify: bool = True,
         hostname: Optional[str] = None,
         config_path: Optional[List[str]] = None,
     ) -> dict:
@@ -158,6 +160,8 @@ class OrasClient:
         :type password_stdin: bool
         :param insecure: use http instead of https
         :type insecure: bool
+        :param tls_verify: verify tls
+        :type tls_verify: bool
         :param hostname: the hostname to login to
         :type hostname: str
         :param config_path: list of config paths to add
@@ -170,7 +174,7 @@ class OrasClient:
             username=username,
             password=password,
             password_stdin=password_stdin,
-            insecure=insecure,
+            tls_verify=tls_verify,
             hostname=hostname,
             config_path=config_path,  # type: ignore
         )
@@ -189,7 +193,7 @@ class OrasClient:
         username: Optional[str] = None,
         password: Optional[str] = None,
         password_stdin: bool = False,
-        insecure: bool = False,
+        tls_verify: bool = True,
         hostname: Optional[str] = None,
         config_path: Optional[str] = None,
     ) -> dict:
@@ -224,7 +228,7 @@ class OrasClient:
         # Login
         # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
         try:
-            client = oras.utils.get_docker_client(insecure=insecure)
+            client = oras.utils.get_docker_client(tls_verify=tls_verify)
             return client.login(
                 username=username,
                 password=password,

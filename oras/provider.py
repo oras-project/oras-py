@@ -31,7 +31,12 @@ class Registry:
     and the registry isn't necessarily the "remote" endpoint.
     """
 
-    def __init__(self, hostname: Optional[str] = None, insecure: bool = False):
+    def __init__(
+        self,
+        hostname: Optional[str] = None,
+        insecure: bool = False,
+        tls_verify: bool = True,
+    ):
         """
         Create a new registry provider.
 
@@ -39,6 +44,8 @@ class Registry:
         :type hostname: str
         :param insecure: use http instead of https
         :type insecure: bool
+        :param tls_verify: verify TLS certificates
+        :type tls_verify: bool
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
@@ -47,9 +54,9 @@ class Registry:
         self.token: Optional[str] = None
         self._auths: dict = {}
         self._basic_auth = None
-        self._insecure = insecure
+        self._tls_verify = tls_verify
 
-        if insecure:
+        if not tls_verify:
             requests.packages.urllib3.disable_warnings()  # type: ignore
 
     def logout(self, hostname: str):
@@ -846,7 +853,7 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
-            verify=not self._insecure,
+            verify=self._tls_verify,
         )
 
         # A 401 response is a request for authentication
