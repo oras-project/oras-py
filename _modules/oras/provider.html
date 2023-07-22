@@ -326,7 +326,12 @@
 <span class="sd">    and the registry isn't necessarily the "remote" endpoint.</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new registry provider.</span>
 
@@ -334,6 +339,8 @@
 <span class="sd">        :type hostname: str</span>
 <span class="sd">        :param insecure: use http instead of https</span>
 <span class="sd">        :type insecure: bool</span>
+<span class="sd">        :param tls_verify: verify TLS certificates</span>
+<span class="sd">        :type tls_verify: bool</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -342,9 +349,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_auths</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_basic_auth</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_insecure</span> <span class="o">=</span> <span class="n">insecure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tls_verify</span> <span class="o">=</span> <span class="n">tls_verify</span>
 
-        <span class="k">if</span> <span class="n">insecure</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tls_verify</span><span class="p">:</span>
             <span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
 
 <div class="viewcode-block" id="Registry.logout"><a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -1141,7 +1148,7 @@
             <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span>
             <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
             <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
-            <span class="n">verify</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insecure</span><span class="p">,</span>
+            <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tls_verify</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># A 401 response is a request for authentication</span>
@@ -1304,7 +1311,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 20, 2023.
+              Jul 22, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

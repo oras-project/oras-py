@@ -346,16 +346,16 @@
     <span class="k">return</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_docker_client"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.get_docker_client">[docs]</a><span class="k">def</span> <span class="nf">get_docker_client</span><span class="p">(</span><span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_docker_client"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.get_docker_client">[docs]</a><span class="k">def</span> <span class="nf">get_docker_client</span><span class="p">(</span><span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a docker client.</span>
 
-<span class="sd">    :param tls : enable tls</span>
-<span class="sd">    :type tls: bool</span>
+<span class="sd">    :param tls_verify : enable tls</span>
+<span class="sd">    :type tls_verify: bool</span>
 <span class="sd">    """</span>
     <span class="kn">import</span> <span class="nn">docker</span>
 
-    <span class="k">return</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">(</span><span class="n">tls</span><span class="o">=</span><span class="ow">not</span> <span class="n">insecure</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">(</span><span class="n">tls</span><span class="o">=</span><span class="n">tls_verify</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre>
        </div>
       </article>
@@ -375,7 +375,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 20, 2023.
+              Jul 22, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
