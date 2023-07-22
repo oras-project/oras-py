@@ -56,7 +56,7 @@ class Registry:
         self._basic_auth = None
         self._tls_verify = tls_verify
 
-        if insecure:
+        if not tls_verify:
             requests.packages.urllib3.disable_warnings()  # type: ignore
 
     def logout(self, hostname: str):
