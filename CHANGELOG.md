@@ -14,7 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
-- add tls_verify to provider class for optional disable tls verification (0.1.22)
+ - add tls_verify to provider class for optional disable tls verification (0.1.22)
  - Allow to pull exactly to PWD (0.1.21)
  - Ensure insecure is passed to provider class (0.1.20)
  - patch fix for blob upload Windows, closes issue [93](https://github.com/oras-project/oras-py/issues/93) (0.1.19)
