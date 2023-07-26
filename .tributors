@@ -59,5 +59,9 @@
         "name": "Marius Bertram",
         "email": "marius@brtrm.de",
         "blog": "https://github.com/mariusbertram"
+    },
+    "dev-zero": {
+        "name": "Tiziano Müller",
+        "blog": "https://dev-zero.ch"
     }
 }
