@@ -40,20 +40,20 @@
   <title>
    oras package — Oras Python
   </title>
-  <link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
-  <link href="../_static/material.css" rel="stylesheet" type="text/css"/>
-  <link href="../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
+  <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
-  <link href="../_static/custom.css" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js">
+  <link href="../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
+  <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=418f6f68">
   </script>
-  <script src="../_static/doctools.js">
+  <script src="../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../_static/sphinx_highlight.js">
+  <script src="../_static/sphinx_highlight.js?v=4825356b">
   </script>
-  <script src="../_static/clipboard.min.js">
+  <script src="../_static/clipboard.min.js?v=a7894cd8">
   </script>
-  <script src="../_static/copybutton.js">
+  <script src="../_static/copybutton.js?v=f281be69">
   </script>
   <script src="../_static/js/rtd_search_config.js">
   </script>
@@ -1257,6 +1257,46 @@
                        </ul>
                       </nav>
                      </li>
+                     <li class="md-nav__item">
+                      <a class="md-nav__link" href="#oras.provider.Subject">
+                       <code class="docutils literal notranslate">
+                        <span class="pre">
+                         Subject
+                        </span>
+                       </code>
+                      </a>
+                      <nav class="md-nav">
+                       <ul class="md-nav__list">
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Subject.digest">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Subject.digest
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Subject.mediaType">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Subject.mediaType
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                        <li class="md-nav__item">
+                         <a class="md-nav__link" href="#oras.provider.Subject.size">
+                          <code class="docutils literal notranslate">
+                           <span class="pre">
+                            Subject.size
+                           </span>
+                          </code>
+                         </a>
+                        </li>
+                       </ul>
+                      </nav>
+                     </li>
                     </ul>
                    </nav>
                   </li>
@@ -2266,6 +2306,46 @@
                      <code class="docutils literal notranslate">
                       <span class="pre">
                        Registry.upload_manifest()
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
+                </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.provider.Subject">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Subject
+                   </span>
+                  </code>
+                 </a>
+                 <nav class="md-nav">
+                  <ul class="md-nav__list">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Subject.digest">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Subject.digest
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Subject.mediaType">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Subject.mediaType
+                      </span>
+                     </code>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#oras.provider.Subject.size">
+                     <code class="docutils literal notranslate">
+                      <span class="pre">
+                       Subject.size
                       </span>
                      </code>
                     </a>
@@ -9710,6 +9790,20 @@ Given a response, look for a Www-Authenticate header to parse.
                   ) – target location to push to
                  </p>
                 </li>
+                <li>
+                 <p>
+                  <strong>
+                   subject
+                  </strong>
+                  (
+                  <a class="reference internal" href="#oras.provider.Subject" title="oras.provider.Subject">
+                   <em>
+                    Subject
+                   </em>
+                  </a>
+                  ) – optional subject reference
+                 </p>
+                </li>
                </ul>
               </dd>
              </dl>
@@ -10579,6 +10673,190 @@ and &lt;= 1024 is a single post then put.
            </dl>
           </dd>
          </dl>
+         <dl class="py class">
+          <dt class="sig sig-object py" id="oras.provider.Subject">
+           <em class="property">
+            <span class="pre">
+             class
+            </span>
+            <span class="w">
+            </span>
+           </em>
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.provider.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             Subject
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              mediaType
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              digest
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              str
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              size
+             </span>
+            </span>
+            <span class="p">
+             <span class="pre">
+              :
+             </span>
+            </span>
+            <span class="w">
+            </span>
+            <span class="n">
+             <span class="pre">
+              int
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../_modules/oras/provider.html#Subject">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.provider.Subject" title="Permalink to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Bases:
+            <code class="xref py py-class docutils literal notranslate">
+             <span class="pre">
+              object
+             </span>
+            </code>
+           </p>
+           <dl class="py attribute">
+            <dt class="sig sig-object py" id="oras.provider.Subject.digest">
+             <span class="sig-name descname">
+              <span class="pre">
+               digest
+              </span>
+             </span>
+             <em class="property">
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="pre">
+               str
+              </span>
+             </em>
+             <a class="headerlink" href="#oras.provider.Subject.digest" title="Permalink to this definition">
+              ¶
+             </a>
+            </dt>
+            <dd>
+            </dd>
+           </dl>
+           <dl class="py attribute">
+            <dt class="sig sig-object py" id="oras.provider.Subject.mediaType">
+             <span class="sig-name descname">
+              <span class="pre">
+               mediaType
+              </span>
+             </span>
+             <em class="property">
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="pre">
+               str
+              </span>
+             </em>
+             <a class="headerlink" href="#oras.provider.Subject.mediaType" title="Permalink to this definition">
+              ¶
+             </a>
+            </dt>
+            <dd>
+            </dd>
+           </dl>
+           <dl class="py attribute">
+            <dt class="sig sig-object py" id="oras.provider.Subject.size">
+             <span class="sig-name descname">
+              <span class="pre">
+               size
+              </span>
+             </span>
+             <em class="property">
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="pre">
+               int
+              </span>
+             </em>
+             <a class="headerlink" href="#oras.provider.Subject.size" title="Permalink to this definition">
+              ¶
+             </a>
+            </dt>
+            <dd>
+            </dd>
+           </dl>
+          </dd>
+         </dl>
         </section>
         <section id="module-oras.schemas">
          <span id="oras-schemas-module">
@@ -10656,13 +10934,13 @@ and &lt;= 1024 is a single post then put.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 22, 2023.
+              Jul 26, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.0.1.
+      7.1.0.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
