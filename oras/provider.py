@@ -5,6 +5,8 @@ __license__ = "Apache-2.0"
 import copy
 import os
 import urllib
+from dataclasses import asdict, dataclass
+from http.cookiejar import DefaultCookiePolicy
 from typing import Callable, List, Optional, Tuple, Union
 
 import jsonschema
@@ -21,6 +23,13 @@ from oras.utils.fileio import PathAndOptionalContent
 
 # container type can be string or container
 container_type = Union[str, oras.container.Container]
+
+
+@dataclass
+class Subject:
+    mediaType: str
+    digest: str
+    size: int
 
 
 class Registry:
@@ -58,6 +67,11 @@ class Registry:
 
         if not tls_verify:
             requests.packages.urllib3.disable_warnings()  # type: ignore
+
+        # Ignore all cookies: some registries try to set one
+        # and take it as a sign they are talking to a browser,
+        # trying to set further CSRF cookies (Harbor is such a case)
+        self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
 
     def logout(self, hostname: str):
         """
@@ -635,6 +649,8 @@ class Registry:
         :type manifest_annotations: dict
         :param target: target location to push to
         :type target: str
+        :param subject: optional subject reference
+        :type subject: Subject
         """
         container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
@@ -711,6 +727,10 @@ class Registry:
             manifest_annots.update(custom_annots)
         if manifest_annots:
             manifest["annotations"] = manifest_annots
+
+        subject = kwargs.get("subject")
+        if subject:
+            manifest["subject"] = asdict(subject)
 
         # Prepare the manifest config (temporary or one provided)
         manifest_config = kwargs.get("manifest_config")
