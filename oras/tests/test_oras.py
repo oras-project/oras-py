@@ -4,7 +4,6 @@ __license__ = "Apache-2.0"
 
 import os
 import shutil
-import sys
 
 import pytest
 
@@ -12,31 +11,8 @@ import oras.client
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-registry_host = os.environ.get("ORAS_HOST")
-registry_port = os.environ.get("ORAS_PORT")
-with_auth = os.environ.get("ORAS_AUTH") == "true"
-oras_user = os.environ.get("ORAS_USER", "myuser")
-oras_pass = os.environ.get("ORAS_PASS", "mypass")
 
-
-def setup_module(module):
-    """
-    Ensure the registry port and host is in the environment.
-    """
-    if not registry_host or not registry_port:
-        sys.exit(
-            "You must export ORAS_HOST and ORAS_PORT for a running registry before running tests."
-        )
-    if with_auth and not oras_user or not oras_pass:
-        sys.exit("To test auth you need to export ORAS_USER and ORAS_PASS")
-
-
-registry = f"{registry_host}:{registry_port}"
-target = f"{registry}/dinosaur/artifact:v1"
-target_dir = f"{registry}/dinosaur/directory:v1"
-
-
-def test_basic_oras():
+def test_basic_oras(registry):
     """
     Basic tests for oras (without authentication)
     """
@@ -44,21 +20,24 @@ def test_basic_oras():
     assert "Python version" in client.version()
 
 
-@pytest.mark.skipif(not with_auth, reason="basic auth is needed for login/logout")
-def test_login_logout():
+@pytest.mark.with_auth(True)
+def test_login_logout(registry, credentials):
     """
     Login and logout are all we can test with basic auth!
     """
     client = oras.client.OrasClient(hostname=registry, insecure=True)
     res = client.login(
-        hostname=registry, username=oras_user, password=oras_pass, insecure=True
+        hostname=registry,
+        username=credentials.user,
+        password=credentials.password,
+        insecure=True,
     )
     assert res["Status"] == "Login Succeeded"
     client.logout(registry)
 
 
-@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
-def test_basic_push_pull(tmp_path):
+@pytest.mark.with_auth(False)
+def test_basic_push_pull(tmp_path, registry, credentials, target):
     """
     Basic tests for oras (without authentication)
     """
@@ -88,8 +67,8 @@ def test_basic_push_pull(tmp_path):
     assert res.status_code == 201
 
 
-@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
-def test_get_delete_tags(tmp_path):
+@pytest.mark.with_auth(False)
+def test_get_delete_tags(tmp_path, registry, credentials, target):
     """
     Test creationg, getting, and deleting tags.
     """
@@ -139,8 +118,8 @@ def test_get_many_tags():
     assert len(tags) == 10
 
 
-@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
-def test_directory_push_pull(tmp_path):
+@pytest.mark.with_auth(False)
+def test_directory_push_pull(tmp_path, registry, credentials, target_dir):
     """
     Test push and pull for directory
     """

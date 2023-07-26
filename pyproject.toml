@@ -8,3 +8,6 @@ skip = []
 
 [tool.mypy]
 mypy_path = ["oras", "examples"]
+
+[tool.pytest.ini_options]
+markers = ["with_auth: mark for tests requiring authenticated registry access (or not)"]
