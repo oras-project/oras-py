@@ -19,14 +19,7 @@ INSTALL_REQUIRES = (
     ("requests", {"min_version": None}),
 )
 
-TESTS_REQUIRES = (
-    ("pytest", {"min_version": "4.6.2"}),
-    ("mypy", {"min_version": None}),
-    ("pyflakes", {"min_version": None}),
-    ("black", {"min_version": None}),
-    ("types-requests", {"min_version": None}),
-    ("isort", {"min_version": None}),
-)
+TESTS_REQUIRES = (("pytest", {"min_version": "4.6.2"}),)
 
 DOCKER_REQUIRES = (("docker", {"exact_version": "5.0.1"}),)
 

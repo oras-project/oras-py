@@ -189,7 +189,7 @@ def get_tmpdir(
     return tmpdir
 
 
-def recursive_find(base: str, pattern: str = None) -> Generator:
+def recursive_find(base: str, pattern: Optional[str] = None) -> Generator:
     """
     Find filenames that match a particular pattern, and yield them.
 
