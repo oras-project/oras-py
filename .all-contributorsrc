@@ -141,6 +141,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/10505884?v=4"
             ]
+        },
+        {
+            "login": "dev-zero",
+            "name": "Tiziano Müller",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://dev-zero.ch",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/11307?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
