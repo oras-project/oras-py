@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.oci — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -316,7 +316,9 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="Annotations"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations">[docs]</a><span class="k">class</span> <span class="nc">Annotations</span><span class="p">:</span>
+<div class="viewcode-block" id="Annotations">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations">[docs]</a>
+<span class="k">class</span> <span class="nc">Annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new set of annotations</span>
 <span class="sd">    """</span>
@@ -325,7 +327,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Annotations.add"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="Annotations.add">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add key/value pairs to a named section.</span>
 <span class="sd">        """</span>
@@ -333,23 +337,33 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="Annotations.load"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Annotations.load">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Annotation file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Annotations.get_annotations"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.get_annotations">[docs]</a>    <span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Annotations.get_annotations">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.get_annotations">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given the name (a relative path or named section) get annotations</span>
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">section</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">{}</span></div></div>
+        <span class="k">return</span> <span class="p">{}</span></div>
+</div>
 
 
-<div class="viewcode-block" id="Layer"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer">[docs]</a><span class="k">class</span> <span class="nc">Layer</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Layer">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer">[docs]</a>
+<span class="k">class</span> <span class="nc">Layer</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
@@ -366,7 +380,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">blob_path</span> <span class="o">=</span> <span class="n">blob_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_media_type</span><span class="p">(</span><span class="n">media_type</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Layer.set_media_type"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.set_media_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_media_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Layer.set_media_type">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.set_media_type">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_media_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Vary the media type to be directory or default layer</span>
 
@@ -381,7 +397,10 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_dir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">media_type</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">media_type</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_blob_media_type</span></div>
 
-<div class="viewcode-block" id="Layer.to_dict"><a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Layer.to_dict">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.to_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return a dictionary representation of the layer</span>
 <span class="sd">        """</span>
@@ -391,10 +410,14 @@
             <span class="s2">"digest"</span><span class="p">:</span> <span class="s2">"sha256:"</span> <span class="o">+</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_file_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blob_path</span><span class="p">),</span>
         <span class="p">}</span>
         <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">oras</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">layer</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">layer</span></div></div>
+        <span class="k">return</span> <span class="n">layer</span></div>
+</div>
 
 
-<div class="viewcode-block" id="NewLayer"><a class="viewcode-back" href="../../source/oras.html#oras.oci.NewLayer">[docs]</a><span class="k">def</span> <span class="nf">NewLayer</span><span class="p">(</span>
+
+<div class="viewcode-block" id="NewLayer">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.NewLayer">[docs]</a>
+<span class="k">def</span> <span class="nf">NewLayer</span><span class="p">(</span>
     <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -410,7 +433,10 @@
     <span class="k">return</span> <span class="n">Layer</span><span class="p">(</span><span class="n">blob_path</span><span class="o">=</span><span class="n">blob_path</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="n">media_type</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">is_dir</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ManifestConfig"><a class="viewcode-back" href="../../source/oras.html#oras.oci.ManifestConfig">[docs]</a><span class="k">def</span> <span class="nf">ManifestConfig</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ManifestConfig">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.ManifestConfig">[docs]</a>
+<span class="k">def</span> <span class="nf">ManifestConfig</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -441,11 +467,15 @@
     <span class="k">return</span> <span class="n">conf</span><span class="p">,</span> <span class="n">path</span></div>
 
 
-<div class="viewcode-block" id="NewManifest"><a class="viewcode-back" href="../../source/oras.html#oras.oci.NewManifest">[docs]</a><span class="k">def</span> <span class="nf">NewManifest</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+<div class="viewcode-block" id="NewManifest">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.NewManifest">[docs]</a>
+<span class="k">def</span> <span class="nf">NewManifest</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get an empty manifest config.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">EmptyManifest</span><span class="p">)</span></div>
+
 </pre>
        </div>
       </article>
@@ -465,13 +495,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

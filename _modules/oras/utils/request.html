@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.utils.request — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -302,7 +302,9 @@
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
 
 
-<div class="viewcode-block" id="iter_localhosts"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.iter_localhosts">[docs]</a><span class="k">def</span> <span class="nf">iter_localhosts</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="iter_localhosts">
+<a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.iter_localhosts">[docs]</a>
+<span class="k">def</span> <span class="nf">iter_localhosts</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a url with localhost, always resolve to 127.0.0.1.</span>
 
@@ -318,7 +320,10 @@
         <span class="k">yield</span> <span class="n">name</span></div>
 
 
-<div class="viewcode-block" id="find_docker_config"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.find_docker_config">[docs]</a><span class="k">def</span> <span class="nf">find_docker_config</span><span class="p">(</span><span class="n">exists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_docker_config">
+<a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.find_docker_config">[docs]</a>
+<span class="k">def</span> <span class="nf">find_docker_config</span><span class="p">(</span><span class="n">exists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return the docker default config path.</span>
 <span class="sd">    """</span>
@@ -329,7 +334,10 @@
         <span class="k">return</span> <span class="n">path</span></div>
 
 
-<div class="viewcode-block" id="append_url_params"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.append_url_params">[docs]</a><span class="k">def</span> <span class="nf">append_url_params</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="append_url_params">
+<a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.append_url_params">[docs]</a>
+<span class="k">def</span> <span class="nf">append_url_params</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a dictionary of params and a url, parse the url and add extra params.</span>
 
@@ -346,7 +354,10 @@
     <span class="k">return</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_docker_client"><a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.get_docker_client">[docs]</a><span class="k">def</span> <span class="nf">get_docker_client</span><span class="p">(</span><span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_docker_client">
+<a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.request.get_docker_client">[docs]</a>
+<span class="k">def</span> <span class="nf">get_docker_client</span><span class="p">(</span><span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a docker client.</span>
 
@@ -356,6 +367,7 @@
     <span class="kn">import</span> <span class="nn">docker</span>
 
     <span class="k">return</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">(</span><span class="n">tls</span><span class="o">=</span><span class="n">tls_verify</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 </pre>
        </div>
       </article>
@@ -375,13 +387,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.container — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -313,7 +313,9 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Container"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container">[docs]</a><span class="k">class</span> <span class="nc">Container</span><span class="p">:</span>
+<div class="viewcode-block" id="Container">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container">[docs]</a>
+<span class="k">class</span> <span class="nc">Container</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">registry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse a container name and easily get urls for registry interactions.</span>
@@ -337,7 +339,9 @@
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span>
 
-<div class="viewcode-block" id="Container.get_blob_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.get_blob_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Container.get_blob_url">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container.get_blob_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the URL to download a blob</span>
 
@@ -346,15 +350,24 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/blobs/</span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="s2">"</span></div>
 
-<div class="viewcode-block" id="Container.upload_blob_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.upload_blob_url">[docs]</a>    <span class="k">def</span> <span class="nf">upload_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Container.upload_blob_url">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container.upload_blob_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">upload_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/blobs/uploads/"</span></div>
 
-<div class="viewcode-block" id="Container.tags_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.tags_url">[docs]</a>    <span class="k">def</span> <span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Container.tags_url">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container.tags_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list"</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list?n=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">"</span></div>
 
-<div class="viewcode-block" id="Container.manifest_url"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.manifest_url">[docs]</a>    <span class="k">def</span> <span class="nf">manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Container.manifest_url">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container.manifest_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the manifest url for a specific tag, or the one for this container.</span>
 
@@ -368,6 +381,7 @@
         <span class="c1"># but from the already defined ones, prefer the digest for consistency.</span>
         <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digest</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/manifests/</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span></div>
+
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span>
@@ -391,7 +405,9 @@
             <span class="n">uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">uri</span>
 
-<div class="viewcode-block" id="Container.parse"><a class="viewcode-back" href="../../source/oras.html#oras.container.Container.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Container.parse">
+<a class="viewcode-back" href="../../source/oras.html#oras.container.Container.parse">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse the container name into registry, repository, and tag.</span>
 
@@ -416,7 +432,9 @@
                 <span class="s2">"You are minimally required to include a &lt;namespace&gt;/&lt;repository&gt;"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span></div>
+</div>
+
 </pre>
        </div>
       </article>
@@ -436,13 +454,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

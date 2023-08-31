@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.client — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -309,7 +309,9 @@
 <span class="kn">import</span> <span class="nn">oras.version</span>
 
 
-<div class="viewcode-block" id="OrasClient"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient">[docs]</a><span class="k">class</span> <span class="nc">OrasClient</span><span class="p">:</span>
+<div class="viewcode-block" id="OrasClient">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient">[docs]</a>
+<span class="k">class</span> <span class="nc">OrasClient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create an OCI Registry as Storage (ORAS) Client.</span>
 
@@ -347,7 +349,9 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"[oras-client]"</span>
 
-<div class="viewcode-block" id="OrasClient.set_token_auth"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_token_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_token_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="OrasClient.set_token_auth">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_token_auth">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_token_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set token authentication.</span>
 
@@ -356,7 +360,10 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">set_token_auth</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.set_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_basic_auth">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="OrasClient.set_basic_auth">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.set_basic_auth">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_basic_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add basic authentication to the request.</span>
 
@@ -367,7 +374,10 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">set_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.version"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.version">[docs]</a>    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_items</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="OrasClient.version">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.version">[docs]</a>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_items</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the version of the client.</span>
 
@@ -390,7 +400,10 @@
         <span class="c1"># Otherwise return a string that can be printed</span>
         <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">"</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">versions</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span></div>
 
-<div class="viewcode-block" id="OrasClient.get_tags"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="OrasClient.get_tags">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.get_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
@@ -401,7 +414,10 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.delete_tags"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.delete_tags">[docs]</a>    <span class="k">def</span> <span class="nf">delete_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="OrasClient.delete_tags">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.delete_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Delete one or more tags for a unique resource identifier.</span>
 
@@ -420,19 +436,28 @@
                 <span class="n">deleted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">deleted</span></div>
 
-<div class="viewcode-block" id="OrasClient.push"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="OrasClient.push">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.push">[docs]</a>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Push a container to the remote.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.pull"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="OrasClient.pull">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.pull">[docs]</a>
+    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Pull a container from the remote.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.login"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
+
+<div class="viewcode-block" id="OrasClient.login">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.login">[docs]</a>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -474,7 +499,10 @@
             <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrasClient.logout"><a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="OrasClient.logout">
+<a class="viewcode-back" href="../../source/oras.html#oras.client.OrasClient.logout">[docs]</a>
+    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Logout from a registry, meaning removing any auth (if loaded)</span>
 
@@ -482,6 +510,7 @@
 <span class="sd">        :type hostname: str</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_login</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -539,6 +568,7 @@
                 <span class="n">registry</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                 <span class="n">dockercfg_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
             <span class="p">)</span></div>
+
 </pre>
        </div>
       </article>
@@ -558,13 +588,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

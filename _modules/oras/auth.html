@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.auth — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -306,7 +306,9 @@
 <span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 
 
-<div class="viewcode-block" id="load_configs"><a class="viewcode-back" href="../../source/oras.html#oras.auth.load_configs">[docs]</a><span class="k">def</span> <span class="nf">load_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_configs">
+<a class="viewcode-back" href="../../source/oras.html#oras.auth.load_configs">[docs]</a>
+<span class="k">def</span> <span class="nf">load_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load one or more configs with credentials from the filesystem.</span>
 
@@ -332,7 +334,10 @@
     <span class="k">return</span> <span class="n">auths</span></div>
 
 
-<div class="viewcode-block" id="get_basic_auth"><a class="viewcode-back" href="../../source/oras.html#oras.auth.get_basic_auth">[docs]</a><span class="k">def</span> <span class="nf">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_basic_auth">
+<a class="viewcode-back" href="../../source/oras.html#oras.auth.get_basic_auth">[docs]</a>
+<span class="k">def</span> <span class="nf">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Prepare basic auth from a username and password.</span>
 
@@ -345,7 +350,10 @@
     <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">auth_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="authHeader"><a class="viewcode-back" href="../../source/oras.html#oras.auth.authHeader">[docs]</a><span class="k">class</span> <span class="nc">authHeader</span><span class="p">:</span>
+
+<div class="viewcode-block" id="authHeader">
+<a class="viewcode-back" href="../../source/oras.html#oras.auth.authHeader">[docs]</a>
+<span class="k">class</span> <span class="nc">authHeader</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a dictionary of values, match them to class attributes</span>
@@ -361,7 +369,10 @@
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">lookup</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="parse_auth_header"><a class="viewcode-back" href="../../source/oras.html#oras.auth.parse_auth_header">[docs]</a><span class="k">def</span> <span class="nf">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">authHeader</span><span class="p">:</span>
+
+<div class="viewcode-block" id="parse_auth_header">
+<a class="viewcode-back" href="../../source/oras.html#oras.auth.parse_auth_header">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">authHeader</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parse authentication header into pieces</span>
 
@@ -376,6 +387,7 @@
     <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
         <span class="n">lookup</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">authHeader</span><span class="p">(</span><span class="n">lookup</span><span class="p">)</span></div>
+
 </pre>
        </div>
       </article>
@@ -395,13 +407,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

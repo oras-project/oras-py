@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.main.login — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -304,12 +304,16 @@
 <span class="kn">import</span> <span class="nn">oras.utils</span>
 
 
-<div class="viewcode-block" id="DockerClient"><a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.DockerClient">[docs]</a><span class="k">class</span> <span class="nc">DockerClient</span><span class="p">:</span>
+<div class="viewcode-block" id="DockerClient">
+<a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.DockerClient">[docs]</a>
+<span class="k">class</span> <span class="nc">DockerClient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    If running inside a container (or similar without docker) do a manual login</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="DockerClient.login"><a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.DockerClient.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
+<div class="viewcode-block" id="DockerClient.login">
+<a class="viewcode-back" href="../../../source/oras.main.html#oras.main.login.DockerClient.login">[docs]</a>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -344,7 +348,9 @@
                 <span class="s2">"auth"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
             <span class="p">}</span>
         <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">dockercfg_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span></div>
+</div>
+
 </pre>
        </div>
       </article>
@@ -364,13 +370,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

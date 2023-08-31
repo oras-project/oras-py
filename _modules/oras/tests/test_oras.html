@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-content_root="../../../" lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -39,16 +39,16 @@
   <title>
    oras.tests.test_oras — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=e7352e39" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
-  <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=418f6f68">
+  <script src="../../../_static/documentation_options.js?v=0e525676">
   </script>
   <script src="../../../_static/doctools.js?v=888ff710">
   </script>
-  <script src="../../../_static/sphinx_highlight.js?v=4825356b">
+  <script src="../../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
   <script src="../../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -138,7 +138,7 @@
        </label>
        <div class="md-search__inner" role="search">
         <form action="../../../search.html" class="md-search__form" method="get" name="search">
-         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="Search" spellcheck="false" type="text"/>
+         <input autocapitalize="off" autocomplete="off" class="md-search__input" data-md-component="query" data-md-state="active" name="q" placeholder="" search="" spellcheck="false" type="text"/>
          <label class="md-icon md-search__icon" for="__search">
          </label>
          <button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
@@ -314,7 +314,9 @@
 <span class="n">oras_pass</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_PASS"</span><span class="p">,</span> <span class="s2">"mypass"</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="setup_module"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.setup_module">[docs]</a><span class="k">def</span> <span class="nf">setup_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_module">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.setup_module">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ensure the registry port and host is in the environment.</span>
 <span class="sd">    """</span>
@@ -326,12 +328,15 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"To test auth you need to export ORAS_USER and ORAS_PASS"</span><span class="p">)</span></div>
 
 
+
 <span class="n">registry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">registry_port</span><span class="si">}</span><span class="s2">"</span>
 <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry</span><span class="si">}</span><span class="s2">/dinosaur/artifact:v1"</span>
 <span class="n">target_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry</span><span class="si">}</span><span class="s2">/dinosaur/directory:v1"</span>
 
 
-<div class="viewcode-block" id="test_basic_oras"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_oras">[docs]</a><span class="k">def</span> <span class="nf">test_basic_oras</span><span class="p">():</span>
+<div class="viewcode-block" id="test_basic_oras">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_oras">[docs]</a>
+<span class="k">def</span> <span class="nf">test_basic_oras</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras (without authentication)</span>
 <span class="sd">    """</span>
@@ -339,7 +344,10 @@
     <span class="k">assert</span> <span class="s2">"Python version"</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">version</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="test_login_logout"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_login_logout">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="ow">not</span> <span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"basic auth is needed for login/logout"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="test_login_logout">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_login_logout">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="ow">not</span> <span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"basic auth is needed for login/logout"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_login_logout</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Login and logout are all we can test with basic auth!</span>
@@ -352,7 +360,10 @@
     <span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">registry</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_basic_push_pull"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_push_pull">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="test_basic_push_pull">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_push_pull">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_basic_push_pull</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras (without authentication)</span>
@@ -383,7 +394,10 @@
     <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span></div>
 
 
-<div class="viewcode-block" id="test_get_delete_tags"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_delete_tags">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="test_get_delete_tags">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_delete_tags">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_get_delete_tags</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test creationg, getting, and deleting tags.</span>
@@ -406,7 +420,10 @@
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">tags</span></div>
 
 
-<div class="viewcode-block" id="test_get_many_tags"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_many_tags">[docs]</a><span class="k">def</span> <span class="nf">test_get_many_tags</span><span class="p">():</span>
+
+<div class="viewcode-block" id="test_get_many_tags">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_many_tags">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_many_tags</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test getting many tags</span>
 <span class="sd">    """</span>
@@ -434,7 +451,10 @@
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span></div>
 
 
-<div class="viewcode-block" id="test_directory_push_pull"><a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_directory_push_pull">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="test_directory_push_pull">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_directory_push_pull">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">test_directory_push_pull</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test push and pull for directory</span>
@@ -452,6 +472,7 @@
     <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">assert</span> <span class="s2">"artifact.txt"</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
 </pre>
        </div>
       </article>
@@ -471,13 +492,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jul 26, 2023.
+              Aug 31, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.1.0.
+      7.2.5.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
