@@ -152,6 +152,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/11307?v=4"
             ]
+        },
+        {
+            "login": "TerryHowe",
+            "name": "Terry Howe",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://terryhowe.wordpress.com/",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/104113?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

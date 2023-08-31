@@ -63,5 +63,9 @@
     "dev-zero": {
         "name": "Tiziano Müller",
         "blog": "https://dev-zero.ch"
+    },
+    "TerryHowe": {
+        "name": "Terry Howe",
+        "blog": "https://terryhowe.wordpress.com/"
     }
 }
