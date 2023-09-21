@@ -67,5 +67,10 @@
     "TerryHowe": {
         "name": "Terry Howe",
         "blog": "https://terryhowe.wordpress.com/"
+    },
+    "saketjajoo": {
+        "name": "Saket Jajoo",
+        "email": "saketjajoo77@gmail.com",
+        "blog": "https://saketjajoo.github.io"
     }
 }
