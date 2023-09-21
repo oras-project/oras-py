@@ -163,6 +163,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/104113?v=4"
             ]
+        },
+        {
+            "login": "saketjajoo",
+            "name": "Saket Jajoo",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://saketjajoo.github.io",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/23132557?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
