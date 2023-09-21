@@ -122,18 +122,36 @@ def test_parse_manifest():
 def test_sanitize_path():
     HOME_DIR = str(Path.home())
     assert str(oras.utils.sanitize_path(HOME_DIR, HOME_DIR)) == f"{HOME_DIR}"
-    assert str(oras.utils.sanitize_path(HOME_DIR, os.path.join(HOME_DIR, "username"))) == f"{HOME_DIR}/username"
-    assert str(oras.utils.sanitize_path(HOME_DIR, os.path.join(HOME_DIR, ".", "username"))) == f"{HOME_DIR}/username"
+    assert (
+        str(oras.utils.sanitize_path(HOME_DIR, os.path.join(HOME_DIR, "username")))
+        == f"{HOME_DIR}/username"
+    )
+    assert (
+        str(oras.utils.sanitize_path(HOME_DIR, os.path.join(HOME_DIR, ".", "username")))
+        == f"{HOME_DIR}/username"
+    )
 
     with pytest.raises(Exception) as e:
         assert oras.utils.sanitize_path(HOME_DIR, os.path.join(HOME_DIR, ".."))
-    assert str(e.value) == f"Filename {Path(os.path.join(HOME_DIR, '..')).resolve()} is not in {HOME_DIR} directory"
+    assert (
+        str(e.value)
+        == f"Filename {Path(os.path.join(HOME_DIR, '..')).resolve()} is not in {HOME_DIR} directory"
+    )
 
     assert oras.utils.sanitize_path("", "") == str(Path(".").resolve())
-    assert oras.utils.sanitize_path("/opt", os.path.join("/opt", "image_name")) == str(Path("/opt/image_name").resolve())
+    assert oras.utils.sanitize_path("/opt", os.path.join("/opt", "image_name")) == str(
+        Path("/opt/image_name").resolve()
+    )
     assert oras.utils.sanitize_path("/../../", "/") == str(Path("/").resolve())
-    assert oras.utils.sanitize_path(Path(os.getcwd()).parent.absolute(), os.path.join(os.getcwd(), "..")) == str(Path("..").resolve())
+    assert oras.utils.sanitize_path(
+        Path(os.getcwd()).parent.absolute(), os.path.join(os.getcwd(), "..")
+    ) == str(Path("..").resolve())
 
     with pytest.raises(Exception) as e:
-        assert oras.utils.sanitize_path(Path(os.getcwd()).parent.absolute(), os.path.join(os.getcwd(), "..", "..")) != str(Path("../..").resolve())
-    assert str(e.value) == f"Filename {Path(os.path.join(os.getcwd(), '..', '..')).resolve()} is not in {Path('../').resolve()} directory"
+        assert oras.utils.sanitize_path(
+            Path(os.getcwd()).parent.absolute(), os.path.join(os.getcwd(), "..", "..")
+        ) != str(Path("../..").resolve())
+    assert (
+        str(e.value)
+        == f"Filename {Path(os.path.join(os.getcwd(), '..', '..')).resolve()} is not in {Path('../').resolve()} directory"
+    )

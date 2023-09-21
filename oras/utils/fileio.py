@@ -44,7 +44,7 @@ def sanitize_path(expected_dir, path):
     We raise an error if it does not - this should not happen
     """
     base_dir = pathlib.Path(expected_dir).expanduser().resolve()
-    path = pathlib.Path(path).expanduser().resolve() # path = base_dir + file_name
+    path = pathlib.Path(path).expanduser().resolve()  # path = base_dir + file_name
     if not ((base_dir in path.parents) or (str(base_dir) == str(path))):
         raise Exception(f"Filename {path} is not in {base_dir} directory")
     return str(path)
