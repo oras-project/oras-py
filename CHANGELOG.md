@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - eliminate the additional subdirectory creation while pulling an image to a custom output directory (0.1.24)
   - patch fix for pulling artifacts by digest (0.1.23)
     - patch fix to reject cookies as this could trigger registries into handling the lib as a web client
     - patch fix for proper validation and specification of the subject element

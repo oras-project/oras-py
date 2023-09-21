@@ -43,14 +43,11 @@ def sanitize_path(expected_dir, path):
     It can be directly there or a child, but not outside it.
     We raise an error if it does not - this should not happen
     """
-    # It's OK to pull to PWD exactly
-    if os.path.abspath(expected_dir) == os.path.abspath(path):
-        return os.path.abspath(expected_dir)
-    base_dir = pathlib.Path(expected_dir)
-    test_path = (base_dir / path).resolve()
-    if not base_dir.resolve() in test_path.resolve().parents:
-        raise Exception(f"Filename {test_path} is not in {base_dir} directory")
-    return str(test_path.resolve())
+    base_dir = pathlib.Path(expected_dir).expanduser().resolve()
+    path = pathlib.Path(path).expanduser().resolve() # path = base_dir + file_name
+    if not ((base_dir in path.parents) or (str(base_dir) == str(path))):
+        raise Exception(f"Filename {path} is not in {base_dir} directory")
+    return str(path)
 
 
 @contextmanager
