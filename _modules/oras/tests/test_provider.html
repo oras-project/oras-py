@@ -298,7 +298,6 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">pytest</span>
@@ -310,40 +309,15 @@
 
 <span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
 
-<span class="n">registry_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_HOST"</span><span class="p">)</span>
-<span class="n">registry_port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_PORT"</span><span class="p">)</span>
-<span class="n">with_auth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_AUTH"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"true"</span>
-<span class="n">oras_user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_USER"</span><span class="p">,</span> <span class="s2">"myuser"</span><span class="p">)</span>
-<span class="n">oras_pass</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ORAS_PASS"</span><span class="p">,</span> <span class="s2">"mypass"</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="setup_module">
-<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.setup_module">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Ensure the registry port and host is in the environment.</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">registry_host</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">registry_port</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
-            <span class="s2">"You must export ORAS_HOST and ORAS_PORT for a running registry before running tests."</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">with_auth</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">oras_user</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">oras_pass</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"To test auth you need to export ORAS_USER and ORAS_PASS"</span><span class="p">)</span></div>
-
-
-
-<span class="n">registry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">registry_port</span><span class="si">}</span><span class="s2">"</span>
-<span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry</span><span class="si">}</span><span class="s2">/dinosaur/artifact:v1"</span>
-<span class="n">target_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry</span><span class="si">}</span><span class="s2">/dinosaur/directory:v1"</span>
-
 
 <div class="viewcode-block" id="test_annotated_registry_push">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_annotated_registry_push">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="n">with_auth</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"token auth is needed for push and pull"</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test_annotated_registry_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_annotated_registry_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras push with annotations</span>
 <span class="sd">    """</span>
+
     <span class="c1"># Direct access to registry functions</span>
     <span class="n">remote</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -387,7 +361,7 @@
 
 <div class="viewcode-block" id="test_parse_manifest">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_parse_manifest">[docs]</a>
-<span class="k">def</span> <span class="nf">test_parse_manifest</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">test_parse_manifest</span><span class="p">(</span><span class="n">registry</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test parse manifest function.</span>
 
@@ -481,7 +455,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 21, 2023.
+              Sep 27, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
