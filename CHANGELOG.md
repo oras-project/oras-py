@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - refactor tests using fixtures and rework pre-commit configuration (0.1.25)
  - eliminate the additional subdirectory creation while pulling an image to a custom output directory (0.1.24)
    - updating the exclude string in the pyproject.toml file to match the [data type black expects](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format)
  - patch fix for pulling artifacts by digest (0.1.23)
