@@ -3,7 +3,6 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import os
-import sys
 from pathlib import Path
 
 import pytest
@@ -15,35 +14,13 @@ import oras.utils
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-registry_host = os.environ.get("ORAS_HOST")
-registry_port = os.environ.get("ORAS_PORT")
-with_auth = os.environ.get("ORAS_AUTH") == "true"
-oras_user = os.environ.get("ORAS_USER", "myuser")
-oras_pass = os.environ.get("ORAS_PASS", "mypass")
 
-
-def setup_module(module):
-    """
-    Ensure the registry port and host is in the environment.
-    """
-    if not registry_host or not registry_port:
-        sys.exit(
-            "You must export ORAS_HOST and ORAS_PORT for a running registry before running tests."
-        )
-    if with_auth and not oras_user or not oras_pass:
-        sys.exit("To test auth you need to export ORAS_USER and ORAS_PASS")
-
-
-registry = f"{registry_host}:{registry_port}"
-target = f"{registry}/dinosaur/artifact:v1"
-target_dir = f"{registry}/dinosaur/directory:v1"
-
-
-@pytest.mark.skipif(with_auth, reason="token auth is needed for push and pull")
-def test_annotated_registry_push(tmp_path):
+@pytest.mark.with_auth(False)
+def test_annotated_registry_push(tmp_path, registry, credentials, target):
     """
     Basic tests for oras push with annotations
     """
+
     # Direct access to registry functions
     remote = oras.provider.Registry(hostname=registry, insecure=True)
     client = oras.client.OrasClient(hostname=registry, insecure=True)
@@ -84,7 +61,7 @@ def test_annotated_registry_push(tmp_path):
         )
 
 
-def test_parse_manifest():
+def test_parse_manifest(registry):
     """
     Test parse manifest function.
 

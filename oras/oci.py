@@ -116,7 +116,7 @@ def NewLayer(
 
 
 def ManifestConfig(
-    path: str = None, media_type: str = None
+    path: Optional[str] = None, media_type: Optional[str] = None
 ) -> Tuple[Dict[str, object], str]:
     """
     Write an empty config, if one is not provided

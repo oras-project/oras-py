@@ -816,7 +816,7 @@ class Registry:
 
     @decorator.ensure_container
     def get_manifest(
-        self, container: container_type, allowed_media_type: list = None
+        self, container: container_type, allowed_media_type: Optional[list] = None
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -842,9 +842,9 @@ class Registry:
         self,
         url: str,
         method: str = "GET",
-        data: Union[dict, bytes] = None,
-        headers: dict = None,
-        json: dict = None,
+        data: Optional[Union[dict, bytes]] = None,
+        headers: Optional[dict] = None,
+        json: Optional[dict] = None,
         stream: bool = False,
     ):
         """

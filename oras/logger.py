@@ -213,7 +213,7 @@ class Logger:
         self.handler({"level": "error", "msg": msg})
         sys.exit(return_code)
 
-    def progress(self, done: int = None, total: int = None):
+    def progress(self, done: int, total: int):
         """
         Show piece of a progress bar
 
