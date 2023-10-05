@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![ORAS Logo](https://raw.githubusercontent.com/oras-project/oras-www/main/static/img/oras.png)
@@ -47,6 +47,7 @@ tool to generate a contributors graphic below.
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://saketjajoo.github.io"><img src="https://avatars.githubusercontent.com/u/23132557?v=4?s=100" width="100px;" alt="Saket Jajoo"/><br /><sub><b>Saket Jajoo</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=saketjajoo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/miker985"><img src="https://avatars.githubusercontent.com/u/26555712?v=4?s=100" width="100px;" alt="Mike"/><br /><sub><b>Mike</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=miker985" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
