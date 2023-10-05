@@ -6,6 +6,7 @@ The directory here has the following examples:
 
  - [simple](simple): simple examples for individual commands adopted from oras-py [before the client was removed](https://github.com/oras-project/oras-py/tree/3b4e6d74d49b8c6a5d8180e646d52fcc50b3508a).
  - [conda-mirror.py](conda-mirror.py): upload to a conda mirror with ORAS with a manifest and custom content types.
+ - [follow-image-index.py](follow-image-index.py): Download a homebrew image index and select a platform-specific image.
 
 ## In the Wild Examples
 
