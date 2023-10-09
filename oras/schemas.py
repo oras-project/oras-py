@@ -14,6 +14,7 @@ layerProperties = {
         "mediaType": {"type": "string"},
         "size": {"type": "number"},
         "digest": {"type": "string"},
+        "artifactType": {"type": ["string", "null"]},
         "annotations": {"type": ["object", "null", "array"]},
     },
 }
@@ -38,6 +39,7 @@ manifestProperties = {
     "schemaVersion": {"type": "number"},
     "subject": {"type": ["null", "object"]},
     "mediaType": {"type": "string"},
+    "artifactType": {"type": ["string", "null"]},
     "layers": {"type": "array", "items": layerProperties},
     "config": layerProperties,
     "annotations": {"type": ["object", "null", "array"]},
