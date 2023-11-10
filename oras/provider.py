@@ -699,11 +699,21 @@ class Registry:
             annotations = annotset.get_annotations(blob)
 
             # Always strip blob_name of path separator
-            layer["annotations"] = {
-                oras.defaults.annotation_title: blob_name.strip(os.sep)
-            }
+            if cleanup_blob:  # is_dir
+                layer["annotations"] = {
+                    oras.defaults.annotation_title: blob_name.strip(os.sep) + ".tar.gz"
+                }
+            else:
+                layer["annotations"] = {
+                    oras.defaults.annotation_title: blob_name.strip(os.sep)
+                }
+
             if annotations:
                 layer["annotations"].update(annotations)
+
+            import IPython
+
+            IPython.embed()
 
             # update the manifest with the new layer
             manifest["layers"].append(layer)
