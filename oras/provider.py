@@ -7,6 +7,7 @@ import os
 import urllib
 from dataclasses import asdict, dataclass
 from http.cookiejar import DefaultCookiePolicy
+from tempfile import TemporaryDirectory
 from typing import Callable, List, Optional, Tuple, Union
 
 import jsonschema
@@ -747,7 +748,15 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        response = self.upload_blob(config_file, container, conf)
+        if config_file is None:
+            with TemporaryDirectory() as tmp:
+                config_file = os.path.join(tmp, "config.json")
+                with open(config_file, "w") as f:
+                    f.write("{}")
+                response = self.upload_blob(config_file, container, conf)
+        else:
+            response = self.upload_blob(config_file, container, conf)
+
         self._check_200_response(response)
 
         # Final upload of the manifest
