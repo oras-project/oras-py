@@ -185,6 +185,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/26555712?v=4"
             ]
+        },
+        {
+            "login": "linshokaku",
+            "name": "deoxy",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/linshokaku",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/18627646?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
