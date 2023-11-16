@@ -438,7 +438,7 @@
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.ManifestConfig">[docs]</a>
 <span class="k">def</span> <span class="nf">ManifestConfig</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write an empty config, if one is not provided</span>
 
@@ -449,11 +449,11 @@
 <span class="sd">    """</span>
     <span class="c1"># Create an empty config if we don't have one</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">devnull</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"mediaType"</span><span class="p">:</span> <span class="n">media_type</span> <span class="ow">or</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">unknown_config_media_type</span><span class="p">,</span>
-            <span class="s2">"size"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">"digest"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">blank_hash</span><span class="p">,</span>
+            <span class="s2">"size"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"digest"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">blank_config_hash</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -495,7 +495,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 05, 2023.
+              Nov 16, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

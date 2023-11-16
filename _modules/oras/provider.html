@@ -300,9 +300,11 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span><span class="p">,</span> <span class="n">nullcontext</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">http.cookiejar</span> <span class="kn">import</span> <span class="n">DefaultCookiePolicy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">jsonschema</span>
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -318,6 +320,17 @@
 
 <span class="c1"># container type can be string or container</span>
 <span class="n">container_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="temporary_empty_config">
+<a class="viewcode-back" href="../../source/oras.html#oras.provider.temporary_empty_config">[docs]</a>
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">temporary_empty_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">tmpdir</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".json"</span><span class="p">)</span>
+        <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">config_file</span></div>
+
 
 
 <div class="viewcode-block" id="Subject">
@@ -1079,7 +1092,11 @@
 
         <span class="c1"># Config is just another layer blob!</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing config </span><span class="si">{</span><span class="n">conf</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">temporary_empty_config</span><span class="p">()</span> <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">nullcontext</span><span class="p">(</span>
+            <span class="n">config_file</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
         <span class="c1"># Final upload of the manifest</span>
@@ -1379,7 +1396,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 05, 2023.
+              Nov 16, 2023.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
