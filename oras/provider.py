@@ -5,9 +5,11 @@ __license__ = "Apache-2.0"
 import copy
 import os
 import urllib
+from contextlib import contextmanager, nullcontext
 from dataclasses import asdict, dataclass
 from http.cookiejar import DefaultCookiePolicy
-from typing import Callable, List, Optional, Tuple, Union
+from tempfile import TemporaryDirectory
+from typing import Callable, Generator, List, Optional, Tuple, Union
 
 import jsonschema
 import requests
@@ -23,6 +25,14 @@ from oras.utils.fileio import PathAndOptionalContent
 
 # container type can be string or container
 container_type = Union[str, oras.container.Container]
+
+
+@contextmanager
+def temporary_empty_config() -> Generator[str, None, None]:
+    with TemporaryDirectory() as tmpdir:
+        config_file = oras.utils.get_tmpfile(tmpdir=tmpdir, suffix=".json")
+        oras.utils.write_file(config_file, "{}")
+        yield config_file
 
 
 @dataclass
@@ -747,7 +757,11 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        response = self.upload_blob(config_file, container, conf)
+        with temporary_empty_config() if config_file is None else nullcontext(
+            config_file
+        ) as config_file:
+            response = self.upload_blob(config_file, container, conf)
+
         self._check_200_response(response)
 
         # Final upload of the manifest

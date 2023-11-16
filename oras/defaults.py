@@ -41,3 +41,8 @@ default_blocksize = 32768
 
 # what you get for a blank digest, so we don't need to save and recalculate
 blank_hash = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+# what you get for a blank config digest, so we don't need to save and recalculate
+blank_config_hash = (
+    "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+)

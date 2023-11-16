@@ -117,7 +117,7 @@ def NewLayer(
 
 def ManifestConfig(
     path: Optional[str] = None, media_type: Optional[str] = None
-) -> Tuple[Dict[str, object], str]:
+) -> Tuple[Dict[str, object], Optional[str]]:
     """
     Write an empty config, if one is not provided
 
@@ -128,11 +128,11 @@ def ManifestConfig(
     """
     # Create an empty config if we don't have one
     if not path or not os.path.exists(path):
-        path = os.devnull
+        path = None
         conf = {
             "mediaType": media_type or oras.defaults.unknown_config_media_type,
-            "size": 0,
-            "digest": oras.defaults.blank_hash,
+            "size": 2,
+            "digest": oras.defaults.blank_config_hash,
         }
 
     else:
