@@ -987,7 +987,9 @@ class Registry:
             logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
-        authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
+        authResponse = self.session.get(
+            h.realm, headers=headers, params=params, verify=self._tls_verify
+        )
         if authResponse.status_code != 200:
             logger.debug(f"Auth response was not successful: {authResponse.text}")
             return False
