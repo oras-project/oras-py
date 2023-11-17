@@ -904,6 +904,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=self._tls_verify,
             )
 
         # Fallback to using Authorization if already required
@@ -919,6 +920,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=self._tls_verify,
             )
 
         return response
@@ -985,7 +987,9 @@ class Registry:
             logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
-        authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
+        authResponse = self.session.get(
+            h.realm, headers=headers, params=params, verify=self._tls_verify
+        )
         if authResponse.status_code != 200:
             logger.debug(f"Auth response was not successful: {authResponse.text}")
             return False
