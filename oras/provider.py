@@ -904,6 +904,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=self._tls_verify,
             )
 
         # Fallback to using Authorization if already required
@@ -919,6 +920,7 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
+                verify=self._tls_verify,
             )
 
         return response
