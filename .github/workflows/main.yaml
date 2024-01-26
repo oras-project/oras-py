@@ -20,7 +20,7 @@ jobs:
       run: |
         python --version
         python3 -m pip install pre-commit
-        python3 -m pip install black        
+        python3 -m pip install black
         make develop
         make lint
 
