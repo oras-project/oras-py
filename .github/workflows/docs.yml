@@ -8,16 +8,17 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    - name: Create conda environment
-      run: conda create --quiet -c conda-forge --name oraspy
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
 
     - name: Install Oras and Dependencies
       run: |
-        export PATH="/usr/share/miniconda/bin:$PATH"
         root=$PWD
         source activate oraspy
         cd /tmp
