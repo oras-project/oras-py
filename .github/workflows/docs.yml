@@ -20,7 +20,6 @@ jobs:
     - name: Install Oras and Dependencies
       run: |
         root=$PWD
-        source activate oraspy
         cd /tmp
         git clone https://github.com/oras-project/oras-py
         cd oras-py
