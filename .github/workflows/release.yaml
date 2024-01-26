@@ -10,15 +10,14 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Install
-      run: conda create --quiet --name oras twine
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
 
     - name: Install dependencies
       run: |
-        export PATH="/usr/share/miniconda/bin:$PATH"
-        source activate oras
         pip install -e .
         pip install setuptools wheel twine
     - name: Build and publish
@@ -26,7 +25,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USER }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASS }}
       run: |
-        export PATH="/usr/share/miniconda/bin:$PATH"
-        source activate oras
         python setup.py sdist bdist_wheel
         twine upload dist/*

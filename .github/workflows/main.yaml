@@ -6,18 +6,21 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Check Spelling
       uses: crate-ci/typos@7ad296c72fa8265059cc03d1eda562fbdfcd6df2 # v1.9.0
       with:
         files: ./docs ./README.md
 
-    - name: Setup Environment
-      run: conda create --quiet --name oras pre-commit
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
     - name: Lint Oras Python
       run: |
-        export PATH="/usr/share/miniconda/bin:$PATH"
-        source activate oras
+        python --version
+        python3 -m pip install pre-commit
+        python3 -m pip install black
         make develop
         make lint
 
@@ -30,16 +33,15 @@ jobs:
         - 5000:5000
     steps:
     - uses: actions/checkout@v3
-    - name: Setup Environment
-      run: conda create --quiet --name oras requests
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
     - name: Test Oras Python
       env:
         registry_host: localhost
         registry_port: ${{ job.services.registry.ports[5000] }}
         REGISTRY_STORAGE_DELETE_ENABLED: "true"
       run: |
-        export PATH="/usr/share/miniconda/bin:$PATH"
-        source activate oras
-        pip install --upgrade pip setuptools
         make install
         make test
