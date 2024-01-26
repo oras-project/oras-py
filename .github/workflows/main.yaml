@@ -6,7 +6,7 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Check Spelling
       uses: crate-ci/typos@7ad296c72fa8265059cc03d1eda562fbdfcd6df2 # v1.9.0
       with:
@@ -16,7 +16,9 @@ jobs:
       run: conda create --quiet --name oras pre-commit
     - name: Lint Oras Python
       run: |
+        sudo apt install -y python3.12-dev
         export PATH="/usr/share/miniconda/bin:$PATH"
+        python --version
         source activate oras
         make develop
         make lint
