@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Tributors Update
       uses: con/tributors@master
       env:
@@ -68,7 +68,7 @@ jobs:
         echo "PULL_REQUEST_BODY=Tributors update automated pull request." >> $GITHUB_ENV
 
     - name: Open Pull Request
-      uses: vsoch/pull-request-action@50f22f6d146226ee6b73b7a001f26a3d4579f360 # 1.0.22
+      uses: vsoch/pull-request-action@master
       if: ${{ env.OPEN_PULL_REQUEST == '1' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
