@@ -757,8 +757,10 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        with temporary_empty_config() if config_file is None else nullcontext(
-            config_file
+        with (
+            temporary_empty_config()
+            if config_file is None
+            else nullcontext(config_file)
         ) as config_file:
             response = self.upload_blob(config_file, container, conf)
 
@@ -835,7 +837,10 @@ class Registry:
 
     @decorator.ensure_container
     def get_manifest(
-        self, container: container_type, allowed_media_type: Optional[list] = None, refresh_headers: bool = True
+        self,
+        container: container_type,
+        allowed_media_type: Optional[list] = None,
+        refresh_headers: bool = True,
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -850,7 +855,7 @@ class Registry:
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
-        
+
         if not refresh_headers:
             headers.update(self.headers)
 
