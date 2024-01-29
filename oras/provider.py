@@ -757,8 +757,10 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        with temporary_empty_config() if config_file is None else nullcontext(
-            config_file
+        with (
+            temporary_empty_config()
+            if config_file is None
+            else nullcontext(config_file)
         ) as config_file:
             response = self.upload_blob(config_file, container, conf)
 
@@ -780,6 +782,8 @@ class Registry:
         :type allowed_media_type: list or None
         :param overwrite: if output file exists, overwrite
         :type overwrite: bool
+        :param refresh_headers: if true, headers are refreshed when fetching manifests
+        :type refresh_headers: bool
         :param manifest_config_ref: save manifest config to this file
         :type manifest_config_ref: str
         :param outdir: output directory path
@@ -788,9 +792,12 @@ class Registry:
         :type target: str
         """
         allowed_media_type = kwargs.get("allowed_media_type")
+        refresh_headers = kwargs.get("refresh_headers")
+        if refresh_headers is None:
+            refresh_headers = True
         container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
-        manifest = self.get_manifest(container, allowed_media_type)
+        manifest = self.get_manifest(container, allowed_media_type, refresh_headers)
         outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
         overwrite = kwargs.get("overwrite", True)
 
@@ -830,7 +837,10 @@ class Registry:
 
     @decorator.ensure_container
     def get_manifest(
-        self, container: container_type, allowed_media_type: Optional[list] = None
+        self,
+        container: container_type,
+        allowed_media_type: Optional[list] = None,
+        refresh_headers: bool = True,
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -839,10 +849,15 @@ class Registry:
         :type container: oras.container.Container or str
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
+        :param refresh_headers: if true, headers are refreshed
+        :type refresh_headers: bool
         """
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
+
+        if not refresh_headers:
+            headers.update(self.headers)
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
