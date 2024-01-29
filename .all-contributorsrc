@@ -196,6 +196,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/18627646?v=4"
             ]
+        },
+        {
+            "login": "kavish-p",
+            "name": "Kavish Punchoo",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/kavish-p",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/29086148?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

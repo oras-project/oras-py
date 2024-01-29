@@ -80,5 +80,11 @@
     "linshokaku": {
         "name": "deoxy",
         "blog": "https://github.com/linshokaku"
+    },
+    "kavish-p": {
+        "name": "Kavish Punchoo",
+        "email": "kavish.punchoo@gmail.com",
+        "bio": "Problem Solving Enthusiast",
+        "blog": "https://github.com/kavish-p"
     }
 }
