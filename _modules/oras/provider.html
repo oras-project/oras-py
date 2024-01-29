@@ -1092,8 +1092,10 @@
 
         <span class="c1"># Config is just another layer blob!</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing config </span><span class="si">{</span><span class="n">conf</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">temporary_empty_config</span><span class="p">()</span> <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">nullcontext</span><span class="p">(</span>
-            <span class="n">config_file</span>
+        <span class="k">with</span> <span class="p">(</span>
+            <span class="n">temporary_empty_config</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">nullcontext</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">conf</span><span class="p">)</span>
 
@@ -1118,6 +1120,8 @@
 <span class="sd">        :type allowed_media_type: list or None</span>
 <span class="sd">        :param overwrite: if output file exists, overwrite</span>
 <span class="sd">        :type overwrite: bool</span>
+<span class="sd">        :param refresh_headers: if true, headers are refreshed when fetching manifests</span>
+<span class="sd">        :type refresh_headers: bool</span>
 <span class="sd">        :param manifest_config_ref: save manifest config to this file</span>
 <span class="sd">        :type manifest_config_ref: str</span>
 <span class="sd">        :param outdir: output directory path</span>
@@ -1126,9 +1130,12 @@
 <span class="sd">        :type target: str</span>
 <span class="sd">        """</span>
         <span class="n">allowed_media_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"allowed_media_type"</span><span class="p">)</span>
+        <span class="n">refresh_headers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"refresh_headers"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refresh_headers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">refresh_headers</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"target"</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"config_path"</span><span class="p">))</span>
-        <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">allowed_media_type</span><span class="p">)</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">allowed_media_type</span><span class="p">,</span> <span class="n">refresh_headers</span><span class="p">)</span>
         <span class="n">outdir</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"outdir"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpdir</span><span class="p">()</span>
         <span class="n">overwrite</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"overwrite"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
@@ -1169,7 +1176,10 @@
 
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
     <span class="k">def</span> <span class="nf">get_manifest</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">allowed_media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
+        <span class="n">allowed_media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">refresh_headers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a manifest for a package.</span>
@@ -1178,10 +1188,15 @@
 <span class="sd">        :type container: oras.container.Container or str</span>
 <span class="sd">        :param allowed_media_type: one or more allowed media types</span>
 <span class="sd">        :type allowed_media_type: str</span>
+<span class="sd">        :param refresh_headers: if true, headers are refreshed</span>
+<span class="sd">        :type refresh_headers: bool</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed_media_type</span><span class="p">:</span>
             <span class="n">allowed_media_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_media_type</span><span class="p">]</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">";"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_media_type</span><span class="p">)}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">refresh_headers</span><span class="p">:</span>
+            <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
 
         <span class="n">get_manifest</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">get_manifest</span><span class="p">,</span> <span class="s2">"GET"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
@@ -1396,7 +1411,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jan 26, 2024.
+              Jan 29, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
