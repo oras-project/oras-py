@@ -26,7 +26,7 @@ layer = {
         "size",
         "digest",
     ],
-    "additionalProperties": False,
+    "additionalProperties": True,
 }
 
 layer.update(layerProperties)
@@ -54,5 +54,5 @@ manifest = {
         "layers",
     ],
     "properties": manifestProperties,
-    "additionalProperties": False,
+    "additionalProperties": True,
 }
