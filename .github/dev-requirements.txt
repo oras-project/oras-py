@@ -1,5 +1,5 @@
 pre-commit
-black==24.1.0
+black==24.3.0
 isort
 flake8
 mypy==0.961
