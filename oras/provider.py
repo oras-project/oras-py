@@ -893,6 +893,7 @@ class Registry:
         :type stream: bool
         """
         headers = headers or {}
+        headers.update(self.headers)
 
         # Make the request and return to calling function, unless requires auth
         response = self.session.request(
