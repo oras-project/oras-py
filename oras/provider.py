@@ -632,7 +632,7 @@ class Registry:
             pass
 
     def upload_manifest(
-        self, manifest: dict, container: oras.container.Container, refresh_headers: bool =True
+        self, manifest: dict, container: oras.container.Container, refresh_headers: bool = True
     ) -> requests.Response:
         """
         Read a manifest file and upload it.
