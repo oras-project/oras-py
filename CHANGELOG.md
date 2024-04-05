@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - add option to not refresh headers during the pushing flow, useful for push with basic auth (0.1.29)
  - enable additionalProperties in schema validation (0.1.28)
  - Introduce the option to not refresh headers when fetching manifests when pulling artifacts (0.1.27)
  - To make it available for more OCI registries, the value of config used when `manifest_config` is not specified in `client.push()` has been changed from a pure empty string to `{}` (0.1.26)

@@ -226,6 +226,7 @@ class Registry:
         container: container_type,
         layer: dict,
         do_chunked: bool = False,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -239,6 +240,8 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
+        :param refresh_headers: if true, headers are refreshed
+        :type refresh_headers: bool
         """
         blob = os.path.abspath(blob)
         container = self.get_container(container)
@@ -250,9 +253,13 @@ class Registry:
         # This is currently disabled unless the user asks for it, as
         # it doesn't seem to work for all registries
         if not do_chunked:
-            response = self.put_upload(blob, container, layer)
+            response = self.put_upload(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
         else:
-            response = self.chunked_upload(blob, container, layer)
+            response = self.chunked_upload(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
         if (
@@ -474,7 +481,11 @@ class Registry:
         return outfile
 
     def put_upload(
-        self, blob: str, container: oras.container.Container, layer: dict
+        self,
+        blob: str,
+        container: oras.container.Container,
+        layer: dict,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload to a registry via put.
@@ -485,9 +496,15 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
+        :param refresh_headers: if true, headers are refreshed
+        :type refresh_headers: bool
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream"}
+
+        if not refresh_headers:
+            headers.update(self.headers)
+
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
 
@@ -541,7 +558,11 @@ class Registry:
         return session_url
 
     def chunked_upload(
-        self, blob: str, container: oras.container.Container, layer: dict
+        self,
+        blob: str,
+        container: oras.container.Container,
+        layer: dict,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload via a chunked upload.
@@ -552,9 +573,14 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
+        :param refresh_headers: if true, headers are refreshed
+        :type refresh_headers: bool
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
+        if not refresh_headers:
+            headers.update(self.headers)
+
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
 
@@ -618,7 +644,10 @@ class Registry:
             pass
 
     def upload_manifest(
-        self, manifest: dict, container: oras.container.Container
+        self,
+        manifest: dict,
+        container: oras.container.Container,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Read a manifest file and upload it.
@@ -627,6 +656,8 @@ class Registry:
         :type manifest: dict
         :param container:  parsed container URI
         :type container: oras.container.Container or str
+        :param refresh_headers: if true, headers are refreshed
+        :type refresh_headers: bool
         """
         self.reset_basic_auth()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
@@ -634,6 +665,10 @@ class Registry:
             "Content-Type": oras.defaults.default_manifest_media_type,
             "Content-Length": str(len(manifest)),
         }
+
+        if not refresh_headers:
+            headers.update(self.headers)
+
         return self.do_request(
             f"{self.prefix}://{container.manifest_url()}",  # noqa
             "PUT",
@@ -659,6 +694,8 @@ class Registry:
         :type manifest_annotations: dict
         :param target: target location to push to
         :type target: str
+        :param refresh_headers: if true or None, headers are refreshed
+        :type refresh_headers: bool
         :param subject: optional subject reference
         :type subject: Subject
         """
@@ -674,6 +711,10 @@ class Registry:
         # A lookup of annotations we can add (to blobs or manifest)
         annotset = oras.oci.Annotations(kwargs.get("annotation_file"))
         media_type = None
+
+        refresh_headers = kwargs.get("refresh_headers")
+        if refresh_headers is None:
+            refresh_headers = True
 
         # Upload files as blobs
         for blob in kwargs.get("files", []):
@@ -720,7 +761,9 @@ class Registry:
             logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
-            response = self.upload_blob(blob, container, layer)
+            response = self.upload_blob(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -762,13 +805,17 @@ class Registry:
             if config_file is None
             else nullcontext(config_file)
         ) as config_file:
-            response = self.upload_blob(config_file, container, conf)
+            response = self.upload_blob(
+                config_file, container, conf, refresh_headers=refresh_headers
+            )
 
         self._check_200_response(response)
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self.upload_manifest(manifest, container))
+        self._check_200_response(
+            self.upload_manifest(manifest, container, refresh_headers=refresh_headers)
+        )
         print(f"Successfully pushed {container}")
         return response
 
