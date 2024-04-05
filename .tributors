@@ -86,5 +86,9 @@
         "email": "kavish.punchoo@gmail.com",
         "bio": "Problem Solving Enthusiast",
         "blog": "https://github.com/kavish-p"
+    },
+    "my5cents": {
+        "name": "my5cents",
+        "blog": "https://github.com/my5cents"
     }
 }
