@@ -207,6 +207,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/29086148?v=4"
             ]
+        },
+        {
+            "login": "my5cents",
+            "name": "my5cents",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/my5cents",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/4820203?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
