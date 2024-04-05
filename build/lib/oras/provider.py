@@ -221,7 +221,12 @@ class Registry:
         return path_content.path, path_content.content
 
     def upload_blob(
-        self, blob: str, container: container_type, layer: dict, do_chunked: bool = False, refresh_headers: bool = True
+        self,
+        blob: str,
+        container: container_type,
+        layer: dict,
+        do_chunked: bool = False,
+        refresh_headers: bool = True
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -253,7 +258,10 @@ class Registry:
             response = self.chunked_upload(blob, container, layer, refresh_headers=refresh_headers)
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
-        if response.status_code not in [200, 201, 202] and layer["digest"] == oras.defaults.blank_hash:
+        if (
+            response.status_code not in [200, 201, 202]
+            and layer["digest"] == oras.defaults.blank_hash
+        ):
             response = requests.Response()
             response.status_code = 200
         return response
@@ -322,7 +330,9 @@ class Registry:
             tags = tags[:N]
         return tags
 
-    def _do_paginated_request(self, url: str, callable: Callable[[requests.Response], bool]):
+    def _do_paginated_request(
+        self, url: str, callable: Callable[[requests.Response], bool]
+    ):
         """
         Paginate a request for a URL.
 
@@ -391,20 +401,36 @@ class Registry:
 
     # Functions to be deprecated in favor of exposed ones
     @decorator.ensure_container
-    def _download_blob(self, container: container_type, digest: str, outfile: str) -> str:
-        logger.warning("This function is deprecated in favor of download_blob and will be removed by 0.1.2")
+    def _download_blob(
+        self, container: container_type, digest: str, outfile: str
+    ) -> str:
+        logger.warning(
+            "This function is deprecated in favor of download_blob and will be removed by 0.1.2"
+        )
         return self.download_blob(container, digest, outfile)
 
-    def _put_upload(self, blob: str, container: oras.container.Container, layer: dict) -> requests.Response:
-        logger.warning("This function is deprecated in favor of put_upload and will be removed by 0.1.2")
+    def _put_upload(
+        self, blob: str, container: oras.container.Container, layer: dict
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of put_upload and will be removed by 0.1.2"
+        )
         return self.put_upload(blob, container, layer)
 
-    def _chunked_upload(self, blob: str, container: oras.container.Container, layer: dict) -> requests.Response:
-        logger.warning("This function is deprecated in favor of chunked_upload and will be removed by 0.1.2")
+    def _chunked_upload(
+        self, blob: str, container: oras.container.Container, layer: dict
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of chunked_upload and will be removed by 0.1.2"
+        )
         return self.chunked_upload(blob, container, layer)
 
-    def _upload_manifest(self, manifest: dict, container: oras.container.Container) -> requests.Response:
-        logger.warning("This function is deprecated in favor of upload_manifest and will be removed by 0.1.2")
+    def _upload_manifest(
+        self, manifest: dict, container: oras.container.Container
+    ) -> requests.Response:
+        logger.warning(
+            "This function is deprecated in favor of upload_manifest and will be removed by 0.1.2"
+        )
         return self.upload_manifest(manifest, container)
 
     def _upload_blob(
@@ -414,11 +440,15 @@ class Registry:
         layer: dict,
         do_chunked: bool = False,
     ) -> requests.Response:
-        logger.warning("This function is deprecated in favor of upload_blob and will be removed by 0.1.2")
+        logger.warning(
+            "This function is deprecated in favor of upload_blob and will be removed by 0.1.2"
+        )
         return self.upload_blob(blob, container, layer, do_chunked)
 
     @decorator.ensure_container
-    def download_blob(self, container: container_type, digest: str, outfile: str) -> str:
+    def download_blob(
+        self, container: container_type, digest: str, outfile: str
+    ) -> str:
         """
         Stream download a blob into an output file.
 
@@ -481,7 +511,9 @@ class Registry:
             "Content-Type": "application/octet-stream",
         }
         headers.update(self.headers)
-        blob_url = oras.utils.append_url_params(session_url, {"digest": layer["digest"]})
+        blob_url = oras.utils.append_url_params(
+            session_url, {"digest": layer["digest"]}
+        )
         with open(blob, "rb") as fd:
             response = self.do_request(
                 blob_url,
@@ -491,7 +523,9 @@ class Registry:
             )
         return response
 
-    def _get_location(self, r: requests.Response, container: oras.container.Container) -> str:
+    def _get_location(
+        self, r: requests.Response, container: oras.container.Container
+    ) -> str:
         """
         Parse the location header and ensure it includes a hostname.
         This currently assumes if there isn't a hostname, we are pushing to
@@ -561,10 +595,14 @@ class Registry:
                 # Important to update with auth token if acquired
                 headers.update(self.headers)
                 start = end + 1
-                self._check_200_response(self.do_request(session_url, "PATCH", data=chunk, headers=headers))
+                self._check_200_response(
+                    self.do_request(session_url, "PATCH", data=chunk, headers=headers)
+                )
 
         # Finally, issue a PUT request to close blob
-        session_url = oras.utils.append_url_params(session_url, {"digest": layer["digest"]})
+        session_url = oras.utils.append_url_params(
+            session_url, {"digest": layer["digest"]}
+        )
         return self.do_request(session_url, "PUT", headers=self.headers)
 
     def _check_200_response(self, response: requests.Response):
@@ -666,7 +704,9 @@ class Registry:
         # Upload files as blobs
         for blob in kwargs.get("files", []):
             # You can provide a blob + content type
-            path_content: PathAndOptionalContent = oras.utils.split_path_and_content(str(blob))
+            path_content: PathAndOptionalContent = oras.utils.split_path_and_content(
+                str(blob)
+            )
             blob = path_content.path
             media_type = path_content.content
 
@@ -677,7 +717,9 @@ class Registry:
             # Path validation means blob must be relative to PWD.
             if validate_path:
                 if not self._validate_path(blob):
-                    raise ValueError(f"Blob {blob} is not in the present working directory context.")
+                    raise ValueError(
+                        f"Blob {blob} is not in the present working directory context."
+                    )
 
             # Save directory or blob name before compressing
             blob_name = os.path.basename(blob)
@@ -693,7 +735,9 @@ class Registry:
             annotations = annotset.get_annotations(blob)
 
             # Always strip blob_name of path separator
-            layer["annotations"] = {oras.defaults.annotation_title: blob_name.strip(os.sep)}
+            layer["annotations"] = {
+                oras.defaults.annotation_title: blob_name.strip(os.sep)
+            }
             if annotations:
                 layer["annotations"].update(annotations)
 
@@ -739,7 +783,11 @@ class Registry:
 
         # Config is just another layer blob!
         logger.debug(f"Preparing config {conf}")
-        with temporary_empty_config() if config_file is None else nullcontext(config_file) as config_file:
+        with (
+            temporary_empty_config()
+            if config_file is None
+            else nullcontext(config_file)
+        ) as config_file:
             response = self.upload_blob(config_file, container, conf, refresh_headers=refresh_headers)
 
         self._check_200_response(response)
@@ -781,7 +829,9 @@ class Registry:
 
         files = []
         for layer in manifest.get("layers", []):
-            filename = (layer.get("annotations") or {}).get(oras.defaults.annotation_title)
+            filename = (layer.get("annotations") or {}).get(
+                oras.defaults.annotation_title
+            )
 
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
@@ -791,7 +841,9 @@ class Registry:
             outfile = oras.utils.sanitize_path(outdir, os.path.join(outdir, filename))
 
             if not overwrite and os.path.exists(outfile):
-                logger.warning(f"{outfile} already exists and --keep-old-files set, will not overwrite.")
+                logger.warning(
+                    f"{outfile} already exists and --keep-old-files set, will not overwrite."
+                )
                 continue
 
             # A directory will need to be uncompressed and moved
@@ -924,7 +976,9 @@ class Registry:
         """
         authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
         if not authHeaderRaw:
-            logger.debug("Www-Authenticate not found in original response, cannot authenticate.")
+            logger.debug(
+                "Www-Authenticate not found in original response, cannot authenticate."
+            )
             return False
 
         # If we have a token, set auth header (base64 encoded user/pass)
