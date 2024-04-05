@@ -5,3 +5,4 @@ oras.egg-info/
 .env
 env
 __pycache__
+.python-version

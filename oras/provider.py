@@ -226,7 +226,7 @@ class Registry:
         container: container_type,
         layer: dict,
         do_chunked: bool = False,
-        refresh_headers: bool = True
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -253,9 +253,13 @@ class Registry:
         # This is currently disabled unless the user asks for it, as
         # it doesn't seem to work for all registries
         if not do_chunked:
-            response = self.put_upload(blob, container, layer, refresh_headers=refresh_headers)
+            response = self.put_upload(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
         else:
-            response = self.chunked_upload(blob, container, layer, refresh_headers=refresh_headers)
+            response = self.chunked_upload(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
         if (
@@ -477,7 +481,11 @@ class Registry:
         return outfile
 
     def put_upload(
-        self, blob: str, container: oras.container.Container, layer: dict, refresh_headers: bool = True
+        self,
+        blob: str,
+        container: oras.container.Container,
+        layer: dict,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload to a registry via put.
@@ -550,7 +558,11 @@ class Registry:
         return session_url
 
     def chunked_upload(
-        self, blob: str, container: oras.container.Container, layer: dict, refresh_headers: bool = True
+        self,
+        blob: str,
+        container: oras.container.Container,
+        layer: dict,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload via a chunked upload.
@@ -632,7 +644,10 @@ class Registry:
             pass
 
     def upload_manifest(
-        self, manifest: dict, container: oras.container.Container, refresh_headers: bool = True
+        self,
+        manifest: dict,
+        container: oras.container.Container,
+        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Read a manifest file and upload it.
@@ -746,7 +761,9 @@ class Registry:
             logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
-            response = self.upload_blob(blob, container, layer, refresh_headers=refresh_headers)
+            response = self.upload_blob(
+                blob, container, layer, refresh_headers=refresh_headers
+            )
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -788,13 +805,17 @@ class Registry:
             if config_file is None
             else nullcontext(config_file)
         ) as config_file:
-            response = self.upload_blob(config_file, container, conf, refresh_headers=refresh_headers)
+            response = self.upload_blob(
+                config_file, container, conf, refresh_headers=refresh_headers
+            )
 
         self._check_200_response(response)
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self.upload_manifest(manifest, container, refresh_headers=refresh_headers))
+        self._check_200_response(
+            self.upload_manifest(manifest, container, refresh_headers=refresh_headers)
+        )
         print(f"Successfully pushed {container}")
         return response
 
