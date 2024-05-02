@@ -3,7 +3,10 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
+import hashlib
+import json
 import os
+from dataclasses import dataclass
 from typing import Dict, Optional, Tuple
 
 import jsonschema
@@ -151,3 +154,27 @@ def NewManifest() -> dict:
     Get an empty manifest config.
     """
     return copy.deepcopy(EmptyManifest)
+
+
+@dataclass
+class Subject:
+    mediaType: str
+    digest: str
+    size: int
+
+    @classmethod
+    def from_manifest(cls, manifest: dict) -> "Subject":
+        """
+        Create a new Subject from a Manifest
+
+        :param manifest: manifest to convert to subject
+        """
+        manifest_string = json.dumps(manifest).encode("utf-8")
+        digest = "sha256:" + hashlib.sha256(manifest_string).hexdigest()
+        size = len(manifest_string)
+
+        return cls(
+            manifest["mediaType"] or oras.defaults.default_manifest_media_type,
+            digest,
+            size,
+        )

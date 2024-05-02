@@ -9,6 +9,7 @@ import pytest
 
 import oras.client
 import oras.defaults
+import oras.oci
 import oras.provider
 import oras.utils
 
