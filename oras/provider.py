@@ -3,6 +3,8 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
+import hashlib
+import json
 import os
 import urllib
 from contextlib import contextmanager, nullcontext
@@ -17,6 +19,7 @@ import requests
 import oras.auth
 import oras.container
 import oras.decorator as decorator
+import oras.defaults
 import oras.oci
 import oras.schemas
 import oras.utils
@@ -40,6 +43,23 @@ class Subject:
     mediaType: str
     digest: str
     size: int
+
+    @classmethod
+    def from_manifest(cls, manifest: dict) -> "Subject":
+        """
+        Create a new Subject from a Manifest
+
+        :param manifest: manifest to convert to subject
+        """
+        manifest_string = json.dumps(manifest).encode("utf-8")
+        digest = "sha256:" + hashlib.sha256(manifest_string).hexdigest()
+        size = len(manifest_string)
+
+        return cls(
+            manifest["mediaType"] or oras.defaults.default_manifest_media_type,
+            digest,
+            size,
+        )
 
 
 class Registry:
