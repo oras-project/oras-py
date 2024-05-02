@@ -54,5 +54,10 @@ def target(registry):
 
 
 @pytest.fixture
+def derived_target(registry):
+    return f"{registry}/dinosaur/artifact:v1-derived"
+
+
+@pytest.fixture
 def target_dir(registry):
     return f"{registry}/dinosaur/directory:v1"

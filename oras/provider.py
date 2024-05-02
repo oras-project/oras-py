@@ -3,6 +3,8 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
+import hashlib
+import json
 import os
 import urllib
 from contextlib import contextmanager, nullcontext
@@ -17,6 +19,7 @@ import requests
 import oras.auth
 import oras.container
 import oras.decorator as decorator
+import oras.defaults
 import oras.oci
 import oras.schemas
 import oras.utils
@@ -40,6 +43,23 @@ class Subject:
     mediaType: str
     digest: str
     size: int
+
+    @classmethod
+    def from_manifest(cls, manifest: dict) -> "Subject":
+        """
+        Create a new Subject from a Manifest
+
+        :param manifest: manifest to convert to subject
+        """
+        manifest_string = json.dumps(manifest).encode("utf-8")
+        digest = "sha256:" + hashlib.sha256(manifest_string).hexdigest()
+        size = len(manifest_string)
+
+        return cls(
+            manifest["mediaType"] or oras.defaults.default_manifest_media_type,
+            digest,
+            size,
+        )
 
 
 class Registry:
@@ -842,11 +862,13 @@ class Registry:
         refresh_headers = kwargs.get("refresh_headers")
         if refresh_headers is None:
             refresh_headers = True
-        container = self.get_container(kwargs["target"])
+        target: str = kwargs["target"]
+        container = self.get_container(target)
         self.load_configs(container, configs=kwargs.get("config_path"))
         manifest = self.get_manifest(container, allowed_media_type, refresh_headers)
         outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
         overwrite = kwargs.get("overwrite", True)
+        include_subject = kwargs.get("include_subject", False)
 
         files = []
         for layer in manifest.get("layers", []):
@@ -880,6 +902,16 @@ class Registry:
                 self.download_blob(container, layer["digest"], outfile)
             logger.info(f"Successfully pulled {outfile}.")
             files.append(outfile)
+
+        if include_subject and manifest.get('subject', False):
+            separator = "@" if "@" in target else ":"
+            repo, _tag = target.rsplit(separator, 1)
+            subject_digest = manifest['subject']['digest']
+            new_kwargs = kwargs
+            new_kwargs['target'] = f'{repo}@{subject_digest}'
+
+            files += self.pull(*args, **kwargs)
+
         return files
 
     @decorator.ensure_container
