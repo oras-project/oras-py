@@ -8,6 +8,7 @@ import shutil
 import pytest
 
 import oras.client
+import oras.provider
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -67,6 +68,40 @@ def test_basic_push_pull(tmp_path, registry, credentials, target):
     assert res.status_code == 201
 
 
+
+@pytest.mark.with_auth(False)
+def test_push_pull_attached_artifacts(tmp_path, registry, credentials, target, derived_target):
+    """
+    Basic tests for oras (without authentication)
+    """
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+
+    artifact = os.path.join(here, "artifact.txt")
+    assert os.path.exists(artifact)
+
+    res = client.push(files=[artifact], target=target)
+    assert res.status_code in [200, 201]
+
+    derived_artifact = os.path.join(here, "derived-artifact.txt")
+    assert os.path.exists(derived_artifact)
+
+    manifest = client.remote.get_manifest(target)
+    subject = oras.provider.Subject.from_manifest(manifest)
+    res = client.push(files=[derived_artifact], target=derived_target, subject=subject)
+    assert res.status_code in [200, 201]
+
+    # Test pulling elsewhere
+    files = sorted(client.pull(target=derived_target, outdir=tmp_path, include_subject=True))
+    assert len(files) == 2
+    assert os.path.basename(files[0]) == "artifact.txt"
+    assert os.path.basename(files[1]) == "derived-artifact.txt"
+    assert str(tmp_path) in files[0]
+    assert str(tmp_path) in files[1]
+    assert os.path.exists(files[0])
+    assert os.path.exists(files[1])
+
+
+
 @pytest.mark.with_auth(False)
 def test_get_delete_tags(tmp_path, registry, credentials, target):
     """
@@ -87,7 +122,7 @@ def test_get_delete_tags(tmp_path, registry, credentials, target):
     assert not client.delete_tags(target, "v1-boop-boop")
     assert "v1" in client.delete_tags(target, "v1")
     tags = client.get_tags(target)
-    assert not tags
+    assert "v1" not in tags
 
 
 def test_get_many_tags():

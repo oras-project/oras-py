@@ -862,11 +862,13 @@ class Registry:
         refresh_headers = kwargs.get("refresh_headers")
         if refresh_headers is None:
             refresh_headers = True
-        container = self.get_container(kwargs["target"])
+        target: str = kwargs["target"]
+        container = self.get_container(target)
         self.load_configs(container, configs=kwargs.get("config_path"))
         manifest = self.get_manifest(container, allowed_media_type, refresh_headers)
         outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
         overwrite = kwargs.get("overwrite", True)
+        include_subject = kwargs.get("include_subject", False)
 
         files = []
         for layer in manifest.get("layers", []):
@@ -900,6 +902,16 @@ class Registry:
                 self.download_blob(container, layer["digest"], outfile)
             logger.info(f"Successfully pulled {outfile}.")
             files.append(outfile)
+
+        if include_subject and manifest.get('subject', False):
+            separator = "@" if "@" in target else ":"
+            repo, _tag = target.rsplit(separator, 1)
+            subject_digest = manifest['subject']['digest']
+            new_kwargs = kwargs
+            new_kwargs['target'] = f'{repo}@{subject_digest}'
+
+            files += self.pull(*args, **kwargs)
+
         return files
 
     @decorator.ensure_container
