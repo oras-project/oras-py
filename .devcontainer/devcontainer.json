@@ -1,0 +1,16 @@
+{
+  "name": "Oras Python with Auth Development Environment",
+  "dockerFile": "Dockerfile",
+  "context": "../",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+  },
+      "extensions": [
+      ]
+    }
+  },
+  "postStartCommand": "git config --global --add safe.directory /workspaces/oras-py"
+}

@@ -6,7 +6,6 @@ read [the installation guide](installation.md) you
 should do that first. If you want to see a more general user guide with examples
 for using the SDK and writing clients, see our [user guide](user-guide.md).
 
-
 ## Running Tests
 
 You'll want to create an environment to install to, and then install:
@@ -24,6 +23,14 @@ $ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
 Zot is a good solution too:
 
 ```bash
+docker run -d -p 5000:5000 --name oras-quickstart ghcr.io/project-zot/zot-linux-amd64:latest
+```
+
+For quick auth, you can use the included Developer container and do:
+
+```bash
+make install
+make test
 ```
 
 And then when you run `make test`, the tests will run. This ultimately

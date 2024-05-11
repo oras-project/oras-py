@@ -20,13 +20,11 @@ def main(args):
     client = oras.client.OrasClient(insecure=args.insecure)
     print(client.version())
     try:
-        if args.username and args.password:
-            client.set_basic_auth(args.username, args.password)
         client.pull(
             config_path=args.config,
-            allowed_media_type=args.allowed_media_type
-            if not args.allow_all_media_types
-            else [],
+            allowed_media_type=(
+                args.allowed_media_type if not args.allow_all_media_types else []
+            ),
             overwrite=not args.keep_old_files,
             outdir=args.output,
             target=args.target,

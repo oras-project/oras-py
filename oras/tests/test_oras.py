@@ -30,7 +30,6 @@ def test_login_logout(registry, credentials):
         hostname=registry,
         username=credentials.user,
         password=credentials.password,
-        insecure=True,
     )
     assert res["Status"] == "Login Succeeded"
     client.logout(registry)
