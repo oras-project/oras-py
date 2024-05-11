@@ -5,7 +5,7 @@ __license__ = "Apache-2.0"
 import os
 from typing import Optional
 
-import oras.auth
+import oras.auth.utils as auth_utils
 import oras.utils
 
 
@@ -41,12 +41,12 @@ class DockerClient:
             oras.utils.mkdir_p(os.path.dirname(dockercfg_path))  # type: ignore
             cfg = {"auths": {}}
         if registry in cfg["auths"]:
-            cfg["auths"][registry]["auth"] = oras.auth.get_basic_auth(
+            cfg["auths"][registry]["auth"] = auth_utils.get_basic_auth(
                 username, password
             )
         else:
             cfg["auths"][registry] = {
-                "auth": oras.auth.get_basic_auth(username, password)
+                "auth": auth_utils.get_basic_auth(username, password)
             }
         oras.utils.write_json(cfg, dockercfg_path)  # type: ignore
         return {"Status": "Login Succeeded"}

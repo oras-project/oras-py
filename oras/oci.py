@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
+from dataclasses import dataclass
 from typing import Dict, Optional, Tuple
 
 import jsonschema
@@ -19,6 +20,13 @@ EmptyManifest = {
     "layers": [],
     "annotations": {},
 }
+
+
+@dataclass
+class Subject:
+    mediaType: str
+    digest: str
+    size: int
 
 
 class Annotations:

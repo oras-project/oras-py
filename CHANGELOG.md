@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - refactor of auth to be provided by backend modules (0.2.0)
  - add option to not refresh headers during the pushing flow, useful for push with basic auth (0.1.29)
  - enable additionalProperties in schema validation (0.1.28)
  - Introduce the option to not refresh headers when fetching manifests when pulling artifacts (0.1.27)

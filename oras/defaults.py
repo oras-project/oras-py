@@ -2,7 +2,6 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors"
 __license__ = "Apache-2.0"
 
-
 # Default tag to use
 default_tag = "latest"
 

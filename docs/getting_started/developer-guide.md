@@ -21,6 +21,11 @@ We recommend a local registry without auth for tests.
 $ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
 ```
 
+Zot is a good solution too:
+
+```bash
+```
+
 And then when you run `make test`, the tests will run. This ultimately
 runs the file [scripts/test.sh](https://github.com/oras-project/oras-py/blob/main/scripts/test.sh).
 If you want to test interactively, add an IPython import statement somewhere in the tests:
