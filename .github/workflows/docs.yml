@@ -35,7 +35,7 @@ jobs:
         ls
 
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
         folder: .
