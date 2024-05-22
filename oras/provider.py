@@ -6,7 +6,7 @@ import copy
 import os
 import urllib
 from contextlib import contextmanager, nullcontext
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from http.cookiejar import DefaultCookiePolicy
 from tempfile import TemporaryDirectory
 from typing import Callable, Generator, List, Optional, Tuple, Union
@@ -33,13 +33,6 @@ def temporary_empty_config() -> Generator[str, None, None]:
         config_file = oras.utils.get_tmpfile(tmpdir=tmpdir, suffix=".json")
         oras.utils.write_file(config_file, "{}")
         yield config_file
-
-
-@dataclass
-class Subject:
-    mediaType: str
-    digest: str
-    size: int
 
 
 class Registry:
@@ -697,7 +690,7 @@ class Registry:
         :param refresh_headers: if true or None, headers are refreshed
         :type refresh_headers: bool
         :param subject: optional subject reference
-        :type subject: Subject
+        :type subject: oras.oci.Subject
         """
         container = self.get_container(kwargs["target"])
         self.load_configs(container, configs=kwargs.get("config_path"))
