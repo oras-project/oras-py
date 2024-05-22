@@ -47,7 +47,7 @@
   <link href="../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
   <script src="../_static/documentation_options.js?v=0e525676">
   </script>
-  <script src="../_static/doctools.js?v=888ff710">
+  <script src="../_static/doctools.js?v=9a2dae69">
   </script>
   <script src="../_static/sphinx_highlight.js?v=dc90522c">
   </script>
@@ -1195,6 +1195,46 @@ function above to get a client and push! 🎉️
             </div>
            </div>
           </details>
+          <details>
+           <summary>
+            Example of basic artifact attachment
+           </summary>
+           <p>
+            We are assuming an
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              derived-artifact.txt
+             </span>
+            </code>
+            in the present working directory and that there’s already a
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              localhost:5000/dinosaur/artifact:v1
+             </span>
+            </code>
+            artifact present in the registry. Here is an example of how to
+            <a class="reference external" href="https://oras.land/docs/concepts/reftypes/">
+             attach
+            </a>
+            a derived artifact to the existing artifact.
+           </p>
+           <div class="highlight-python notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">oras.client</span>
+<span class="kn">import</span> <span class="nn">oras.oci</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">manifest</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="s2">"localhost:5000/dinosaur/artifact:v1"</span><span class="p">)</span>
+<span class="n">subject</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">from_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">)</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">"derived-artifact.txt"</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="s2">"localhost:5000/dinosaur/artifact:v1-derived"</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">)</span>
+<span class="n">Successfully</span> <span class="n">pushed</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">dinosaur</span><span class="o">/</span><span class="n">artifact</span><span class="p">:</span><span class="n">v1</span><span class="o">-</span><span class="n">derived</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">201</span><span class="p">]</span><span class="o">&gt;</span>
+</pre>
+            </div>
+           </div>
+          </details>
           <p>
            The above examples are just a start! See our
            <a class="reference external" href="https://github.com/oras-project/oras-py/tree/main/examples">
@@ -1577,13 +1617,13 @@ and working on these docs!
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Apr 05, 2024.
+              May 22, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.2.6.
+      7.3.7.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

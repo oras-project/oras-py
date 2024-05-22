@@ -46,7 +46,7 @@
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
   <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
-  <script src="../../_static/doctools.js?v=888ff710">
+  <script src="../../_static/doctools.js?v=9a2dae69">
   </script>
   <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
@@ -301,7 +301,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span><span class="p">,</span> <span class="n">nullcontext</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">asdict</span>
 <span class="kn">from</span> <span class="nn">http.cookiejar</span> <span class="kn">import</span> <span class="n">DefaultCookiePolicy</span>
 <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
@@ -330,16 +330,6 @@
         <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">tmpdir</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".json"</span><span class="p">)</span>
         <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">config_file</span></div>
-
-
-
-<div class="viewcode-block" id="Subject">
-<a class="viewcode-back" href="../../source/oras.html#oras.provider.Subject">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Subject</span><span class="p">:</span>
-    <span class="n">mediaType</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 
@@ -1032,7 +1022,7 @@
 <span class="sd">        :param refresh_headers: if true or None, headers are refreshed</span>
 <span class="sd">        :type refresh_headers: bool</span>
 <span class="sd">        :param subject: optional subject reference</span>
-<span class="sd">        :type subject: Subject</span>
+<span class="sd">        :type subject: oras.oci.Subject</span>
 <span class="sd">        """</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"target"</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"config_path"</span><span class="p">))</span>
@@ -1458,13 +1448,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Apr 05, 2024.
+              May 22, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.2.6.
+      7.3.7.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

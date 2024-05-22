@@ -46,7 +46,7 @@
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
   <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
-  <script src="../../_static/doctools.js?v=888ff710">
+  <script src="../../_static/doctools.js?v=9a2dae69">
   </script>
   <script src="../../_static/sphinx_highlight.js?v=dc90522c">
   </script>
@@ -298,7 +298,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">jsonschema</span>
@@ -476,6 +479,36 @@
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">EmptyManifest</span><span class="p">)</span></div>
 
+
+
+<div class="viewcode-block" id="Subject">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Subject">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subject</span><span class="p">:</span>
+    <span class="n">mediaType</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span>
+
+<div class="viewcode-block" id="Subject.from_manifest">
+<a class="viewcode-back" href="../../source/oras.html#oras.oci.Subject.from_manifest">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_manifest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Subject"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create a new Subject from a Manifest</span>
+
+<span class="sd">        :param manifest: manifest to convert to subject</span>
+<span class="sd">        """</span>
+        <span class="n">manifest_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">manifest</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="s2">"sha256:"</span> <span class="o">+</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">manifest_string</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">manifest_string</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">manifest</span><span class="p">[</span><span class="s2">"mediaType"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_media_type</span><span class="p">,</span>
+            <span class="n">digest</span><span class="p">,</span>
+            <span class="n">size</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
 </pre>
        </div>
       </article>
@@ -495,13 +528,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Apr 05, 2024.
+              May 22, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.2.6.
+      7.3.7.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
