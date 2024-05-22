@@ -90,5 +90,10 @@
     "my5cents": {
         "name": "my5cents",
         "blog": "https://github.com/my5cents"
+    },
+    "tumido": {
+        "name": "Tom Coufal",
+        "bio": "Pushing buttons at @redhat-et",
+        "blog": "https://github.com/tumido"
     }
 }
