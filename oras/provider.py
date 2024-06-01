@@ -701,7 +701,7 @@ class Registry:
         :param target: target location to push to
         :type target: str
         :param subject: optional subject reference
-        :type subject: Subject
+        :type subject: oras.oci.Subject
         """
         container = self.get_container(target)
         files = files or []

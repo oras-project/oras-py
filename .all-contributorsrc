@@ -218,6 +218,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/4820203?v=4"
             ]
+        },
+        {
+            "login": "tumido",
+            "name": "Tom Coufal",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/tumido",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/7453394?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

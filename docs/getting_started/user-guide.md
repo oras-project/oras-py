@@ -485,6 +485,28 @@ def push(uri, root):
 
 </details>
 
+<details>
+
+<summary>Example of basic artifact attachment</summary>
+
+We are assuming an `derived-artifact.txt` in the present working directory and that there's already a `localhost:5000/dinosaur/artifact:v1` artifact present in the registry. Here is an example of how to [attach](https://oras.land/docs/concepts/reftypes/) a derived artifact to the existing artifact.
+
+```python
+import oras.client
+import oras.oci
+
+client = oras.client.OrasClient(insecure=True)
+
+manifest = client.remote.get_manifest("localhost:5000/dinosaur/artifact:v1")
+subject = oras.oci.Subject.from_manifest(manifest)
+
+client.push(files=["derived-artifact.txt"], target="localhost:5000/dinosaur/artifact:v1-derived", subject=subject)
+Successfully pushed localhost:5000/dinosaur/artifact:v1-derived
+Out[4]: <Response [201]>
+```
+
+</details>
+
 The above examples are just a start! See our [examples](https://github.com/oras-project/oras-py/tree/main/examples)
 folder alongside the repository for more code examples and clients. If you would like help
 for an example, or to contribute an example, [you know what to do](https://github.com/oras-project/oras-py/issues)!
