@@ -1,6 +1,7 @@
 """
 Follow homebrew image index to get the 'hello' bottle specific to your platform
 """
+
 import re
 
 import oras.client

@@ -85,7 +85,6 @@ if not token or not user:
 
 def main():
     mirror = CondaMirror()
-    mirror.set_basic_auth(user, token)
     mirror.inspect("ghcr.io/wolfv/conda-forge/linux-64/xtensor:0.9.0-0")
 
 

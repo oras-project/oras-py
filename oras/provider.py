@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 
 import copy
 import os
+import sys
 import urllib
 from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
@@ -17,14 +18,14 @@ import requests
 import oras.auth
 import oras.container
 import oras.decorator as decorator
+import oras.defaults
+import oras.main.login as login
 import oras.oci
 import oras.schemas
 import oras.utils
 from oras.logger import logger
+from oras.types import container_type
 from oras.utils.fileio import PathAndOptionalContent
-
-# container type can be string or container
-container_type = Union[str, oras.container.Container]
 
 
 @contextmanager
@@ -48,24 +49,24 @@ class Registry:
         hostname: Optional[str] = None,
         insecure: bool = False,
         tls_verify: bool = True,
+        auth_backend: str = "token",
     ):
         """
-        Create a new registry provider.
+        Create an ORAS client.
 
-        :param hostname: the registry hostname (optional)
+        The hostname is the remote registry to ping.
+
+        :param hostname: the hostname of the registry to ping
         :type hostname: str
+        :param registry: if provided, use this custom provider instead of default
+        :type registry: oras.provider.Registry or None
         :param insecure: use http instead of https
         :type insecure: bool
-        :param tls_verify: verify TLS certificates
-        :type tls_verify: bool
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
         self.session: requests.Session = requests.Session()
         self.prefix: str = "http" if insecure else "https"
-        self.token: Optional[str] = None
-        self._auths: dict = {}
-        self._basic_auth = None
         self._tls_verify = tls_verify
 
         if not tls_verify:
@@ -76,6 +77,57 @@ class Registry:
         # trying to set further CSRF cookies (Harbor is such a case)
         self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
 
+        # Get custom backend, pass on session to share
+        self.auth = oras.auth.get_auth_backend(auth_backend, self.session)
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    def __str__(self) -> str:
+        return "[oras-client]"
+
+    def version(self, return_items: bool = False) -> Union[dict, str]:
+        """
+        Get the version of the client.
+
+        :param return_items : return the dict of version info instead of string
+        :type return_items: bool
+        """
+        version = oras.version.__version__
+
+        python_version = "%s.%s.%s" % (
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        )
+        versions = {"Version": version, "Python version": python_version}
+
+        # If the user wants the dictionary of items returned
+        if return_items:
+            return versions
+
+        # Otherwise return a string that can be printed
+        return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
+
+    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
+        """
+        Delete one or more tags for a unique resource identifier.
+
+        Returns those successfully deleted.
+
+        :param name: container URI to parse
+        :type name: str
+        :param tags: single or multiple tags name to delete
+        :type N: string or list
+        """
+        if isinstance(tags, str):
+            tags = [tags]
+        deleted = []
+        for tag in tags:
+            if self.delete_tag(name, tag):
+                deleted.append(tag)
+        return deleted
+
     def logout(self, hostname: str):
         """
         If auths are loaded, remove a hostname.
@@ -83,95 +135,75 @@ class Registry:
         :param hostname: the registry hostname to remove
         :type hostname: str
         """
-        # Remove any basic auth or token
-        self._basic_auth = None
-        self.token = None
+        self.auth.logout(hostname)
 
-        if not self._auths:
-            logger.info(f"You are not logged in to {hostname}")
-            return
-
-        for host in oras.utils.iter_localhosts(hostname):
-            if host in self._auths:
-                del self._auths[host]
-                logger.info(f"You have successfully logged out of {hostname}")
-                return
-        logger.info(f"You are not logged in to {hostname}")
-
-    @decorator.ensure_container
-    def load_configs(self, container: container_type, configs: Optional[list] = None):
+    def login(
+        self,
+        username: str,
+        password: str,
+        password_stdin: bool = False,
+        tls_verify: bool = True,
+        hostname: Optional[str] = None,
+        config_path: Optional[List[str]] = None,
+    ) -> dict:
         """
-        Load configs to discover credentials for a specific container.
-
-        This is typically just called once. We always add the default Docker
-        config to the set.s
-
-        :param container: the parsed container URI with components
-        :type container: oras.container.Container
-        :param configs: list of configs to read (optional)
-        :type configs: list
-        """
-        if not self._auths:
-            self._auths = oras.auth.load_configs(configs)
-        for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
-            if self._load_auth(registry):
-                return
-
-    def _load_auth(self, hostname: str) -> bool:
-        """
-        Look for and load a named authentication token.
-
-        :param hostname: the registry hostname to look for
-        :type hostname: str
-        """
-        # Note that the hostname can be defined without a token
-        if hostname in self._auths:
-            auth = self._auths[hostname].get("auth")
-
-            # Case 1: they use a credsStore we don't know how to read
-            if not auth and "credsStore" in self._auths[hostname]:
-                logger.warning(
-                    '"credsStore" found in your ~/.docker/config.json, which is not supported by oras-py. Remove it, docker login, and try again.'
-                )
-                return False
-
-            # Case 2: no auth there (wonky file)
-            elif not auth:
-                return False
-            self._basic_auth = auth
-            return True
-        return False
-
-    def set_basic_auth(self, username: str, password: str):
-        """
-        Set basic authentication.
+        Login to a registry.
 
         :param username: the user account name
         :type username: str
         :param password: the user account password
         :type password: str
+        :param password_stdin: get the password from standard input
+        :type password_stdin: bool
+        :param insecure: use http instead of https
+        :type insecure: bool
+        :param tls_verify: verify tls
+        :type tls_verify: bool
+        :param hostname: the hostname to login to
+        :type hostname: str
+        :param config_path: list of config paths to add
+        :type config_path: list
         """
-        self._basic_auth = oras.auth.get_basic_auth(username, password)
-        self.set_header("Authorization", "Basic %s" % self._basic_auth)
+        # Read password from stdin
+        if password_stdin:
+            password = oras.utils.readline()
 
-    def set_token_auth(self, token: str):
-        """
-        Set token authentication.
+        # No username, try to get from stdin
+        if not username:
+            username = input("Username: ")
 
-        :param token: the bearer token
-        :type token: str
-        """
-        self.token = token
-        self.set_header("Authorization", "Bearer %s" % token)
+        # No password provided
+        if not password:
+            password = input("Password: ")
+            if not password:
+                raise ValueError("password required")
 
-    def reset_basic_auth(self):
-        """
-        Given we have basic auth, reset it.
-        """
-        if "Authorization" in self.headers:
-            del self.headers["Authorization"]
-        if self._basic_auth:
-            self.set_header("Authorization", "Basic %s" % self._basic_auth)
+        # Cut out early if we didn't get what we need
+        if not password or not username:
+            return {"Login": "Not successful"}
+
+        # Set basic auth for the auth client
+        self.auth.set_basic_auth(username, password)
+
+        # Login
+        # https://docker-py.readthedocs.io/en/stable/client.html?highlight=login#docker.client.DockerClient.login
+        try:
+            client = oras.utils.get_docker_client(tls_verify=tls_verify)
+            return client.login(
+                username=username,
+                password=password,
+                registry=hostname,
+                dockercfg_path=config_path,
+            )
+
+        # Fallback to manual login
+        except Exception:
+            return login.DockerClient().login(
+                username=username,  # type: ignore
+                password=password,  # type: ignore
+                registry=hostname,  # type: ignore
+                dockercfg_path=config_path,
+            )
 
     def set_header(self, name: str, value: str):
         """
@@ -219,7 +251,6 @@ class Registry:
         container: container_type,
         layer: dict,
         do_chunked: bool = False,
-        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Prepare and upload a blob.
@@ -233,26 +264,17 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
-        :param refresh_headers: if true, headers are refreshed
-        :type refresh_headers: bool
         """
         blob = os.path.abspath(blob)
         container = self.get_container(container)
-
-        # Always reset headers between uploads
-        self.reset_basic_auth()
 
         # Chunked for large, otherwise POST and PUT
         # This is currently disabled unless the user asks for it, as
         # it doesn't seem to work for all registries
         if not do_chunked:
-            response = self.put_upload(
-                blob, container, layer, refresh_headers=refresh_headers
-            )
+            response = self.put_upload(blob, container, layer)
         else:
-            response = self.chunked_upload(
-                blob, container, layer, refresh_headers=refresh_headers
-            )
+            response = self.chunked_upload(blob, container, layer)
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
         if (
@@ -478,7 +500,6 @@ class Registry:
         blob: str,
         container: oras.container.Container,
         layer: dict,
-        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload to a registry via put.
@@ -489,14 +510,9 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
-        :param refresh_headers: if true, headers are refreshed
-        :type refresh_headers: bool
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream"}
-
-        if not refresh_headers:
-            headers.update(self.headers)
 
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
@@ -555,7 +571,6 @@ class Registry:
         blob: str,
         container: oras.container.Container,
         layer: dict,
-        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Upload via a chunked upload.
@@ -566,13 +581,9 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
-        :param refresh_headers: if true, headers are refreshed
-        :type refresh_headers: bool
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
-        if not refresh_headers:
-            headers.update(self.headers)
 
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
@@ -598,7 +609,7 @@ class Registry:
                 }
 
                 # Important to update with auth token if acquired
-                headers.update(self.headers)
+                # TODO call to auth here
                 start = end + 1
                 self._check_200_response(
                     self.do_request(session_url, "PATCH", data=chunk, headers=headers)
@@ -640,7 +651,6 @@ class Registry:
         self,
         manifest: dict,
         container: oras.container.Container,
-        refresh_headers: bool = True,
     ) -> requests.Response:
         """
         Read a manifest file and upload it.
@@ -649,19 +659,12 @@ class Registry:
         :type manifest: dict
         :param container:  parsed container URI
         :type container: oras.container.Container or str
-        :param refresh_headers: if true, headers are refreshed
-        :type refresh_headers: bool
         """
-        self.reset_basic_auth()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         headers = {
             "Content-Type": oras.defaults.default_manifest_media_type,
             "Content-Length": str(len(manifest)),
         }
-
-        if not refresh_headers:
-            headers.update(self.headers)
-
         return self.do_request(
             f"{self.prefix}://{container.manifest_url()}",  # noqa
             "PUT",
@@ -669,7 +672,17 @@ class Registry:
             json=manifest,
         )
 
-    def push(self, *args, **kwargs) -> requests.Response:
+    def push(
+        self,
+        target: str,
+        config_path: Optional[str] = None,
+        disable_path_validation: bool = False,
+        files: Optional[List] = None,
+        manifest_config: Optional[dict] = None,
+        annotation_file: Optional[str] = None,
+        manifest_annotations: Optional[dict] = None,
+        subject: Optional[str] = None,
+    ) -> requests.Response:
         """
         Push a set of files to a target
 
@@ -687,30 +700,22 @@ class Registry:
         :type manifest_annotations: dict
         :param target: target location to push to
         :type target: str
-        :param refresh_headers: if true or None, headers are refreshed
-        :type refresh_headers: bool
         :param subject: optional subject reference
         :type subject: oras.oci.Subject
         """
-        container = self.get_container(kwargs["target"])
-        self.load_configs(container, configs=kwargs.get("config_path"))
-
-        # Hold state of request for http/https
-        validate_path = not kwargs.get("disable_path_validation", False)
+        container = self.get_container(target)
+        files = files or []
+        self.auth.load_configs(container, configs=config_path)
 
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
 
         # A lookup of annotations we can add (to blobs or manifest)
-        annotset = oras.oci.Annotations(kwargs.get("annotation_file"))
+        annotset = oras.oci.Annotations(annotation_file)
         media_type = None
 
-        refresh_headers = kwargs.get("refresh_headers")
-        if refresh_headers is None:
-            refresh_headers = True
-
         # Upload files as blobs
-        for blob in kwargs.get("files", []):
+        for blob in files:
             # You can provide a blob + content type
             path_content: PathAndOptionalContent = oras.utils.split_path_and_content(
                 str(blob)
@@ -723,7 +728,7 @@ class Registry:
                 raise FileNotFoundError(f"{blob} does not exist.")
 
             # Path validation means blob must be relative to PWD.
-            if validate_path:
+            if not disable_path_validation:
                 if not self._validate_path(blob):
                     raise ValueError(
                         f"Blob {blob} is not in the present working directory context."
@@ -754,9 +759,7 @@ class Registry:
             logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
-            response = self.upload_blob(
-                blob, container, layer, refresh_headers=refresh_headers
-            )
+            response = self.upload_blob(blob, container, layer)
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
@@ -768,18 +771,16 @@ class Registry:
 
         # Custom manifest annotations from client key=value pairs
         # These over-ride any potentially provided from file
-        custom_annots = kwargs.get("manifest_annotations")
+        custom_annots = copy.deepcopy(manifest_annotations)
         if custom_annots:
             manifest_annots.update(custom_annots)
         if manifest_annots:
             manifest["annotations"] = manifest_annots
 
-        subject = kwargs.get("subject")
         if subject:
             manifest["subject"] = asdict(subject)
 
         # Prepare the manifest config (temporary or one provided)
-        manifest_config = kwargs.get("manifest_config")
         config_annots = annotset.get_annotations("$config")
         if manifest_config:
             ref, media_type = self._parse_manifest_ref(manifest_config)
@@ -798,21 +799,24 @@ class Registry:
             if config_file is None
             else nullcontext(config_file)
         ) as config_file:
-            response = self.upload_blob(
-                config_file, container, conf, refresh_headers=refresh_headers
-            )
+            response = self.upload_blob(config_file, container, conf)
 
         self._check_200_response(response)
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(
-            self.upload_manifest(manifest, container, refresh_headers=refresh_headers)
-        )
+        self._check_200_response(self.upload_manifest(manifest, container))
         print(f"Successfully pushed {container}")
         return response
 
-    def pull(self, *args, **kwargs) -> List[str]:
+    def pull(
+        self,
+        target: str,
+        config_path: Optional[str] = None,
+        allowed_media_type: Optional[List] = None,
+        overwrite: bool = True,
+        outdir: Optional[str] = None,
+    ) -> List[str]:
         """
         Pull an artifact from a target
 
@@ -822,8 +826,6 @@ class Registry:
         :type allowed_media_type: list or None
         :param overwrite: if output file exists, overwrite
         :type overwrite: bool
-        :param refresh_headers: if true, headers are refreshed when fetching manifests
-        :type refresh_headers: bool
         :param manifest_config_ref: save manifest config to this file
         :type manifest_config_ref: str
         :param outdir: output directory path
@@ -831,15 +833,11 @@ class Registry:
         :param target: target location to pull from
         :type target: str
         """
-        allowed_media_type = kwargs.get("allowed_media_type")
-        refresh_headers = kwargs.get("refresh_headers")
-        if refresh_headers is None:
-            refresh_headers = True
-        container = self.get_container(kwargs["target"])
-        self.load_configs(container, configs=kwargs.get("config_path"))
-        manifest = self.get_manifest(container, allowed_media_type, refresh_headers)
-        outdir = kwargs.get("outdir") or oras.utils.get_tmpdir()
-        overwrite = kwargs.get("overwrite", True)
+        container = self.get_container(target)
+        self.auth.load_configs(container, configs=config_path)
+        manifest = self.get_manifest(container, allowed_media_type)
+        outdir = outdir or oras.utils.get_tmpdir()
+        overwrite = overwrite
 
         files = []
         for layer in manifest.get("layers", []):
@@ -880,7 +878,6 @@ class Registry:
         self,
         container: container_type,
         allowed_media_type: Optional[list] = None,
-        refresh_headers: bool = True,
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -889,15 +886,10 @@ class Registry:
         :type container: oras.container.Container or str
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
-        :param refresh_headers: if true, headers are refreshed
-        :type refresh_headers: bool
         """
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
-
-        if not refresh_headers:
-            headers.update(self.headers)
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
@@ -932,8 +924,6 @@ class Registry:
         :param stream: stream the responses
         :type stream: bool
         """
-        headers = headers or {}
-
         # Make the request and return to calling function, unless requires auth
         response = self.session.request(
             method,
@@ -945,144 +935,33 @@ class Registry:
             verify=self._tls_verify,
         )
 
-        # A 401 response is a request for authentication
-        if response.status_code not in [401, 404]:
+        # A 401 response is a request for authentication, 404 is not found
+        if response.status_code not in [401, 403]:
             return response
 
         # Otherwise, authenticate the request and retry
-        if self.authenticate_request(response):
-            headers.update(self.headers)
-            response = self.session.request(
-                method,
-                url,
-                data=data,
-                json=json,
-                headers=headers,
-                stream=stream,
+        headers, changed = self.auth.authenticate_request(response, headers)
+        if not changed:
+            logger.exit("Cannot respond to request for authentication.")
+        response = self.session.request(
+            method,
+            url,
+            data=data,
+            json=json,
+            headers=headers,
+            stream=stream,
+        )
+
+        # One retry if 403 denied (need new token?)
+        if response.status_code == 403:
+            headers, changed = self.auth.authenticate_request(
+                response, headers, refresh=True
             )
-
-        # Fallback to using Authorization if already required
-        # This is a catch for EC2. I don't think this is correct
-        # A basic token should be used for a bearer one.
-        if response.status_code in [401, 404] and "Authorization" in self.headers:
-            logger.debug("Trying with provided Basic Authorization...")
-            headers.update(self.headers)
-            response = self.session.request(
-                method,
-                url,
-                data=data,
-                json=json,
-                headers=headers,
-                stream=stream,
-            )
-
-        return response
-
-    def authenticate_request(self, originalResponse: requests.Response) -> bool:
-        """
-        Authenticate Request
-        Given a response, look for a Www-Authenticate header to parse.
-
-        We return True/False to indicate if the request should be retried.
-
-        :param originalResponse: original response to get the Www-Authenticate header
-        :type originalResponse: requests.Response
-        """
-        authHeaderRaw = originalResponse.headers.get("Www-Authenticate")
-        if not authHeaderRaw:
-            logger.debug(
-                "Www-Authenticate not found in original response, cannot authenticate."
-            )
-            return False
-
-        # If we have a token, set auth header (base64 encoded user/pass)
-        if self.token:
-            self.set_header("Authorization", "Bearer %s" % self._basic_auth)
-            return True
-
-        headers = copy.deepcopy(self.headers)
-        h = oras.auth.parse_auth_header(authHeaderRaw)
-
-        if "Authorization" not in headers:
-            # First try to request an anonymous token
-            logger.debug("No Authorization, requesting anonymous token")
-            if self.request_anonymous_token(h):
-                logger.debug("Successfully obtained anonymous token!")
-                return True
-
-            logger.error(
-                "This endpoint requires a token. Please set "
-                "oras.provider.Registry.set_basic_auth(username, password) "
-                "first or use oras-py login to do the same."
-            )
-            return False
-
-        params = {}
-
-        # Prepare request to retry
-        if h.service:
-            logger.debug(f"Service: {h.service}")
-            params["service"] = h.service
-            headers.update(
-                {
-                    "Service": h.service,
-                    "Accept": "application/json",
-                    "User-Agent": "oras-py",
-                }
-            )
-
-        # Ensure the realm starts with http
-        if not h.realm.startswith("http"):  # type: ignore
-            h.realm = f"{self.prefix}://{h.realm}"
-
-        # If the www-authenticate included a scope, honor it!
-        if h.scope:
-            logger.debug(f"Scope: {h.scope}")
-            params["scope"] = h.scope
-
-        authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
-        if authResponse.status_code != 200:
-            logger.debug(f"Auth response was not successful: {authResponse.text}")
-            return False
-
-        # Request the token
-        info = authResponse.json()
-        token = info.get("token") or info.get("access_token")
-
-        # Set the token to the original request and retry
-        self.headers.update({"Authorization": "Bearer %s" % token})
-        return True
-
-    def request_anonymous_token(self, h: oras.auth.authHeader) -> bool:
-        """
-        Given no basic auth, fall back to trying to request an anonymous token.
-
-        Returns: boolean if headers have been updated with token.
-        """
-        if not h.realm:
-            logger.debug("Request anonymous token: no realm provided, exiting early")
-            return False
-
-        params = {}
-        if h.service:
-            params["service"] = h.service
-        if h.scope:
-            params["scope"] = h.scope
-
-        logger.debug(f"Final params are {params}")
-        response = self.session.request("GET", h.realm, params=params)
-        if response.status_code != 200:
-            logger.debug(f"Response for anon token failed: {response.text}")
-            return False
-
-        # From https://docs.docker.com/registry/spec/auth/token/ section
-        # We can get token OR access_token OR both (when both they are identical)
-        data = response.json()
-        token = data.get("token") or data.get("access_token")
-
-        # Update the headers but not self.token (expects Basic)
-        if token:
-            self.headers.update({"Authorization": "Bearer %s" % token})
-            return True
-        logger.debug("Warning: no token or access_token present in response.")
-        return False
+        return self.session.request(
+            method,
+            url,
+            data=data,
+            json=json,
+            headers=headers,
+            stream=stream,
+        )

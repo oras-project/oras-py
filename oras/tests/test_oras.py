@@ -30,7 +30,6 @@ def test_login_logout(registry, credentials):
         hostname=registry,
         username=credentials.user,
         password=credentials.password,
-        insecure=True,
     )
     assert res["Status"] == "Login Succeeded"
     client.logout(registry)
@@ -85,6 +84,7 @@ def test_get_delete_tags(tmp_path, registry, credentials, target):
 
     # Test deleting not-existence tag
     assert not client.delete_tags(target, "v1-boop-boop")
+
     assert "v1" in client.delete_tags(target, "v1")
     tags = client.get_tags(target)
     assert not tags

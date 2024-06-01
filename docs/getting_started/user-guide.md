@@ -29,7 +29,7 @@ $ docker run -it --rm -p 5000:5000 ghcr.io/oras-project/registry:latest
 ```
 
 And add the `-d` for detached.  If you are brave and want to try basic auth:
-
+bash
 ```bash
 # This is an htpassword file, "b" means bcrypt
 htpasswd -cB -b auth.htpasswd myuser mypass
@@ -67,9 +67,8 @@ class MyProvider(oras.client.OrasClient):
     pass
 ```
 
-If you don't use this class, it's recommended to set basic auth with
-`self.set_basic_auth(username, password)`, which is provided by `oras.provider.Registry`.
-Also note that we currently just have one provider type (the `Registry`) and if you
+Authentication is provided by custom modules, and you can read about loading
+and using them [here](#authentication). Also note that we currently just have one provider type (the `Registry`) and if you
 have an idea for a request or custom provider, please [let us know](https://github.com/oras-project/oras-py/issues).
 
 ### Creating OCI Objects
@@ -204,7 +203,7 @@ You can read more about how registries provide tags [at the distribution spec](h
 ### Push Interactions
 
 Let's start with a very basic push interaction, and this one
-follows [the example here](https://oras.land/cli/1_pushing/).
+follows [the example here](https://oras.land/docs/how_to_guides/pushing_and_pulling/#pushing-artifacts-with-single-file).
 
 <details>
 
@@ -369,14 +368,11 @@ def get_oras_client():
     """
     Consistent method to get an oras client
     """
-    user = os.environ.get("ORAS_USER")
-    password = os.environ.get("ORAS_PASS")
     reg = Registry()
-    if user and password:
-        print("Found username and password for basic auth")
-        reg.set_basic_auth(user, password)
-    else:
+    if not reg.auth.username or not reg.auth.password:
         sys.exit("ORAS_USER or ORAS_PASS is missing, and required.")
+
+    print("Found username and password for basic auth")
     return reg
 
 
@@ -622,6 +618,27 @@ is exposed as above. For earlier versions, you can use `self._download_blob`.
 
 ### Authentication
 
+As of oras Python 0.2.0, authentication is handled with modules. We take this approach because
+different registries have subtle different logic and it led to many errors.
+
+By default, you will get a bearer token setup that takes an initial set of basic credentials and then makes
+requests for tokens.  This is set by way of defining the "auth_backend" variable. For example,
+here is asking for the default.
+
+```python
+import oras.client
+client = oras.client.OrasClient(auth_backend="token")
+client.login(password="myuser", username="myuser", insecure=True)
+```
+
+If you wanted to always maintain the basic auth you might do:
+
+```python
+import oras.client
+client = oras.client.OrasClient(auth_backend="basic")
+client.login(password="myuser", username="myuser", insecure=True)
+```
+
 Here is a very basic example of logging in and out of a registry using the default (basic)
 provided client:
 
@@ -632,8 +649,8 @@ provided client:
 
 ```python
 import oras.client
-client = oras.client.OrasClient()
-client.login(password="myuser", username="myuser", insecure=True)
+client = oras.client.OrasClient(hostname="ghcr.io")
+client.login(password="myuser", username="myuser")
 ```
 
 And logout!
@@ -643,50 +660,6 @@ client.logout("localhost:5000")
 ```
 
 </details>
-
-Here is an example of getting a GitHub user and token from the environment, and
-then doing a pull.
-
-<details>
-
-<summary>Example setting and using GitHub credentials (click to expand)</summary>
-
-Given that you are pushing to GitHub packages (which has support for ORAS)
-and perhaps are running in a GitHub action, you might want to get these credentials from the environment:
-
-```python
-# We will need GitHub personal access token or token
-token = os.environ.get("GITHUB_TOKEN")
-password = os.environ.get("GITHUB_USER")
-
-if not password or not user:
-    sys.exit("GITHUB_TOKEN and GITHUB_USER are required in the environment.")
-```
-
-Then you can run your custom functions that use these user and password credentials,
-either inspecting a particular unique resource identifier or using
-your lookup of archives (paths and media types) to push:
-
-```python
-# Pull Example
-reg = MyProvider()
-reg.set_basic_auth(user, password)
-reg.inspect("ghcr.io/wolfv/conda-forge/linux-64/xtensor:0.9.0-0")
-
-# Push Example
-reg = Registry()
-reg.set_basic_auth(user, token)
-archives = {
-    "/tmp/pakages-tmp.q6amnrkq/pakages-0.0.16.tar.gz": "application/vnd.oci.image.layer.v1.tar+gzip",
-    "/tmp/pakages-tmp.q6amnrkq/sbom.json": "application/vnd.cyclonedx"}
-reg.push("ghcr.io/vsoch/excellent-dinosaur:latest", archives)
-```
-
-</details>
-
-The above examples supplement our official [examples folder](https://github.com/oras-project/oras-py/tree/main/examples).
-Please let us know if you need an additional example or help with your client!
-
 
 ### Debugging
 
