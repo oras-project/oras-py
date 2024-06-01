@@ -24,13 +24,6 @@ EmptyManifest = {
 }
 
 
-@dataclass
-class Subject:
-    mediaType: str
-    digest: str
-    size: int
-
-
 class Annotations:
     """
     Create a new set of annotations
