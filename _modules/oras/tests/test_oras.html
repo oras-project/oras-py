@@ -330,7 +330,6 @@
         <span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
         <span class="n">password</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
-        <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">assert</span> <span class="n">res</span><span class="p">[</span><span class="s2">"Status"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Login Succeeded"</span>
     <span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">registry</span><span class="p">)</span></div>
@@ -391,6 +390,7 @@
 
     <span class="c1"># Test deleting not-existence tag</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"v1-boop-boop"</span><span class="p">)</span>
+
     <span class="k">assert</span> <span class="s2">"v1"</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">delete_tags</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"v1"</span><span class="p">)</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">tags</span></div>
@@ -468,7 +468,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 22, 2024.
+              Jun 01, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

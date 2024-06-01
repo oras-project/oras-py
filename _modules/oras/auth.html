@@ -293,100 +293,25 @@
        </h1>
        <div class="highlight">
         <pre>
-<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Vanessa Sochat"</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">import</span> <span class="nn">oras.utils</span>
 <span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 
+<span class="kn">from</span> <span class="nn">.basic</span> <span class="kn">import</span> <span class="n">BasicAuth</span>
+<span class="kn">from</span> <span class="nn">.token</span> <span class="kn">import</span> <span class="n">TokenAuth</span>
 
-<div class="viewcode-block" id="load_configs">
-<a class="viewcode-back" href="../../source/oras.html#oras.auth.load_configs">[docs]</a>
-<span class="k">def</span> <span class="nf">load_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Load one or more configs with credentials from the filesystem.</span>
-
-<span class="sd">    :param configs: list of configuration paths to load, defaults to None</span>
-<span class="sd">    :type configs: optional list</span>
-<span class="sd">    """</span>
-    <span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">default_config</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">find_docker_config</span><span class="p">()</span>
-
-    <span class="c1"># Add the default docker config</span>
-    <span class="k">if</span> <span class="n">default_config</span><span class="p">:</span>
-        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default_config</span><span class="p">)</span>
-    <span class="n">configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-    <span class="c1"># Load configs until we find our registry hostname</span>
-    <span class="n">auths</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
-            <span class="k">continue</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">auths</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"auths"</span><span class="p">,</span> <span class="p">{}))</span>
-    <span class="k">return</span> <span class="n">auths</span></div>
+<span class="n">auth_backends</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"token"</span><span class="p">:</span> <span class="n">TokenAuth</span><span class="p">,</span> <span class="s2">"basic"</span><span class="p">:</span> <span class="n">BasicAuth</span><span class="p">}</span>
 
 
-
-<div class="viewcode-block" id="get_basic_auth">
-<a class="viewcode-back" href="../../source/oras.html#oras.auth.get_basic_auth">[docs]</a>
-<span class="k">def</span> <span class="nf">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Prepare basic auth from a username and password.</span>
-
-<span class="sd">    :param username: the user account name</span>
-<span class="sd">    :type username: str</span>
-<span class="sd">    :param password: the user account password</span>
-<span class="sd">    :type password: str</span>
-<span class="sd">    """</span>
-    <span class="n">auth_str</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">auth_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="authHeader">
-<a class="viewcode-back" href="../../source/oras.html#oras.auth.authHeader">[docs]</a>
-<span class="k">class</span> <span class="nc">authHeader</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lookup</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Given a dictionary of values, match them to class attributes</span>
-
-<span class="sd">        :param lookup : dictionary of key,value pairs to parse into auth header</span>
-<span class="sd">        :type lookup: dict</span>
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">realm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">lookup</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"realm"</span><span class="p">,</span> <span class="s2">"service"</span><span class="p">,</span> <span class="s2">"scope"</span><span class="p">]:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">lookup</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
-
-
-
-<div class="viewcode-block" id="parse_auth_header">
-<a class="viewcode-back" href="../../source/oras.html#oras.auth.parse_auth_header">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_auth_header</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">authHeader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Parse authentication header into pieces</span>
-
-<span class="sd">    :param username: the user account name</span>
-<span class="sd">    :type username: str</span>
-<span class="sd">    :param password: the user account password</span>
-<span class="sd">    :type password: str</span>
-<span class="sd">    """</span>
-    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'([a-zA-z]+)="(.+?)"'</span><span class="p">)</span>
-    <span class="n">matches</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">authHeaderRaw</span><span class="p">)</span>
-    <span class="n">lookup</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-        <span class="n">lookup</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">authHeader</span><span class="p">(</span><span class="n">lookup</span><span class="p">)</span></div>
+<div class="viewcode-block" id="get_auth_backend">
+<a class="viewcode-back" href="../../source/oras.html#oras.auth.get_auth_backend">[docs]</a>
+<span class="k">def</span> <span class="nf">get_auth_backend</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">auth_backends</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">backend</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Authentication backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2"> is not known."</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">backend</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span> <span class="ow">or</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">backend</span></div>
 
 </pre>
        </div>
@@ -407,7 +332,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 22, 2024.
+              Jun 01, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

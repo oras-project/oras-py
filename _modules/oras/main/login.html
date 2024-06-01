@@ -300,7 +300,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">oras.auth</span>
+<span class="kn">import</span> <span class="nn">oras.auth.utils</span> <span class="k">as</span> <span class="nn">auth_utils</span>
 <span class="kn">import</span> <span class="nn">oras.utils</span>
 
 
@@ -340,12 +340,12 @@
             <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">mkdir_p</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dockercfg_path</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
             <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"auths"</span><span class="p">:</span> <span class="p">{}}</span>
         <span class="k">if</span> <span class="n">registry</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"auths"</span><span class="p">]:</span>
-            <span class="n">cfg</span><span class="p">[</span><span class="s2">"auths"</span><span class="p">][</span><span class="n">registry</span><span class="p">][</span><span class="s2">"auth"</span><span class="p">]</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="p">[</span><span class="s2">"auths"</span><span class="p">][</span><span class="n">registry</span><span class="p">][</span><span class="s2">"auth"</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_utils</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span>
                 <span class="n">username</span><span class="p">,</span> <span class="n">password</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cfg</span><span class="p">[</span><span class="s2">"auths"</span><span class="p">][</span><span class="n">registry</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">"auth"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+                <span class="s2">"auth"</span><span class="p">:</span> <span class="n">auth_utils</span><span class="o">.</span><span class="n">get_basic_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
             <span class="p">}</span>
         <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">dockercfg_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span></div>
@@ -370,7 +370,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 22, 2024.
+              Jun 01, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

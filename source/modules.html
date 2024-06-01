@@ -424,37 +424,10 @@
              </a>
              <ul>
               <li class="toctree-l3">
-               <a class="reference internal" href="oras.html#oras.auth.authHeader">
+               <a class="reference internal" href="oras.html#oras.auth.get_auth_backend">
                 <code class="docutils literal notranslate">
                  <span class="pre">
-                  authHeader
-                 </span>
-                </code>
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="oras.html#oras.auth.get_basic_auth">
-                <code class="docutils literal notranslate">
-                 <span class="pre">
-                  get_basic_auth()
-                 </span>
-                </code>
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="oras.html#oras.auth.load_configs">
-                <code class="docutils literal notranslate">
-                 <span class="pre">
-                  load_configs()
-                 </span>
-                </code>
-               </a>
-              </li>
-              <li class="toctree-l3">
-               <a class="reference internal" href="oras.html#oras.auth.parse_auth_header">
-                <code class="docutils literal notranslate">
-                 <span class="pre">
-                  parse_auth_header()
+                  get_auth_backend()
                  </span>
                 </code>
                </a>
@@ -465,100 +438,6 @@
              <a class="reference internal" href="oras.html#module-oras.client">
               oras.client module
              </a>
-             <ul>
-              <li class="toctree-l3">
-               <a class="reference internal" href="oras.html#oras.client.OrasClient">
-                <code class="docutils literal notranslate">
-                 <span class="pre">
-                  OrasClient
-                 </span>
-                </code>
-               </a>
-               <ul>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.delete_tags">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.delete_tags()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.get_tags">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.get_tags()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.login">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.login()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.logout">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.logout()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.pull">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.pull()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.push">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.push()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.set_basic_auth">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.set_basic_auth()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.set_token_auth">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.set_token_auth()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.client.OrasClient.version">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    OrasClient.version()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-               </ul>
-              </li>
-             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.container">
@@ -1200,15 +1079,6 @@
                </a>
                <ul>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.authenticate_request">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Registry.authenticate_request()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
                  <a class="reference internal" href="oras.html#oras.provider.Registry.chunked_upload">
                   <code class="docutils literal notranslate">
                    <span class="pre">
@@ -1222,6 +1092,15 @@
                   <code class="docutils literal notranslate">
                    <span class="pre">
                     Registry.delete_tag()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.delete_tags">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.delete_tags()
                    </span>
                   </code>
                  </a>
@@ -1281,10 +1160,10 @@
                  </a>
                 </li>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.load_configs">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.login">
                   <code class="docutils literal notranslate">
                    <span class="pre">
-                    Registry.load_configs()
+                    Registry.login()
                    </span>
                   </code>
                  </a>
@@ -1326,46 +1205,10 @@
                  </a>
                 </li>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.request_anonymous_token">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Registry.request_anonymous_token()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.reset_basic_auth">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Registry.reset_basic_auth()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.set_basic_auth">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Registry.set_basic_auth()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
                  <a class="reference internal" href="oras.html#oras.provider.Registry.set_header">
                   <code class="docutils literal notranslate">
                    <span class="pre">
                     Registry.set_header()
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="toctree-l4">
-                 <a class="reference internal" href="oras.html#oras.provider.Registry.set_token_auth">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Registry.set_token_auth()
                    </span>
                   </code>
                  </a>
@@ -1384,6 +1227,15 @@
                   <code class="docutils literal notranslate">
                    <span class="pre">
                     Registry.upload_manifest()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.version">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.version()
                    </span>
                   </code>
                  </a>
@@ -1466,7 +1318,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 22, 2024.
+              Jun 01, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
