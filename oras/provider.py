@@ -251,12 +251,14 @@ class Registry:
         container: container_type,
         layer: dict,
         do_chunked: bool = False,
+        chunk_size: int = oras.defaults.default_chunksize,
     ) -> requests.Response:
         """
         Prepare and upload a blob.
 
-        Sizes > 1024 are uploaded via a chunked approach (post, patch+, put)
-        and <= 1024 is a single post then put.
+        Large artifacts can be uploaded via a chunked approach (post, patch+, put)
+        to registries that support it. Larger chunks generally give better throughput.
+        Set do_chunked=True for chunked upload.
 
         :param blob: path to blob to upload
         :type blob: str
@@ -264,6 +266,10 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
+        :param do_chunked: if true do chunked blob upload. This allows upload of larger oci artifacts.
+        :type do_chunked: bool
+        :param chunk_size: if true use chunked upload.
+        :type chunk_size: int
         """
         blob = os.path.abspath(blob)
         container = self.get_container(container)
@@ -274,7 +280,12 @@ class Registry:
         if not do_chunked:
             response = self.put_upload(blob, container, layer)
         else:
-            response = self.chunked_upload(blob, container, layer)
+            response = self.chunked_upload(
+                blob,
+                container,
+                layer,
+                chunk_size=chunk_size,
+            )
 
         # If we have an empty layer digest and the registry didn't accept, just return dummy successful response
         if (
@@ -571,6 +582,7 @@ class Registry:
         blob: str,
         container: oras.container.Container,
         layer: dict,
+        chunk_size: int = oras.defaults.default_chunksize,
     ) -> requests.Response:
         """
         Upload via a chunked upload.
@@ -581,6 +593,8 @@ class Registry:
         :type container: oras.container.Container or str
         :param layer: dict from oras.oci.NewLayer
         :type layer: dict
+        :param chunk_size: chunk size in bytes
+        :type chunk_size: int
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
@@ -596,7 +610,9 @@ class Registry:
         # Read the blob in chunks, for each do a patch
         start = 0
         with open(blob, "rb") as fd:
-            for chunk in oras.utils.read_in_chunks(fd):
+            for chunk in oras.utils.read_in_chunks(fd, chunk_size=chunk_size):
+                print("uploading chunk starting at " + str(start))
+
                 if not chunk:
                     break
 
@@ -682,6 +698,8 @@ class Registry:
         annotation_file: Optional[str] = None,
         manifest_annotations: Optional[dict] = None,
         subject: Optional[str] = None,
+        do_chunked: bool = False,
+        chunk_size: int = oras.defaults.default_chunksize,
     ) -> requests.Response:
         """
         Push a set of files to a target
@@ -700,6 +718,10 @@ class Registry:
         :type manifest_annotations: dict
         :param target: target location to push to
         :type target: str
+        :param do_chunked: if true do chunked blob upload
+        :type do_chunked: bool
+        :param chunk_size: chunk size in bytes
+        :type chunk_size: int
         :param subject: optional subject reference
         :type subject: oras.oci.Subject
         """
@@ -759,7 +781,13 @@ class Registry:
             logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
-            response = self.upload_blob(blob, container, layer)
+            response = self.upload_blob(
+                blob,
+                container,
+                layer,
+                do_chunked=do_chunked,
+                chunk_size=chunk_size,
+            )
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
