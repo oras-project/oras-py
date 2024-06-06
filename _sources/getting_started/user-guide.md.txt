@@ -132,7 +132,7 @@ import oras.defaults
 
 layers = []
 for blob in blobs:
-    layer = oras.oci.NewLayer(blob, is_dir=False, media_type="org.dinosaur.tools.blobish")
+    layer = oras.oci.NewLayer(blob, is_dir=False, media_type="application/x-org.dinosaur.tools.blobish")
 
     # This is important so oras clients can derive the relative name you want to download to
     # Using basename assumes a flat directory of files - it doesn't have to be.
@@ -390,7 +390,7 @@ class Registry(oras.provider.Registry):
 
             blob = item.get("path")
             media_type = (
-                item.get("media_type") or "org.dinosaur.tool.datatype"
+                item.get("media_type") or "application/x-org.dinosaur.tool.datatype"
             )
             annots = item.get("annotations") or {}
 
@@ -464,7 +464,7 @@ def push(uri, root):
     for filename in os.listdir(root):
 
         # use some logic here to derive the mediaType
-        media_type = "org.dinosaur.tool.datatype"
+        media_type = "application/x-org.dinosaur.tool.datatype"
 
         # Add some custom annotations!
         size = os.path.getsize(os.path.join(root, filename))  # bytes

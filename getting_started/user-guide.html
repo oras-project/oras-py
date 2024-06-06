@@ -722,7 +722,7 @@ support that!
 
 <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
-    <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">"org.dinosaur.tools.blobish"</span><span class="p">)</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">"application/x-org.dinosaur.tools.blobish"</span><span class="p">)</span>
 
     <span class="c1"># This is important so oras clients can derive the relative name you want to download to</span>
     <span class="c1"># Using basename assumes a flat directory of files - it doesn't have to be.</span>
@@ -1086,7 +1086,7 @@ how to use
 
             <span class="n">blob</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path"</span><span class="p">)</span>
             <span class="n">media_type</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"media_type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"org.dinosaur.tool.datatype"</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"media_type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"application/x-org.dinosaur.tool.datatype"</span>
             <span class="p">)</span>
             <span class="n">annots</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
 
@@ -1163,7 +1163,7 @@ function above to get a client and push! 🎉️
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
 
         <span class="c1"># use some logic here to derive the mediaType</span>
-        <span class="n">media_type</span> <span class="o">=</span> <span class="s2">"org.dinosaur.tool.datatype"</span>
+        <span class="n">media_type</span> <span class="o">=</span> <span class="s2">"application/x-org.dinosaur.tool.datatype"</span>
 
         <span class="c1"># Add some custom annotations!</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>  <span class="c1"># bytes</span>
@@ -1580,7 +1580,7 @@ and working on these docs!
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 01, 2024.
+              Jun 06, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
