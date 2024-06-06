@@ -678,7 +678,7 @@ class Registry:
         config_path: Optional[str] = None,
         disable_path_validation: bool = False,
         files: Optional[List] = None,
-        manifest_config: Optional[dict] = None,
+        manifest_config: Optional[str] = None,
         annotation_file: Optional[str] = None,
         manifest_annotations: Optional[dict] = None,
         subject: Optional[str] = None,
