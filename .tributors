@@ -95,5 +95,9 @@
         "name": "Tom Coufal",
         "bio": "Pushing buttons at @redhat-et",
         "blog": "https://github.com/tumido"
+    },
+    "tarilabs": {
+        "name": "Matteo Mortari",
+        "blog": "https://youtube.com/@MatteoMortari"
     }
 }
