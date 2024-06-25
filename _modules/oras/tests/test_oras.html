@@ -325,9 +325,10 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Login and logout are all we can test with basic auth!</span>
 <span class="sd">    """</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
         <span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span>
+        <span class="n">tls_verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
         <span class="n">password</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
     <span class="p">)</span>
@@ -461,6 +462,40 @@
 <span class="sd">    Test push and pull for directory</span>
 <span class="sd">    """</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Test upload of a directory</span>
+    <span class="n">upload_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s2">"upload_data"</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">upload_dir</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target_dir</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="s2">"upload_data"</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="s2">"artifact.txt"</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="test_directory_push_pull_selfsigned_auth">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_directory_push_pull_selfsigned_auth">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_directory_push_pull_selfsigned_auth</span><span class="p">(</span>
+    <span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target_dir</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Test push and pull for directory using a self-signed cert registry (`tls_verify=False`) and basic auth (`auth_backend="basic"`)</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">auth_backend</span><span class="o">=</span><span class="s2">"basic"</span>
+    <span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span>
+        <span class="n">tls_verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="n">credentials</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="p">[</span><span class="s2">"Status"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Login Succeeded"</span>
 
     <span class="c1"># Test upload of a directory</span>
     <span class="n">upload_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s2">"upload_data"</span><span class="p">)</span>

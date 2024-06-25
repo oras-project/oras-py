@@ -351,6 +351,15 @@
                  </a>
                 </li>
                 <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.tests.test_oras.test_directory_push_pull_selfsigned_auth">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    test_directory_push_pull_selfsigned_auth()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
                  <a class="md-nav__link" href="#oras.tests.test_oras.test_get_delete_tags">
                   <code class="docutils literal notranslate">
                    <span class="pre">
@@ -789,6 +798,80 @@
           <dd>
            <p>
             Test push and pull for directory
+           </p>
+          </dd>
+         </dl>
+         <dl class="py function">
+          <dt class="sig sig-object py" id="oras.tests.test_oras.test_directory_push_pull_selfsigned_auth">
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.tests.test_oras.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             test_directory_push_pull_selfsigned_auth
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              tmp_path
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              registry
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              credentials
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              target_dir
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../_modules/oras/tests/test_oras.html#test_directory_push_pull_selfsigned_auth">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.tests.test_oras.test_directory_push_pull_selfsigned_auth" title="Link to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Test push and pull for directory using a self-signed cert registry (
+            <cite>
+             tls_verify=False
+            </cite>
+            ) and basic auth (
+            <cite>
+             auth_backend=”basic”
+            </cite>
+            )
            </p>
           </dd>
          </dl>
