@@ -805,7 +805,10 @@ class Registry:
 
         # Final upload of the manifest
         manifest["config"] = conf
-        self._check_200_response(self.upload_manifest(manifest, container))
+        response = self.upload_manifest(
+            manifest, container
+        )  # make the returned response from this method, the one pertaining to the uploaded Manifest
+        self._check_200_response(response)
         print(f"Successfully pushed {container}")
         return response
 

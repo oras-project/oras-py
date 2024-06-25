@@ -67,6 +67,28 @@ def test_basic_push_pull(tmp_path, registry, credentials, target):
 
 
 @pytest.mark.with_auth(False)
+def test_basic_push_pul_via_sha_ref(tmp_path, registry, credentials, target):
+    """
+    Basic tests for oras pushing and then pulling with SHA reference
+    """
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    artifact = os.path.join(here, "artifact.txt")
+
+    assert os.path.exists(artifact)
+
+    res = client.push(files=[artifact], target=target)
+    assert res.status_code in [200, 201]
+
+    # Test pulling elsewhere
+    using_ref = f"{registry}/dinosaur/artifact@{res.headers['Docker-Content-Digest']}"
+    files = client.pull(target=using_ref, outdir=tmp_path)
+    assert len(files) == 1
+    assert os.path.basename(files[0]) == "artifact.txt"
+    assert str(tmp_path) in files[0]
+    assert os.path.exists(files[0])
+
+
+@pytest.mark.with_auth(False)
 def test_get_delete_tags(tmp_path, registry, credentials, target):
     """
     Test creationg, getting, and deleting tags.
