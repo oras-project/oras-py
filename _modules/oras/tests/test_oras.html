@@ -370,6 +370,31 @@
 
 
 
+<div class="viewcode-block" id="test_basic_push_pul_via_sha_ref">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_basic_push_pul_via_sha_ref">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_basic_push_pul_via_sha_ref</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Basic tests for oras pushing and then pulling with SHA reference</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">registry</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">artifact</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s2">"artifact.txt"</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">]</span>
+
+    <span class="c1"># Test pulling elsewhere</span>
+    <span class="n">using_ref</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">registry</span><span class="si">}</span><span class="s2">/dinosaur/artifact@</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">'Docker-Content-Digest'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">using_ref</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="s2">"artifact.txt"</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+
 <div class="viewcode-block" id="test_get_delete_tags">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_get_delete_tags">[docs]</a>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -468,7 +493,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 06, 2024.
+              Jun 25, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
