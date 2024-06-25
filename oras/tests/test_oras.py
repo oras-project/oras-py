@@ -151,6 +151,7 @@ def test_directory_push_pull_selfsigned_auth(
     )
     res = client.login(
         hostname=registry,
+        tls_verify=False,
         username=credentials.user,
         password=credentials.password,
     )
