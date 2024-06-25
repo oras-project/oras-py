@@ -39,4 +39,8 @@ class BasicAuth(AuthBackend):
         :param originalResponse: original response to get the Www-Authenticate header
         :type originalResponse: requests.Response
         """
-        return self.get_auth_header(), True
+        result = {}
+        if headers is not None:
+            result.update(headers)
+        result.update(self.get_auth_header())
+        return result, True

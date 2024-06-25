@@ -23,9 +23,13 @@ jobs:
           registry_port: 5000
           with_auth: true
           REGISTRY_AUTH: "{htpasswd: {realm: localhost, path: /etc/docker/registry/auth.htpasswd}}"
+          REGISTRY_HTTP_TLS_CERTIFICATE: "/etc/docker/registry/server.cert"
+          REGISTRY_HTTP_TLS_KEY: "/etc/docker/registry/server.key"
           REGISTRY_STORAGE_DELETE_ENABLED: "true"
         run: |
            htpasswd -cB -b auth.htpasswd myuser mypass
            cp auth.htpasswd /etc/docker/registry/auth.htpasswd
+           apk add openssl
+           openssl req -newkey rsa:4096 -nodes -sha256 -keyout /etc/docker/registry/server.key -x509 -days 365 -subj "/C=IT/ST=Lombardy/L=Milan/O=Acme Org/OU=IT Department/CN=example.com" -out /etc/docker/registry/server.cert
            registry serve /etc/docker/registry/config.yml & sleep 5
            echo $PWD && ls $PWD && make test

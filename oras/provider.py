@@ -953,6 +953,7 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
+            verify=self._tls_verify,
         )
 
         # One retry if 403 denied (need new token?)
@@ -960,11 +961,14 @@ class Registry:
             headers, changed = self.auth.authenticate_request(
                 response, headers, refresh=True
             )
-        return self.session.request(
-            method,
-            url,
-            data=data,
-            json=json,
-            headers=headers,
-            stream=stream,
-        )
+            response = self.session.request(
+                method,
+                url,
+                data=data,
+                json=json,
+                headers=headers,
+                stream=stream,
+                verify=self._tls_verify,
+            )
+
+        return response

@@ -15,6 +15,7 @@ The versions coincide with releases on pip. Only major versions will be released
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
  - refactor of auth to be provided by backend modules (0.2.0)
+   - bugfix maintain requests's verify valorization for all invocations, augment basic auth header to existing headers
  - Allow generating a Subject from a pre-existing Manifest (0.1.30)
  - add option to not refresh headers during the pushing flow, useful for push with basic auth (0.1.29)
  - enable additionalProperties in schema validation (0.1.28)
