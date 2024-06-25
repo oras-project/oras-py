@@ -146,7 +146,7 @@ def test_directory_push_pull_selfsigned_auth(
     Test push and pull for directory using a self-signed cert registry (`tls_verify=False`) and basic auth (`auth_backend="basic"`)
     """
     client = oras.client.OrasClient(
-        hostname=registry, tls_verify=False, auth_backend="basic"
+        hostname=registry, insecure=True, tls_verify=False, auth_backend="basic"
     )
     res = client.login(
         hostname=registry,
