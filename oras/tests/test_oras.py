@@ -25,9 +25,10 @@ def test_login_logout(registry, credentials):
     """
     Login and logout are all we can test with basic auth!
     """
-    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    client = oras.client.OrasClient(hostname=registry, tls_verify=False)
     res = client.login(
         hostname=registry,
+        tls_verify=False,
         username=credentials.user,
         password=credentials.password,
     )
