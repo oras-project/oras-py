@@ -44,7 +44,11 @@ class TokenAuth(AuthBackend):
             self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
     def authenticate_request(
-        self, original: requests.Response, headers: dict, refresh=False, skipAnonToken=False
+        self,
+        original: requests.Response,
+        headers: dict,
+        refresh=False,
+        skipAnonToken=False,
     ):
         """
         Authenticate Request
@@ -102,7 +106,7 @@ class TokenAuth(AuthBackend):
         """
         params = {}
         headers = {}
-        if self._basic_auth: # we exchange the basic auth for the token
+        if self._basic_auth:  # we exchange the basic auth for the token
             headers["Authorization"] = "Basic %s" % self._basic_auth
 
         # Prepare request to retry
