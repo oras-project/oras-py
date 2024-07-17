@@ -82,7 +82,7 @@ def main(args):
     5. We first try using the docker-py login.
     6. If it fails we fall back to custom setting of credentials.
     """
-    client = oras.client.OrasClient(insecre=args.insecure)
+    client = oras.client.OrasClient(insecure=args.insecure)
     print(client.version())
 
     # Other ways to handle login:
