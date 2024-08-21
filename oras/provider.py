@@ -598,6 +598,7 @@ class Registry:
         """
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
+        headers.update(self.headers)
 
         upload_url = f"{self.prefix}://{container.upload_blob_url()}"
         r = self.do_request(upload_url, "POST", headers=headers)
@@ -611,11 +612,6 @@ class Registry:
         start = 0
         with open(blob, "rb") as fd:
             for chunk in oras.utils.read_in_chunks(fd, chunk_size=chunk_size):
-                print("uploading chunk starting at " + str(start))
-
-                if not chunk:
-                    break
-
                 end = start + len(chunk) - 1
                 content_range = "%s-%s" % (start, end)
                 headers = {
@@ -623,13 +619,19 @@ class Registry:
                     "Content-Length": str(len(chunk)),
                     "Content-Type": "application/octet-stream",
                 }
+                headers.update(self.headers)
 
                 # Important to update with auth token if acquired
                 # TODO call to auth here
                 start = end + 1
                 self._check_200_response(
-                    self.do_request(session_url, "PATCH", data=chunk, headers=headers)
+                    r := self.do_request(
+                        session_url, "PATCH", data=chunk, headers=headers
+                    )
                 )
+                session_url = self._get_location(r, container)
+                if not session_url:
+                    raise ValueError(f"Issue retrieving session url: {r.json()}")
 
         # Finally, issue a PUT request to close blob
         session_url = oras.utils.append_url_params(

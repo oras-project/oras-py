@@ -39,7 +39,7 @@ oci_image_index_file = "index.json"
 default_blocksize = 32768
 
 # DefaultChunkSize default size of each chunk when uploading chunked blobs.
-default_chunksize = 16777216
+default_chunksize = 16777216  # 16MB
 
 # what you get for a blank digest, so we don't need to save and recalculate
 blank_hash = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
