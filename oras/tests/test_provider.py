@@ -82,7 +82,7 @@ def test_chunked_push(tmp_path, registry, credentials, target):
     assert oras.utils.get_file_hash(artifact) == oras.utils.get_file_hash(files[0])
 
     # large file upload
-    base_size = oras.defaults.default_chunksize * 4
+    base_size = oras.defaults.default_chunksize * 1024  # 16GB
     tmp_chunked = here / "chunked"
     try:
         subprocess.run(
