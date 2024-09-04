@@ -568,12 +568,14 @@
         <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_chunksize</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Prepare and upload a blob.</span>
 
-<span class="sd">        Sizes &gt; 1024 are uploaded via a chunked approach (post, patch+, put)</span>
-<span class="sd">        and &lt;= 1024 is a single post then put.</span>
+<span class="sd">        Large artifacts can be uploaded via a chunked approach (post, patch+, put)</span>
+<span class="sd">        to registries that support it. Larger chunks generally give better throughput.</span>
+<span class="sd">        Set do_chunked=True for chunked upload.</span>
 
 <span class="sd">        :param blob: path to blob to upload</span>
 <span class="sd">        :type blob: str</span>
@@ -581,6 +583,10 @@
 <span class="sd">        :type container: oras.container.Container or str</span>
 <span class="sd">        :param layer: dict from oras.oci.NewLayer</span>
 <span class="sd">        :type layer: dict</span>
+<span class="sd">        :param do_chunked: if true do chunked blob upload. This allows upload of larger oci artifacts.</span>
+<span class="sd">        :type do_chunked: bool</span>
+<span class="sd">        :param chunk_size: if true use chunked upload.</span>
+<span class="sd">        :type chunk_size: int</span>
 <span class="sd">        """</span>
         <span class="n">blob</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
@@ -591,7 +597,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">do_chunked</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked_upload</span><span class="p">(</span>
+                <span class="n">blob</span><span class="p">,</span>
+                <span class="n">container</span><span class="p">,</span>
+                <span class="n">layer</span><span class="p">,</span>
+                <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="c1"># If we have an empty layer digest and the registry didn't accept, just return dummy successful response</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -897,6 +908,7 @@
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_chunksize</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Upload via a chunked upload.</span>
@@ -907,9 +919,12 @@
 <span class="sd">        :type container: oras.container.Container or str</span>
 <span class="sd">        :param layer: dict from oras.oci.NewLayer</span>
 <span class="sd">        :type layer: dict</span>
+<span class="sd">        :param chunk_size: chunk size in bytes</span>
+<span class="sd">        :type chunk_size: int</span>
 <span class="sd">        """</span>
         <span class="c1"># Start an upload session</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/octet-stream"</span><span class="p">,</span> <span class="s2">"Content-Length"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">}</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
 
         <span class="n">upload_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">upload_blob_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">upload_url</span><span class="p">,</span> <span class="s2">"POST"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
@@ -922,10 +937,7 @@
         <span class="c1"># Read the blob in chunks, for each do a patch</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_in_chunks</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
-                    <span class="k">break</span>
-
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_in_chunks</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">):</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
                 <span class="n">content_range</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
                 <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
@@ -933,13 +945,19 @@
                     <span class="s2">"Content-Length"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)),</span>
                     <span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/octet-stream"</span><span class="p">,</span>
                 <span class="p">}</span>
+                <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
 
                 <span class="c1"># Important to update with auth token if acquired</span>
                 <span class="c1"># TODO call to auth here</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">session_url</span><span class="p">,</span> <span class="s2">"PATCH"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span>
+                        <span class="n">session_url</span><span class="p">,</span> <span class="s2">"PATCH"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
+                <span class="n">session_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_location</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">session_url</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue retrieving session url: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Finally, issue a PUT request to close blob</span>
         <span class="n">session_url</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">append_url_params</span><span class="p">(</span>
@@ -1014,6 +1032,8 @@
         <span class="n">annotation_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">manifest_annotations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">subject</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">do_chunked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_chunksize</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Push a set of files to a target</span>
@@ -1032,6 +1052,10 @@
 <span class="sd">        :type manifest_annotations: dict</span>
 <span class="sd">        :param target: target location to push to</span>
 <span class="sd">        :type target: str</span>
+<span class="sd">        :param do_chunked: if true do chunked blob upload</span>
+<span class="sd">        :type do_chunked: bool</span>
+<span class="sd">        :param chunk_size: chunk size in bytes</span>
+<span class="sd">        :type chunk_size: int</span>
 <span class="sd">        :param subject: optional subject reference</span>
 <span class="sd">        :type subject: oras.oci.Subject</span>
 <span class="sd">        """</span>
@@ -1091,7 +1115,13 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="c1"># Upload the blob layer</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span>
+                <span class="n">blob</span><span class="p">,</span>
+                <span class="n">container</span><span class="p">,</span>
+                <span class="n">layer</span><span class="p">,</span>
+                <span class="n">do_chunked</span><span class="o">=</span><span class="n">do_chunked</span><span class="p">,</span>
+                <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
             <span class="c1"># Do we need to cleanup a temporary targz?</span>
@@ -1328,13 +1358,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 25, 2024.
+              Sep 04, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.3.7.
+      8.0.2.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

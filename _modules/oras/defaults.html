@@ -336,6 +336,9 @@
 <span class="c1"># DefaultBlocksize default size of each slice of bytes read in each write through in gunzipand untar.</span>
 <span class="n">default_blocksize</span> <span class="o">=</span> <span class="mi">32768</span>
 
+<span class="c1"># DefaultChunkSize default size of each chunk when uploading chunked blobs.</span>
+<span class="n">default_chunksize</span> <span class="o">=</span> <span class="mi">16777216</span>  <span class="c1"># 16MB</span>
+
 <span class="c1"># what you get for a blank digest, so we don't need to save and recalculate</span>
 <span class="n">blank_hash</span> <span class="o">=</span> <span class="s2">"sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"</span>
 
@@ -362,13 +365,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 25, 2024.
+              Sep 04, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.3.7.
+      8.0.2.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for

@@ -2284,6 +2284,15 @@
                 </a>
                </li>
                <li class="toctree-l3">
+                <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_chunked_push">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   test_chunked_push()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
                 <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_parse_manifest">
                  <code class="docutils literal notranslate">
                   <span class="pre">
@@ -7325,6 +7334,40 @@ and the registry isn’t necessarily the “remote” endpoint.
                </span>
               </span>
              </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                chunk_size
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                int
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                16777216
+               </span>
+              </span>
+             </em>
              <span class="sig-paren">
               )
              </span>
@@ -7404,6 +7447,18 @@ and the registry isn’t necessarily the “remote” endpoint.
                    dict
                   </em>
                   ) – dict from oras.oci.NewLayer
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   chunk_size
+                  </strong>
+                  (
+                  <em>
+                   int
+                  </em>
+                  ) – chunk size in bytes
                  </p>
                 </li>
                </ul>
@@ -8924,6 +8979,74 @@ and the registry isn’t necessarily the “remote” endpoint.
                </span>
               </span>
              </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                do_chunked
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                bool
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                False
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                chunk_size
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                int
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                16777216
+               </span>
+              </span>
+             </em>
              <span class="sig-paren">
               )
              </span>
@@ -9043,6 +9166,30 @@ and the registry isn’t necessarily the “remote” endpoint.
                    str
                   </em>
                   ) – target location to push to
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   do_chunked
+                  </strong>
+                  (
+                  <em>
+                   bool
+                  </em>
+                  ) – if true do chunked blob upload
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   chunk_size
+                  </strong>
+                  (
+                  <em>
+                   int
+                  </em>
+                  ) – chunk size in bytes
                  </p>
                 </li>
                 <li>
@@ -9443,6 +9590,40 @@ and the registry isn’t necessarily the “remote” endpoint.
                </span>
               </span>
              </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                chunk_size
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                int
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                16777216
+               </span>
+              </span>
+             </em>
              <span class="sig-paren">
               )
              </span>
@@ -9472,8 +9653,9 @@ and the registry isn’t necessarily the “remote” endpoint.
               Prepare and upload a blob.
              </p>
              <p>
-              Sizes &gt; 1024 are uploaded via a chunked approach (post, patch+, put)
-and &lt;= 1024 is a single post then put.
+              Large artifacts can be uploaded via a chunked approach (post, patch+, put)
+to registries that support it. Larger chunks generally give better throughput.
+Set do_chunked=True for chunked upload.
              </p>
              <dl class="field-list simple">
               <dt class="field-odd">
@@ -9526,6 +9708,30 @@ and &lt;= 1024 is a single post then put.
                    dict
                   </em>
                   ) – dict from oras.oci.NewLayer
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   do_chunked
+                  </strong>
+                  (
+                  <em>
+                   bool
+                  </em>
+                  ) – if true do chunked blob upload. This allows upload of larger oci artifacts.
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   chunk_size
+                  </strong>
+                  (
+                  <em>
+                   int
+                  </em>
+                  ) – if true use chunked upload.
                  </p>
                 </li>
                </ul>
@@ -9901,13 +10107,13 @@ and &lt;= 1024 is a single post then put.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 25, 2024.
+              Sep 04, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      7.3.7.
+      8.0.2.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
