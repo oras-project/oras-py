@@ -1,28 +1,28 @@
 name: Oras Python Tests
 on:
-  pull_request: []
+  pull_request:
 
 jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Check Spelling
-      uses: crate-ci/typos@7ad296c72fa8265059cc03d1eda562fbdfcd6df2 # v1.9.0
-      with:
-        files: ./docs ./README.md
+      - uses: actions/checkout@v4
+      - name: Check Spelling
+        uses: crate-ci/typos@7ad296c72fa8265059cc03d1eda562fbdfcd6df2 # v1.9.0
+        with:
+          files: ./docs ./README.md
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.11
-    - name: Lint Oras Python
-      run: |
-        python --version
-        python3 -m pip install pre-commit
-        python3 -m pip install black
-        make develop
-        make lint
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Lint Oras Python
+        run: |
+          python --version
+          python3 -m pip install pre-commit
+          python3 -m pip install black
+          make develop
+          make lint
 
   test-oras-py:
     runs-on: ubuntu-latest
@@ -30,18 +30,53 @@ jobs:
       registry:
         image: ghcr.io/oras-project/registry:latest
         ports:
-        - 5000:5000
+          - 5000:5000
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.11
-    - name: Test Oras Python
-      env:
-        registry_host: localhost
-        registry_port: ${{ job.services.registry.ports[5000] }}
-        REGISTRY_STORAGE_DELETE_ENABLED: "true"
-      run: |
-        make install
-        make test
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Make space for large files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo apt-get remove -y firefox || true
+          sudo apt-get remove -y google-chrome-stable || true
+          sudo apt purge openjdk-* || echo "OpenJDK is not installed"
+          sudo apt remove --autoremove openjdk-*  || echo "OpenJDK is not installed"
+          sudo apt purge oracle-java* || echo "Oracle Java is not installed"
+          sudo apt remove --autoremove adoptopenjdk-* || echo "Adopt open JDK is not installed"
+          sudo apt-get remove -y ant || echo "ant is not installed"
+          sudo rm -rf /opt/hostedtoolcache/Java_Adopt_jdk || true
+          sudo apt-get remove -y podman || echo "Podman is not installed"
+          sudo apt-get remove -y buildah || echo "Buidah is not installed"
+          sudo apt-get remove -y esl-erlang || echo "erlang is not installed"
+          sudo rm -rf /opt/google
+          sudo rm -rf /usr/share/az* /opt/az || true
+          sudo rm -rf /opt/microsoft
+          sudo rm -rf /opt/hostedtoolcache/Ruby
+          sudo apt-get remove -y swift || echo "swift is not installed"
+          sudo apt-get remove -y swig || echo "swig is not installed"
+          sudo apt-get remove -y texinfo || echo "texinfo is not installed"
+          sudo apt-get remove -y texlive || echo "texlive is not installed"
+          sudo apt-get remove -y r-base-core r-base || echo "R is not installed"
+          sudo rm -rf /opt/R
+          sudo rm -rf /usr/share/R
+          sudo rm -rf /opt/*.zip
+          sudo rm -rf /opt/*.tar.gz
+          sudo rm -rf /usr/share/*.zip
+          sudo rm -rf /usr/share/*.tar.gz
+          sudo rm -rf /opt/hhvm
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /opt/hostedtoolcache/node
+          sudo apt-get autoremove
+      - name: Test Oras Python
+        env:
+          registry_host: localhost
+          registry_port: ${{ job.services.registry.ports[5000] }}
+          REGISTRY_STORAGE_DELETE_ENABLED: "true"
+        run: |
+          make install
+          make test

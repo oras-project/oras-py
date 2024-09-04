@@ -3,6 +3,7 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,7 @@ import oras.oci
 import oras.provider
 import oras.utils
 
-here = os.path.abspath(os.path.dirname(__file__))
+here = Path(__file__).resolve().parent
 
 
 @pytest.mark.with_auth(False)
@@ -60,6 +61,60 @@ def test_annotated_registry_push(tmp_path, registry, credentials, target):
         res = client.push(
             files=[artifact], target=target, annotation_file=annotation_file
         )
+
+
+@pytest.mark.with_auth(False)
+def test_chunked_push(tmp_path, registry, credentials, target):
+    """
+    Basic tests for oras chunked push
+    """
+    # Direct access to registry functions
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    artifact = os.path.join(here, "artifact.txt")
+
+    assert os.path.exists(artifact)
+
+    res = client.push(files=[artifact], target=target, do_chunked=True)
+    assert res.status_code in [200, 201, 202]
+
+    files = client.pull(target, outdir=tmp_path)
+    assert str(tmp_path / "artifact.txt") in files
+    assert oras.utils.get_file_hash(artifact) == oras.utils.get_file_hash(files[0])
+
+    # large file upload
+    base_size = oras.defaults.default_chunksize * 1024  # 16GB
+    tmp_chunked = here / "chunked"
+    try:
+        subprocess.run(
+            [
+                "dd",
+                "if=/dev/null",
+                f"of={tmp_chunked}",
+                "bs=1",
+                "count=0",
+                f"seek={base_size}",
+            ],
+        )
+
+        res = client.push(
+            files=[tmp_chunked],
+            target=target,
+            do_chunked=True,
+        )
+        assert res.status_code in [200, 201, 202]
+
+        files = client.pull(target, outdir=tmp_path / "download")
+        download = str(tmp_path / "download/chunked")
+        assert download in files
+        assert oras.utils.get_file_hash(str(tmp_chunked)) == oras.utils.get_file_hash(
+            download
+        )
+    finally:
+        tmp_chunked.unlink()
+
+    # File that doesn't exist
+    with pytest.raises(FileNotFoundError):
+        res = client.push(files=[tmp_path / "none"], target=target)
 
 
 def test_parse_manifest(registry):
