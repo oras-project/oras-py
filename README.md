@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![ORAS Logo](https://raw.githubusercontent.com/oras-project/oras-www/main/static/img/oras.png)
@@ -53,6 +53,9 @@ tool to generate a contributors graphic below.
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/my5cents"><img src="https://avatars.githubusercontent.com/u/4820203?v=4?s=100" width="100px;" alt="my5cents"/><br /><sub><b>my5cents</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=my5cents" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tumido"><img src="https://avatars.githubusercontent.com/u/7453394?v=4?s=100" width="100px;" alt="Tom Coufal"/><br /><sub><b>Tom Coufal</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=tumido" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://youtube.com/@MatteoMortari"><img src="https://avatars.githubusercontent.com/u/1699252?v=4?s=100" width="100px;" alt="Matteo Mortari"/><br /><sub><b>Matteo Mortari</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=tarilabs" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="crosscat.me"><img src="https://avatars.githubusercontent.com/u/39812919?v=4?s=100" width="100px;" alt="Isabella Basso"/><br /><sub><b>Isabella Basso</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=isinyaaa" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
