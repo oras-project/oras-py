@@ -23,15 +23,14 @@ def iter_localhosts(name: str):
         yield name
 
 
-def find_docker_config(exists: bool = True):
+def find_docker_config():
     """
     Return the docker default config path.
     """
     path = os.path.expanduser("~/.docker/config.json")
 
     # Allow the caller to request the path regardless of existing
-    if os.path.exists(path) or not exists:
-        return path
+    return path if os.path.exists(path) else None
 
 
 def append_url_params(url: str, params: dict) -> str:

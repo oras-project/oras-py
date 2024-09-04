@@ -3,7 +3,7 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import requests
-
+from typing import Optional, Tuple
 import oras.auth.utils as auth_utils
 from oras.logger import logger
 
@@ -15,9 +15,9 @@ class TokenAuth(AuthBackend):
     Token (OAuth2) style auth.
     """
 
-    def __init__(self):
+    def __init__(self, session: requests.Session):
         self.token = None
-        super().__init__()
+        super().__init__(session=session)
 
     def _logout(self):
         self.token = None
@@ -44,8 +44,11 @@ class TokenAuth(AuthBackend):
             self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
     def authenticate_request(
-        self, original: requests.Response, headers: dict, refresh=False
-    ):
+        self,
+        original: requests.Response,
+        headers: Optional[dict[str, str]] = None,
+        refresh=False,
+    ) -> Tuple[dict[str, str], bool]:
         """
         Authenticate Request
         Given a response, look for a Www-Authenticate header to parse.
@@ -55,6 +58,8 @@ class TokenAuth(AuthBackend):
         :param original: original response to get the Www-Authenticate header
         :type original: requests.Response
         """
+        _headers = headers or {}
+
         if refresh:
             self.token = None
 
@@ -63,12 +68,12 @@ class TokenAuth(AuthBackend):
             logger.debug(
                 "Www-Authenticate not found in original response, cannot authenticate."
             )
-            return headers, False
+            return _headers, False
 
         # If we have a token, set auth header (base64 encoded user/pass)
         if self.token:
-            headers["Authorization"] = "Bearer %s" % self.token
-            return headers, True
+            _headers["Authorization"] = "Bearer %s" % self.token
+            return _headers, True
 
         h = auth_utils.parse_auth_header(authHeaderRaw)
 
@@ -78,23 +83,23 @@ class TokenAuth(AuthBackend):
         if anon_token:
             logger.debug("Successfully obtained anonymous token!")
             self.token = anon_token
-            headers["Authorization"] = "Bearer %s" % self.token
-            return headers, True
+            _headers["Authorization"] = "Bearer %s" % self.token
+            return _headers, True
 
         # Next try for logged in token
         token = self.request_token(h)
         if token:
             self.token = token
-            headers["Authorization"] = "Bearer %s" % self.token
-            return headers, True
+            _headers["Authorization"] = "Bearer %s" % self.token
+            return _headers, True
 
         logger.error(
             "This endpoint requires a token. Please use "
             "basic auth with a username or password."
         )
-        return headers, False
+        return _headers, False
 
-    def request_token(self, h: auth_utils.authHeader) -> bool:
+    def request_token(self, h: auth_utils.authHeader):
         """
         Request an authenticated token and save for later.s
         """
@@ -113,16 +118,18 @@ class TokenAuth(AuthBackend):
                 }
             )
 
+        assert h.realm is not None, "realm must be defined"
+
         # Ensure the realm starts with http
-        if not h.realm.startswith("http"):  # type: ignore
-            h.realm = f"{self.prefix}://{h.realm}"
+        if not h.realm.startswith("http"):
+            h.realm = f"http://{h.realm}"  # TODO: Should this be htts
 
         # If the www-authenticate included a scope, honor it!
         if h.scope:
             logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
-        authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
+        authResponse = self.session.get(h.realm, headers=headers, params=params)
         if authResponse.status_code != 200:
             logger.debug(f"Auth response was not successful: {authResponse.text}")
             return
@@ -131,11 +138,9 @@ class TokenAuth(AuthBackend):
         info = authResponse.json()
         return info.get("token") or info.get("access_token")
 
-    def request_anonymous_token(self, h: auth_utils.authHeader) -> bool:
+    def request_anonymous_token(self, h: auth_utils.authHeader) -> Optional[str]:
         """
         Given no basic auth, fall back to trying to request an anonymous token.
-
-        Returns: boolean if headers have been updated with token.
         """
         if not h.realm:
             logger.debug("Request anonymous token: no realm provided, exiting early")

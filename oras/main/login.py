@@ -33,12 +33,11 @@ class DockerClient:
         :param dockercfg_str: docker config path
         :type dockercfg_str: list
         """
-        if not dockercfg_path:
-            dockercfg_path = oras.utils.find_docker_config(exists=False)
-        if os.path.exists(dockercfg_path):  # type: ignore
-            cfg = oras.utils.read_json(dockercfg_path)  # type: ignore
+        _dockercfg_path = dockercfg_path or "~/.docker/config.json"
+        if os.path.exists(_dockercfg_path):
+            cfg = oras.utils.read_json(_dockercfg_path)
         else:
-            oras.utils.mkdir_p(os.path.dirname(dockercfg_path))  # type: ignore
+            oras.utils.mkdir_p(os.path.dirname(_dockercfg_path))
             cfg = {"auths": {}}
         if registry in cfg["auths"]:
             cfg["auths"][registry]["auth"] = auth_utils.get_basic_auth(
@@ -48,5 +47,5 @@ class DockerClient:
             cfg["auths"][registry] = {
                 "auth": auth_utils.get_basic_auth(username, password)
             }
-        oras.utils.write_json(cfg, dockercfg_path)  # type: ignore
+        oras.utils.write_json(cfg, _dockercfg_path)
         return {"Status": "Login Succeeded"}

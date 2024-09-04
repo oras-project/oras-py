@@ -2,37 +2,49 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-
-from typing import Optional
+import abc
+from typing import Dict, Optional, Tuple
 
 import oras.auth.utils as auth_utils
 import oras.container
-import oras.decorator as decorator
 from oras.logger import logger
-from oras.types import container_type
+import oras.utils
+
+import requests
 
 
-class AuthBackend:
+class AuthBackend(abc.ABC):
     """
     Generic (and default) auth backend.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, session: requests.Session):
         self._auths: dict = {}
+        self.session = session
+        self.headers: Dict[str, str] = {}
+
+    @abc.abstractmethod
+    def authenticate_request(
+        self,
+        original: requests.Response,
+        headers: Optional[dict[str, str]] = None,
+        refresh=False,
+    ) -> Tuple[dict[str, str], bool]:
+        pass
+
+    def set_header(self, name: str, value: str):
+        """
+        Courtesy function to set a header
+
+        :param name: header name to set
+        :type name: str
+        :param value: header value to set
+        :type value: str
+        """
+        self.headers.update({name: value})
 
     def get_auth_header(self):
         raise NotImplementedError
-
-    def get_container(self, name: container_type) -> oras.container.Container:
-        """
-        Courtesy function to get a container from a URI.
-
-        :param name: unique resource identifier to parse
-        :type name: oras.container.Container or str
-        """
-        if isinstance(name, oras.container.Container):
-            return name
-        return oras.container.Container(name, registry=self.hostname)
 
     def logout(self, hostname: str):
         """
@@ -81,8 +93,9 @@ class AuthBackend:
             return True
         return False
 
-    @decorator.ensure_container
-    def load_configs(self, container: container_type, configs: Optional[list] = None):
+    def load_configs(
+        self, container: oras.container.Container, configs: Optional[list] = None
+    ):
         """
         Load configs to discover credentials for a specific container.
 
@@ -96,7 +109,7 @@ class AuthBackend:
         """
         if not self._auths:
             self._auths = auth_utils.load_configs(configs)
-        for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
+        for registry in oras.utils.iter_localhosts(container.registry):
             if self._load_auth(registry):
                 return
 
@@ -120,37 +133,3 @@ class AuthBackend:
         :type password: str
         """
         self._basic_auth = auth_utils.get_basic_auth(username, password)
-
-    def request_anonymous_token(self, h: auth_utils.authHeader, headers: dict) -> bool:
-        """
-        Given no basic auth, fall back to trying to request an anonymous token.
-
-        Returns: boolean if headers have been updated with token.
-        """
-        if not h.realm:
-            logger.debug("Request anonymous token: no realm provided, exiting early")
-            return headers, False
-
-        params = {}
-        if h.service:
-            params["service"] = h.service
-        if h.scope:
-            params["scope"] = h.scope
-
-        logger.debug(f"Final params are {params}")
-        response = self.session.request("GET", h.realm, params=params)
-        if response.status_code != 200:
-            logger.debug(f"Response for anon token failed: {response.text}")
-            return headers, False
-
-        # From https://docs.docker.com/registry/spec/auth/token/ section
-        # We can get token OR access_token OR both (when both they are identical)
-        data = response.json()
-        token = data.get("token") or data.get("access_token")
-
-        # Update the headers but not self.token (expects Basic)
-        if token:
-            headers["Authorization"] = {"Authorization": "Bearer %s" % token}
-
-        logger.debug("Warning: no token or access_token present in response.")
-        return headers, False

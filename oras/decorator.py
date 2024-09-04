@@ -3,81 +3,43 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import time
-from functools import partial, update_wrapper
+import functools
 
 from oras.logger import logger
+from oras.provider import Registry
 
 
-class Decorator:
-    """
-    Shared parent decorator class
-    """
-
-    def __init__(self, func):
-        update_wrapper(self, func)
-        self.func = func
-
-    def __get__(self, obj, objtype):
-        return partial(self.__call__, obj)
-
-
-class ensure_container(Decorator):
-    """
-    Ensure the first argument is a container, and not a string.
-    """
-
-    def __call__(self, cls, *args, **kwargs):
+def ensure_container(fn):
+    @functools.wraps(fn)
+    def wrapper(self: Registry, *args, **kwargs):
         if "container" in kwargs:
-            kwargs["container"] = cls.get_container(kwargs["container"])
+            kwargs["container"] = self.get_container(kwargs["container"])
         elif args:
-            container = cls.get_container(args[0])
+            container = self.get_container(args[0])
             args = (container, *args[1:])
-        return self.func(cls, *args, **kwargs)
+        return fn(self, *args, **kwargs)
+
+    return wrapper
 
 
-class classretry(Decorator):
+def retry(func):
     """
-    Retry a function that is part of a class
+    A simple retry decorator
     """
 
-    def __init__(self, func, attempts=5, timeout=2):
-        super().__init__(func)
-        self.attempts = attempts
-        self.timeout = timeout
-
-    def __call__(self, cls, *args, **kwargs):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        attempts = 5
+        timeout = 2
         attempt = 0
-        attempts = self.attempts
-        timeout = self.timeout
         while attempt < attempts:
             try:
-                return self.func(cls, *args, **kwargs)
+                return func(*args, **kwargs)
             except Exception as e:
                 sleep = timeout + 3**attempt
                 logger.info(f"Retrying in {sleep} seconds - error: {e}")
                 time.sleep(sleep)
                 attempt += 1
-        return self.func(cls, *args, **kwargs)
+        return func(*args, **kwargs)
 
-
-def retry(attempts, timeout=2):
-    """
-    A simple retry decorator
-    """
-
-    def decorator(func):
-        def inner(*args, **kwargs):
-            attempt = 0
-            while attempt < attempts:
-                try:
-                    return func(*args, **kwargs)
-                except Exception as e:
-                    sleep = timeout + 3**attempt
-                    logger.info(f"Retrying in {sleep} seconds - error: {e}")
-                    time.sleep(sleep)
-                    attempt += 1
-            return func(*args, **kwargs)
-
-        return inner
-
-    return decorator
+    return wrapper

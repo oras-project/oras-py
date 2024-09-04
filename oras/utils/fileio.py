@@ -270,7 +270,7 @@ def read_in_chunks(image: Union[TextIO, io.BufferedReader], chunk_size: int = 10
         data = image.read(chunk_size)
         if not data:
             break
-        yield data
+        yield data.encode() if isinstance(data, str) else data
 
 
 def write_json(json_obj: dict, filename: str, mode: str = "w") -> str:

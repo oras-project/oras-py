@@ -18,17 +18,16 @@ def load_configs(configs: Optional[List[str]] = None):
     :param configs: list of configuration paths to load, defaults to None
     :type configs: optional list
     """
-    configs = configs or []
+    _configs = configs or []
     default_config = oras.utils.find_docker_config()
 
     # Add the default docker config
     if default_config:
-        configs.append(default_config)
-    configs = set(configs)  # type: ignore
+        _configs.append(default_config)
 
     # Load configs until we find our registry hostname
     auths = {}
-    for config in configs:
+    for config in set(_configs):
         if not os.path.exists(config):
             logger.warning(f"{config} does not exist.")
             continue
