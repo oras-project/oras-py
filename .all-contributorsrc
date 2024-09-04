@@ -240,6 +240,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/1699252?v=4"
             ]
+        },
+        {
+            "login": "isinyaaa",
+            "name": "Isabella Basso",
+            "contributions": [
+                "code"
+            ],
+            "profile": "crosscat.me",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/39812919?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
