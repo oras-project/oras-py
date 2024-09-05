@@ -124,7 +124,7 @@ class TokenAuth(AuthBackend):
 
         # Ensure the realm starts with http
         if not h.realm.startswith("http"):
-            h.realm = f"http://{h.realm}"  # TODO: Should this be htts
+            h.realm = f"http://{h.realm}"  # TODO: Should this be https
 
         # If the www-authenticate included a scope, honor it!
         if h.scope:
