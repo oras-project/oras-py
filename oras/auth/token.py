@@ -2,8 +2,10 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-import requests
 from typing import Optional, Tuple
+
+import requests
+
 import oras.auth.utils as auth_utils
 from oras.logger import logger
 

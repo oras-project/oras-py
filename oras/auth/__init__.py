@@ -1,4 +1,5 @@
 from typing import Dict, Literal, Optional
+
 import requests
 
 from oras.auth.base import AuthBackend

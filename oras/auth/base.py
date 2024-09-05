@@ -5,12 +5,12 @@ __license__ = "Apache-2.0"
 import abc
 from typing import Dict, Optional, Tuple
 
+import requests
+
 import oras.auth.utils as auth_utils
 import oras.container
-from oras.logger import logger
 import oras.utils
-
-import requests
+from oras.logger import logger
 
 
 class AuthBackend(abc.ABC):

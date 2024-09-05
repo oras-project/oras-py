@@ -1,12 +1,18 @@
+from __future__ import annotations
+
 __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-import time
+
 import functools
+import time
+from typing import TYPE_CHECKING
 
 from oras.logger import logger
-from oras.provider import Registry
+
+if TYPE_CHECKING:
+    from oras.provider import Registry
 
 
 def ensure_container(fn):
