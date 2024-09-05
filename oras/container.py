@@ -108,7 +108,7 @@ class Container:
             raise ValueError(
                 f"{name} does not match a recognized registry unique resource identifier. Try <registry>/<namespace>/<repository>:<tag|digest>"
             )
-        items = match.groupdict()  # type: ignore
+        items = match.groupdict()
         self.repository = items["repository"]
         self.registry = items["registry"] or self.registry
         self.namespace = items["namespace"]

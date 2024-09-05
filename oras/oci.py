@@ -29,7 +29,7 @@ class Annotations:
     Create a new set of annotations
     """
 
-    def __init__(self, filename=None):
+    def __init__(self, filename: Optional[str] = None):
         self.lookup = {}
         self.load(filename)
 
@@ -41,7 +41,7 @@ class Annotations:
             self.lookup[section] = {}
         self.lookup[section][key] = value
 
-    def load(self, filename: str):
+    def load(self, filename: Optional[str]):
         if filename and os.path.exists(filename):
             self.lookup = oras.utils.read_json(filename)
         if filename and not os.path.exists(filename):

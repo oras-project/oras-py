@@ -6,6 +6,7 @@ import copy
 import os
 import sys
 import urllib
+import urllib.parse
 from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
 from http.cookiejar import DefaultCookiePolicy
@@ -23,6 +24,7 @@ import oras.main.login as login
 import oras.oci
 import oras.schemas
 import oras.utils
+import oras.version
 from oras.logger import logger
 from oras.types import container_type
 from oras.utils.fileio import PathAndOptionalContent
@@ -49,7 +51,7 @@ class Registry:
         hostname: Optional[str] = None,
         insecure: bool = False,
         tls_verify: bool = True,
-        auth_backend: str = "token",
+        auth_backend: oras.auth.AuthBackendName = "token",
     ):
         """
         Create an ORAS client.
@@ -86,7 +88,7 @@ class Registry:
     def __str__(self) -> str:
         return "[oras-client]"
 
-    def version(self, return_items: bool = False) -> Union[dict, str]:
+    def version(self, return_items: bool = False) -> Union[dict[str, str], str]:
         """
         Get the version of the client.
 
@@ -109,7 +111,7 @@ class Registry:
         # Otherwise return a string that can be printed
         return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
 
-    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
+    def delete_tags(self, name: str, tags: Union[str, List[str]]) -> List[str]:
         """
         Delete one or more tags for a unique resource identifier.
 
@@ -120,10 +122,9 @@ class Registry:
         :param tags: single or multiple tags name to delete
         :type N: string or list
         """
-        if isinstance(tags, str):
-            tags = [tags]
+        _tags = [tags] if isinstance(tags, str) else tags
         deleted = []
-        for tag in tags:
+        for tag in _tags:
             if self.delete_tag(name, tag):
                 deleted.append(tag)
         return deleted
@@ -199,10 +200,10 @@ class Registry:
         # Fallback to manual login
         except Exception:
             return login.DockerClient().login(
-                username=username,  # type: ignore
-                password=password,  # type: ignore
+                username=username,
+                password=password,
                 registry=hostname,  # type: ignore
-                dockercfg_path=config_path,
+                dockercfg_path=config_path,  # type: ignore
             )
 
     def set_header(self, name: str, value: str):
@@ -306,9 +307,10 @@ class Registry:
         :param tag: name of tag to delete
         :type tag: str
         """
+        assert isinstance(container, oras.container.Container)
         logger.debug(f"Deleting tag {tag} for {container}")
 
-        head_url = f"{self.prefix}://{container.manifest_url(tag)}"  # type: ignore
+        head_url = f"{self.prefix}://{container.manifest_url(tag)}"
 
         # get digest of manifest to delete
         response = self.do_request(
@@ -324,14 +326,14 @@ class Registry:
         if not digest:
             raise RuntimeError("Expected to find Docker-Content-Digest header.")
 
-        delete_url = f"{self.prefix}://{container.manifest_url(digest)}"  # type: ignore
+        delete_url = f"{self.prefix}://{container.manifest_url(digest)}"
         response = self.do_request(delete_url, "DELETE")
         if response.status_code != 202:
             raise RuntimeError("Delete was not successful: {response.json()}")
         return True
 
     @decorator.ensure_container
-    def get_tags(self, container: container_type, N=None) -> List[str]:
+    def get_tags(self, container: container_type, N: Optional[int] = None) -> List[str]:
         """
         Retrieve tags for a package.
 
@@ -340,18 +342,21 @@ class Registry:
         :param N: limit number of tags, None for all (default)
         :type N: Optional[int]
         """
+        assert isinstance(container, oras.container.Container)
         retrieve_all = N is None
-        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"
         tags: List[str] = []
 
-        def extract_tags(response: requests.Response):
+        def extract_tags(response: requests.Response) -> bool:
             """
             Determine if we should continue based on new tags and under limit.
             """
             json = response.json()
             new_tags = json.get("tags") or []
             tags.extend(new_tags)
-            return len(new_tags) and (retrieve_all or len(tags) < N)
+            if not len(tags) > 0:
+                return False
+            return retrieve_all if N is None else len(tags) < N
 
         self._do_paginated_request(tags_url, callable=extract_tags)
 
@@ -414,8 +419,9 @@ class Registry:
         :param head: use head to determine if blob exists
         :type head: bool
         """
+        assert isinstance(container, oras.container.Container)
         method = "GET" if not head else "HEAD"
-        blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
+        blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"
         return self.do_request(blob_url, method, headers=self.headers, stream=stream)
 
     def get_container(self, name: container_type) -> oras.container.Container:
@@ -699,7 +705,7 @@ class Registry:
         manifest_config: Optional[str] = None,
         annotation_file: Optional[str] = None,
         manifest_annotations: Optional[dict] = None,
-        subject: Optional[str] = None,
+        subject: Optional[oras.oci.Subject] = None,
         do_chunked: bool = False,
         chunk_size: int = oras.defaults.default_chunksize,
     ) -> requests.Response:
@@ -729,7 +735,9 @@ class Registry:
         """
         container = self.get_container(target)
         files = files or []
-        self.auth.load_configs(container, configs=config_path)
+        self.auth.load_configs(
+            container, configs=[config_path] if config_path else None
+        )
 
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
@@ -808,7 +816,7 @@ class Registry:
             manifest["annotations"] = manifest_annots
 
         if subject:
-            manifest["subject"] = asdict(subject)
+            manifest["subject"] = asdict(subject)  # type: ignore
 
         # Prepare the manifest config (temporary or one provided)
         config_annots = annotset.get_annotations("$config")
@@ -867,7 +875,9 @@ class Registry:
         :type target: str
         """
         container = self.get_container(target)
-        self.auth.load_configs(container, configs=config_path)
+        self.auth.load_configs(
+            container, configs=[config_path] if config_path else None
+        )
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
         overwrite = overwrite
@@ -920,27 +930,28 @@ class Registry:
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
         """
+        assert isinstance(container, oras.container.Container)
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
 
-        get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
+        get_manifest = f"{self.prefix}://{container.manifest_url()}"
         response = self.do_request(get_manifest, "GET", headers=headers)
         self._check_200_response(response)
         manifest = response.json()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         return manifest
 
-    @decorator.classretry
+    @decorator.retry
     def do_request(
         self,
         url: str,
         method: str = "GET",
         data: Optional[Union[dict, bytes]] = None,
-        headers: Optional[dict] = None,
+        headers: Optional[dict[str, str]] = None,
         json: Optional[dict] = None,
         stream: bool = False,
-    ):
+    ) -> requests.Response:
         """
         Do a request. This is a wrapper around requests to handle retry auth.
 
