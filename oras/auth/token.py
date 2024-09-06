@@ -57,7 +57,6 @@ class TokenAuth(AuthBackend):
         """
         if refresh:
             self.token = None
-
         authHeaderRaw = original.headers.get("Www-Authenticate")
         if not authHeaderRaw:
             logger.debug(
@@ -122,7 +121,11 @@ class TokenAuth(AuthBackend):
             logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
+        # Set Basic Auth to receive token
+        headers["Authorization"] = "Basic %s" % self._basic_auth
+
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
+
         if authResponse.status_code != 200:
             logger.debug(f"Auth response was not successful: {authResponse.text}")
             return
