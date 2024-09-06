@@ -34,14 +34,14 @@ class TokenAuth(AuthBackend):
     def get_auth_header(self):
         return {"Authorization": "Bearer %s" % self.token}
 
-    def reset_basic_auth(self):
+    def reset_basic_auth(self) -> str:
         """
         Given we have basic auth, reset it.
         """
         if "Authorization" in self.headers:
             del self.headers["Authorization"]
         if self._basic_auth:
-            self.set_header("Authorization", "Basic %s" % self._basic_auth)
+            return "Basic %s" % self._basic_auth
 
     def authenticate_request(
         self, original: requests.Response, headers: dict, refresh=False
@@ -57,7 +57,6 @@ class TokenAuth(AuthBackend):
         """
         if refresh:
             self.token = None
-
         authHeaderRaw = original.headers.get("Www-Authenticate")
         if not authHeaderRaw:
             logger.debug(
@@ -66,6 +65,7 @@ class TokenAuth(AuthBackend):
             return headers, False
 
         # If we have a token, set auth header (base64 encoded user/pass)
+        # Else if
         if self.token:
             headers["Authorization"] = "Bearer %s" % self.token
             return headers, True
@@ -122,7 +122,11 @@ class TokenAuth(AuthBackend):
             logger.debug(f"Scope: {h.scope}")
             params["scope"] = h.scope
 
+        # Set Basic Auth to receive token
+        headers["Authorization"] = "Basic %s" % self._basic_auth
+
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
+
         if authResponse.status_code != 200:
             logger.debug(f"Auth response was not successful: {authResponse.text}")
             return
@@ -156,6 +160,7 @@ class TokenAuth(AuthBackend):
         # From https://docs.docker.com/registry/spec/auth/token/ section
         # We can get token OR access_token OR both (when both they are identical)
         data = response.json()
+        print("data: %s" % data)
         token = data.get("token") or data.get("access_token")
 
         # Update the headers but not self.token (expects Basic)
