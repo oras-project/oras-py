@@ -65,7 +65,6 @@ class TokenAuth(AuthBackend):
             return headers, False
 
         # If we have a token, set auth header (base64 encoded user/pass)
-        # Else if
         if self.token:
             headers["Authorization"] = "Bearer %s" % self.token
             return headers, True
@@ -160,7 +159,6 @@ class TokenAuth(AuthBackend):
         # From https://docs.docker.com/registry/spec/auth/token/ section
         # We can get token OR access_token OR both (when both they are identical)
         data = response.json()
-        print("data: %s" % data)
         token = data.get("token") or data.get("access_token")
 
         # Update the headers but not self.token (expects Basic)
