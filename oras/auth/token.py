@@ -34,14 +34,14 @@ class TokenAuth(AuthBackend):
     def get_auth_header(self):
         return {"Authorization": "Bearer %s" % self.token}
 
-    def reset_basic_auth(self) -> str:
+    def reset_basic_auth(self):
         """
         Given we have basic auth, reset it.
         """
         if "Authorization" in self.headers:
             del self.headers["Authorization"]
         if self._basic_auth:
-            return "Basic %s" % self._basic_auth
+            self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
     def authenticate_request(
         self, original: requests.Response, headers: dict, refresh=False
