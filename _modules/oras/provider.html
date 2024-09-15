@@ -1311,7 +1311,7 @@
         <span class="c1"># Otherwise, authenticate the request and retry</span>
         <span class="n">headers</span><span class="p">,</span> <span class="n">changed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">authenticate_request</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">"Cannot respond to request for authentication."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot respond to request for authentication."</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
             <span class="n">method</span><span class="p">,</span>
             <span class="n">url</span><span class="p">,</span>
@@ -1358,7 +1358,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 06, 2024.
+              Sep 15, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
