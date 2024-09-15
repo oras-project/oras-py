@@ -975,7 +975,7 @@ class Registry:
         # Otherwise, authenticate the request and retry
         headers, changed = self.auth.authenticate_request(response, headers)
         if not changed:
-            logger.exit("Cannot respond to request for authentication.")
+            raise ValueError("Cannot respond to request for authentication.")
         response = self.session.request(
             method,
             url,
