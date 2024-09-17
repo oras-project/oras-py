@@ -5,6 +5,7 @@ __license__ = "Apache-2.0"
 import time
 from functools import partial, update_wrapper
 
+import oras.auth
 from oras.logger import logger
 
 
@@ -52,6 +53,8 @@ class classretry(Decorator):
         while attempt < attempts:
             try:
                 return self.func(cls, *args, **kwargs)
+            except oras.auth.AuthenticationException as e:
+                raise e
             except Exception as e:
                 sleep = timeout + 3**attempt
                 logger.info(f"Retrying in {sleep} seconds - error: {e}")
@@ -71,6 +74,8 @@ def retry(attempts, timeout=2):
             while attempt < attempts:
                 try:
                     return func(*args, **kwargs)
+                except oras.auth.AuthenticationException as e:
+                    raise e
                 except Exception as e:
                     sleep = timeout + 3**attempt
                     logger.info(f"Retrying in {sleep} seconds - error: {e}")
