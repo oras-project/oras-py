@@ -8,8 +8,10 @@ auth_backends = {"token": TokenAuth, "basic": BasicAuth}
 
 class AuthenticationException(Exception):
     """
-    An exception to traise with Authentication errors are fatal
+    An exception to raise when Authentication errors are fatal
     """
+
+    pass
 
 
 def get_auth_backend(name="token", session=None, **kwargs):
