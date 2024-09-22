@@ -1002,19 +1002,5 @@ class Registry:
                 stream=stream,
                 verify=self._tls_verify,
             )
-        # ...or attempt exchange anon token for auth token if 401
-        if response.status_code == 401:
-            headers, changed = self.auth.authenticate_request(
-                response, headers, refresh=True, skipAnonToken=True
-            )
-            response = self.session.request(
-                method,
-                url,
-                data=data,
-                json=json,
-                headers=headers,
-                stream=stream,
-                verify=self._tls_verify,
-            )
 
         return response

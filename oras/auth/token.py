@@ -44,7 +44,7 @@ class TokenAuth(AuthBackend):
             self.set_header("Authorization", "Basic %s" % self._basic_auth)
 
     def authenticate_request(
-        self, original: requests.Response, headers: dict, refresh=False, skipAnonToken=False
+        self, original: requests.Response, headers: dict, refresh=False
     ):
         """
         Authenticate Request
@@ -72,20 +72,17 @@ class TokenAuth(AuthBackend):
         h = auth_utils.parse_auth_header(authHeaderRaw)
 
         # First try to request an anonymous token
-        if not skipAnonToken:
-            logger.debug("No Authorization, requesting anonymous token")
-            anon_token = self.request_anonymous_token(h)
-            if anon_token:
-                logger.debug("Successfully obtained anonymous token!")
-                self.token = anon_token
-                headers["Authorization"] = "Bearer %s" % self.token
-                return headers, True
+        logger.debug("No Authorization, requesting anonymous token")
+        anon_token = self.request_anonymous_token(h)
+        if anon_token:
+            logger.debug("Successfully obtained anonymous token!")
+            self.token = anon_token
+            headers["Authorization"] = "Bearer %s" % self.token
+            return headers, True
 
         # Next try for logged in token
-        logger.debug("requesting auth token")
         token = self.request_token(h)
         if token:
-            logger.debug("Successfully obtained auth token!")
             self.token = token
             headers["Authorization"] = "Bearer %s" % self.token
             return headers, True
