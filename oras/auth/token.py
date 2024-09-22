@@ -48,7 +48,7 @@ class TokenAuth(AuthBackend):
         original: requests.Response,
         headers: dict,
         refresh=False,
-        skip_anon_token=False,
+        skipAnonToken=False,
     ):
         """
         Authenticate Request
@@ -76,7 +76,7 @@ class TokenAuth(AuthBackend):
         h = auth_utils.parse_auth_header(authHeaderRaw)
 
         # First try to request an anonymous token
-        if not skip_anon_token:
+        if not skipAnonToken:
             logger.debug("No Authorization, requesting anonymous token")
             anon_token = self.request_anonymous_token(h)
             if anon_token:
