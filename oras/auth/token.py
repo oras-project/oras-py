@@ -99,8 +99,6 @@ class TokenAuth(AuthBackend):
         """
         params = {}
         headers = {}
-        if self._basic_auth: # we exchange the basic auth for the token
-            headers["Authorization"] = "Basic %s" % self._basic_auth
 
         # Prepare request to retry
         if h.service:
