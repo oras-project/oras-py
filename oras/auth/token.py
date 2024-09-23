@@ -73,7 +73,6 @@ class TokenAuth(AuthBackend):
 
         # if no basic auth, try by request an anonymous token
         if not hasattr(self, "_basic_auth"):
-            logger.debug("No Basic Auth found, requesting anonymous token")
             anon_token = self.request_anonymous_token(h)
             if anon_token:
                 logger.debug("Successfully obtained anonymous token!")
@@ -81,8 +80,7 @@ class TokenAuth(AuthBackend):
                 headers["Authorization"] = "Bearer %s" % self.token
                 return headers, True
 
-        # try using auth token
-        logger.debug("requesting Auth Token")
+        # basic auth is available, try using auth token
         token = self.request_token(h)
         if token:
             self.token = token
@@ -97,7 +95,7 @@ class TokenAuth(AuthBackend):
 
     def request_token(self, h: auth_utils.authHeader) -> bool:
         """
-        Request an authenticated token and save for later.s
+        Request an authenticated token and save for later.
         """
         params = {}
         headers = {}
@@ -126,6 +124,7 @@ class TokenAuth(AuthBackend):
         # Set Basic Auth to receive token
         headers["Authorization"] = "Basic %s" % self._basic_auth
 
+        logger.debug(f"Requesting auth token for: {h}")
         authResponse = self.session.get(h.realm, headers=headers, params=params)  # type: ignore
 
         if authResponse.status_code != 200:
@@ -152,7 +151,7 @@ class TokenAuth(AuthBackend):
         if h.scope:
             params["scope"] = h.scope
 
-        logger.debug(f"Final params are {params}")
+        logger.debug(f"Requesting anon token with params: {params}")
         response = self.session.request("GET", h.realm, params=params)
         if response.status_code != 200:
             logger.debug(f"Response for anon token failed: {response.text}")
