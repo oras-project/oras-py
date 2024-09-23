@@ -251,6 +251,28 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/39812919?v=4"
             ]
+        },
+        {
+            "login": "xarses",
+            "name": "Andrew Woodward",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/xarses",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/2107834?v=4"
+            ]
+        },
+        {
+            "login": "ccronca",
+            "name": "Camilo Cota",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/ccronca",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/1499184?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7

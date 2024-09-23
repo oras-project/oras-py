@@ -105,5 +105,13 @@
         "email": "idoamara@redhat.com",
         "bio": "wibbly-wobbly mathsy-computesey stuff",
         "blog": "crosscat.me"
+    },
+    "xarses": {
+        "name": "Andrew Woodward",
+        "blog": "https://github.com/xarses"
+    },
+    "ccronca": {
+        "name": "Camilo Cota",
+        "blog": "https://github.com/ccronca"
     }
 }
