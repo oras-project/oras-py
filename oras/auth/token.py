@@ -72,7 +72,7 @@ class TokenAuth(AuthBackend):
         h = auth_utils.parse_auth_header(authHeaderRaw)
 
         # if no basic auth, try by request an anonymous token
-        if not hasattr(self, '_basic_auth'):
+        if not hasattr(self, "_basic_auth"):
             logger.debug("No Basic Auth found, requesting anonymous token")
             anon_token = self.request_anonymous_token(h)
             if anon_token:
