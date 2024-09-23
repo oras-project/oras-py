@@ -7,3 +7,6 @@ env
 __pycache__
 .python-version
 .venv
+.vscode
+build
+dist

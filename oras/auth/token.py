@@ -71,16 +71,18 @@ class TokenAuth(AuthBackend):
 
         h = auth_utils.parse_auth_header(authHeaderRaw)
 
-        # First try to request an anonymous token
-        logger.debug("No Authorization, requesting anonymous token")
-        anon_token = self.request_anonymous_token(h)
-        if anon_token:
-            logger.debug("Successfully obtained anonymous token!")
-            self.token = anon_token
-            headers["Authorization"] = "Bearer %s" % self.token
-            return headers, True
+        # if no basic auth, try by request an anonymous token
+        if not hasattr(self, '_basic_auth'):
+            logger.debug("No Basic Auth found, requesting anonymous token")
+            anon_token = self.request_anonymous_token(h)
+            if anon_token:
+                logger.debug("Successfully obtained anonymous token!")
+                self.token = anon_token
+                headers["Authorization"] = "Bearer %s" % self.token
+                return headers, True
 
-        # Next try for logged in token
+        # try using auth token
+        logger.debug("requesting Auth Token")
         token = self.request_token(h)
         if token:
             self.token = token
