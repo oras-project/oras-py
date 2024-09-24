@@ -65,6 +65,9 @@ class authHeader:
             if key in ["realm", "service", "scope"]:
                 setattr(self, key, lookup[key])
 
+    def __repr__(self):
+        return f"authHeader(lookup={{'service': {repr(self.service)}, 'realm': {repr(self.realm)}, 'scope': {repr(self.scope)}}})"
+
 
 def parse_auth_header(authHeaderRaw: str) -> authHeader:
     """
