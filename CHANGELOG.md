@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - release request (0.2.21)
  - add missing basic auth data for request token function in token auth backend (0.2.2)
  - re-enable chunked upload (0.2.1)
  - refactor of auth to be provided by backend modules (0.2.0)
