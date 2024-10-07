@@ -346,7 +346,8 @@ def split_path_and_content(ref: str) -> PathAndOptionalContent:
     : return: A Tuple of the path in the reference, and the content-type if one found,
               otherwise None.
     """
-    if ":" not in ref:
+
+    if os.path.exists(ref) or ":" not in ref:
         return PathAndOptionalContent(ref, None)
 
     if pathlib.Path(ref).drive:
@@ -370,5 +371,5 @@ def split_path_and_content(ref: str) -> PathAndOptionalContent:
             )
         return PathAndOptionalContent(ref, None)
     else:
-        path_content_list = ref.split(":", 1)
+        path_content_list = ref.rsplit(":", 1)
         return PathAndOptionalContent(path_content_list[0], path_content_list[1])
