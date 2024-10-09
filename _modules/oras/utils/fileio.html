@@ -703,7 +703,8 @@
 <span class="sd">    : return: A Tuple of the path in the reference, and the content-type if one found,</span>
 <span class="sd">              otherwise None.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ref</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ref</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">PathAndOptionalContent</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="n">drive</span><span class="p">:</span>
@@ -727,7 +728,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">PathAndOptionalContent</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">path_content_list</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">path_content_list</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">PathAndOptionalContent</span><span class="p">(</span><span class="n">path_content_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path_content_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 </pre>
@@ -749,7 +750,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 01, 2024.
+              Oct 09, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
