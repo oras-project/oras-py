@@ -273,6 +273,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/1499184?v=4"
             ]
+        },
+        {
+            "login": "rhatdan",
+            "name": "Daniel J Walsh",
+            "contributions": [
+                "code"
+            ],
+            "profile": "http://danwalsh.livejournal.com",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/2000835?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
