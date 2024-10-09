@@ -64,6 +64,65 @@ def test_annotated_registry_push(tmp_path, registry, credentials, target):
 
 
 @pytest.mark.with_auth(False)
+def test_file_contains_column(tmp_path, registry, credentials, target):
+    """
+    Test for file containing column symbol
+    """
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    artifact = os.path.join(here, "artifact.txt")
+    assert os.path.exists(artifact)
+
+    # file containing `:`
+    try:
+        contains_column = here / "some:file"
+        with open(contains_column, "w") as f:
+            f.write("hello world some:file")
+
+        res = client.push(files=[contains_column], target=target)
+        assert res.status_code in [200, 201]
+
+        files = client.pull(target, outdir=tmp_path / "download")
+        download = str(tmp_path / "download/some:file")
+        assert download in files
+        assert oras.utils.get_file_hash(
+            str(contains_column)
+        ) == oras.utils.get_file_hash(download)
+    finally:
+        contains_column.unlink()
+
+    # file containing `:` as prefix, pushed with type
+    try:
+        contains_column = here / ":somefile"
+        with open(contains_column, "w") as f:
+            f.write("hello world :somefile")
+
+        res = client.push(files=[f"{contains_column}:text/plain"], target=target)
+        assert res.status_code in [200, 201]
+
+        files = client.pull(target, outdir=tmp_path / "download")
+        download = str(tmp_path / "download/:somefile")
+        assert download in files
+        assert oras.utils.get_file_hash(
+            str(contains_column)
+        ) == oras.utils.get_file_hash(download)
+    finally:
+        contains_column.unlink()
+
+    # error: file does not exist
+    with pytest.raises(FileNotFoundError):
+        client.push(files=[".doesnotexist"], target=target)
+
+    with pytest.raises(FileNotFoundError):
+        client.push(files=[":doesnotexist"], target=target)
+
+    with pytest.raises(FileNotFoundError, match=r".*does:not:exists .*"):
+        client.push(files=["does:not:exists:text/plain"], target=target)
+
+    with pytest.raises(FileNotFoundError, match=r".*does:not:exists .*"):
+        client.push(files=["does:not:exists:text/plain+ext"], target=target)
+
+
+@pytest.mark.with_auth(False)
 def test_chunked_push(tmp_path, registry, credentials, target):
     """
     Basic tests for oras chunked push
