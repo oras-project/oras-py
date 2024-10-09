@@ -113,5 +113,11 @@
     "ccronca": {
         "name": "Camilo Cota",
         "blog": "https://github.com/ccronca"
+    },
+    "rhatdan": {
+        "name": "Daniel J Walsh",
+        "email": "dwalsh@redhat.com",
+        "bio": "Mr SELinux, Red Hat Senior Distinguished Engineer. Works on  @containers  projects: ai-lab-recipes, Podman, Skopeo, Buildah, image, storage...",
+        "blog": "http://danwalsh.livejournal.com"
     }
 }
