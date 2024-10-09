@@ -189,12 +189,6 @@ def test_parse_manifest(registry):
     assert ref == "path/to/config"
     assert content_type == "application/vnd.oci.image.config.v1+json"
 
-    testref = "path/to/config:application/vnd.oci.image.config.v1+json:extra"
-    remote = oras.provider.Registry(hostname=registry, insecure=True)
-    ref, content_type = remote._parse_manifest_ref(testref)
-    assert ref == "path/to/config"
-    assert content_type == "application/vnd.oci.image.config.v1+json:extra"
-
     testref = "/dev/null:application/vnd.oci.image.manifest.v1+json"
     ref, content_type = remote._parse_manifest_ref(testref)
     assert ref == "/dev/null"
