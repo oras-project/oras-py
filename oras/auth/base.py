@@ -19,6 +19,7 @@ class AuthBackend:
 
     def __init__(self, *args, **kwargs):
         self._auths: dict = {}
+        self.prefix: str = "https"
 
     def get_auth_header(self):
         raise NotImplementedError
