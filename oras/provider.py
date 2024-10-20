@@ -144,7 +144,7 @@ class Registry:
         password_stdin: bool = False,
         tls_verify: bool = True,
         hostname: Optional[str] = None,
-        config_path: Optional[List[str]] = None,
+        config_path: Optional[str] = None,
     ) -> dict:
         """
         Login to a registry.
@@ -161,8 +161,8 @@ class Registry:
         :type tls_verify: bool
         :param hostname: the hostname to login to
         :type hostname: str
-        :param config_path: list of config paths to add
-        :type config_path: list
+        :param config_path: custom config path to add credentials to
+        :type config_path: str
         """
         # Read password from stdin
         if password_stdin:
@@ -729,7 +729,7 @@ class Registry:
         """
         container = self.get_container(target)
         files = files or []
-        self.auth.load_configs(container, configs=config_path)
+        self.auth.load_configs(container, configs=None if config_path is None else [config_path])
 
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
@@ -867,7 +867,7 @@ class Registry:
         :type target: str
         """
         container = self.get_container(target)
-        self.auth.load_configs(container, configs=config_path)
+        self.auth.load_configs(container, configs=None if config_path is None else [config_path])
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
         overwrite = overwrite
