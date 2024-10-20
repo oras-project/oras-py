@@ -20,4 +20,4 @@ printf "ORAS_REGISTRY: ${ORAS_REGISTRY}\n"
 printf "ORAS_AUTH: ${ORAS_AUTH}\n"
 
 # Client (command line) tests
-pytest -xs oras/
+pytest -xs oras/ -vv 
