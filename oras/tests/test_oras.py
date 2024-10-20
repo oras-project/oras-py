@@ -192,7 +192,7 @@ def test_directory_push_pull_selfsigned_auth(
     assert "artifact.txt" in os.listdir(files[0])
 
 
-@pytest.mark.with_auth(False)
+@pytest.mark.with_auth(True)
 def test_custom_docker_config_path(tmp_path, registry, credentials, target_dir):
     """
     Custom docker config_path for login, push, pull
@@ -207,6 +207,9 @@ def test_custom_docker_config_path(tmp_path, registry, credentials, target_dir):
         config_path=my_dockercfg_path, # <-- for login
     )
     assert res["Status"] == "Login Succeeded"
+
+    with open(my_dockercfg_path, "r") as f:
+        print(f.read())
 
     # Test push/pull with custom docker config_path
     upload_dir = os.path.join(here, "upload_data")
