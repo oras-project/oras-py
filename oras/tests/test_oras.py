@@ -198,7 +198,9 @@ def test_custom_docker_config_path(tmp_path, registry, credentials, target_dir):
     Custom docker config_path for login, push, pull
     """
     my_dockercfg_path = tmp_path / "myconfig.json"
-    client = oras.client.OrasClient(hostname=registry, tls_verify=False)
+    client = oras.client.OrasClient(
+        hostname=registry, tls_verify=False, auth_backend="basic"
+    )
     res = client.login(
         hostname=registry,
         tls_verify=False,
