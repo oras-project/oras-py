@@ -729,7 +729,9 @@ class Registry:
         """
         container = self.get_container(target)
         files = files or []
-        self.auth.load_configs(container, configs=None if config_path is None else [config_path])
+        self.auth.load_configs(
+            container, configs=None if config_path is None else [config_path]
+        )
 
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
@@ -867,7 +869,9 @@ class Registry:
         :type target: str
         """
         container = self.get_container(target)
-        self.auth.load_configs(container, configs=None if config_path is None else [config_path])
+        self.auth.load_configs(
+            container, configs=None if config_path is None else [config_path]
+        )
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
         overwrite = overwrite
