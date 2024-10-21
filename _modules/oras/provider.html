@@ -455,7 +455,7 @@
         <span class="n">password_stdin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Login to a registry.</span>
@@ -472,8 +472,8 @@
 <span class="sd">        :type tls_verify: bool</span>
 <span class="sd">        :param hostname: the hostname to login to</span>
 <span class="sd">        :type hostname: str</span>
-<span class="sd">        :param config_path: list of config paths to add</span>
-<span class="sd">        :type config_path: list</span>
+<span class="sd">        :param config_path: custom config path to add credentials to</span>
+<span class="sd">        :type config_path: str</span>
 <span class="sd">        """</span>
         <span class="c1"># Read password from stdin</span>
         <span class="k">if</span> <span class="n">password_stdin</span><span class="p">:</span>
@@ -1061,7 +1061,9 @@
 <span class="sd">        """</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
         <span class="n">files</span> <span class="o">=</span> <span class="n">files</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span>
+            <span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="p">[</span><span class="n">config_path</span><span class="p">]</span> <span class="k">if</span> <span class="n">config_path</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
 
         <span class="c1"># Prepare a new manifest</span>
         <span class="n">manifest</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewManifest</span><span class="p">()</span>
@@ -1202,7 +1204,9 @@
 <span class="sd">        :type target: str</span>
 <span class="sd">        """</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">load_configs</span><span class="p">(</span>
+            <span class="n">container</span><span class="p">,</span> <span class="n">configs</span><span class="o">=</span><span class="p">[</span><span class="n">config_path</span><span class="p">]</span> <span class="k">if</span> <span class="n">config_path</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
         <span class="n">manifest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">allowed_media_type</span><span class="p">)</span>
         <span class="n">outdir</span> <span class="o">=</span> <span class="n">outdir</span> <span class="ow">or</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpdir</span><span class="p">()</span>
         <span class="n">overwrite</span> <span class="o">=</span> <span class="n">overwrite</span>
@@ -1360,7 +1364,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 19, 2024.
+              Oct 21, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
