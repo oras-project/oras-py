@@ -730,7 +730,7 @@ class Registry:
         container = self.get_container(target)
         files = files or []
         self.auth.load_configs(
-            container, configs=None if config_path is None else [config_path]
+            container, configs=[config_path] if config_path else None
         )
 
         # Prepare a new manifest
@@ -870,7 +870,7 @@ class Registry:
         """
         container = self.get_container(target)
         self.auth.load_configs(
-            container, configs=None if config_path is None else [config_path]
+            container, configs=[config_path] if config_path else None
         )
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
