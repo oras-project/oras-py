@@ -935,7 +935,7 @@ class Registry:
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         return manifest
 
-    @decorator.classretry
+    @decorator.retry()
     def do_request(
         self,
         url: str,
