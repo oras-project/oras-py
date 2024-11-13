@@ -425,28 +425,10 @@
                    <nav class="md-nav">
                     <ul class="md-nav__list">
                      <li class="md-nav__item">
-                      <a class="md-nav__link" href="#oras.decorator.Decorator">
-                       <code class="docutils literal notranslate">
-                        <span class="pre">
-                         Decorator
-                        </span>
-                       </code>
-                      </a>
-                     </li>
-                     <li class="md-nav__item">
-                      <a class="md-nav__link" href="#oras.decorator.classretry">
-                       <code class="docutils literal notranslate">
-                        <span class="pre">
-                         classretry
-                        </span>
-                       </code>
-                      </a>
-                     </li>
-                     <li class="md-nav__item">
                       <a class="md-nav__link" href="#oras.decorator.ensure_container">
                        <code class="docutils literal notranslate">
                         <span class="pre">
-                         ensure_container
+                         ensure_container()
                         </span>
                        </code>
                       </a>
@@ -1356,28 +1338,10 @@
               <nav class="md-nav">
                <ul class="md-nav__list">
                 <li class="md-nav__item">
-                 <a class="md-nav__link" href="#oras.decorator.Decorator">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    Decorator
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="#oras.decorator.classretry">
-                  <code class="docutils literal notranslate">
-                   <span class="pre">
-                    classretry
-                   </span>
-                  </code>
-                 </a>
-                </li>
-                <li class="md-nav__item">
                  <a class="md-nav__link" href="#oras.decorator.ensure_container">
                   <code class="docutils literal notranslate">
                    <span class="pre">
-                    ensure_container
+                    ensure_container()
                    </span>
                   </code>
                  </a>
@@ -3416,167 +3380,8 @@
            ¶
           </a>
          </h2>
-         <dl class="py class">
-          <dt class="sig sig-object py" id="oras.decorator.Decorator">
-           <em class="property">
-            <span class="pre">
-             class
-            </span>
-            <span class="w">
-            </span>
-           </em>
-           <span class="sig-prename descclassname">
-            <span class="pre">
-             oras.decorator.
-            </span>
-           </span>
-           <span class="sig-name descname">
-            <span class="pre">
-             Decorator
-            </span>
-           </span>
-           <span class="sig-paren">
-            (
-           </span>
-           <em class="sig-param">
-            <span class="n">
-             <span class="pre">
-              func
-             </span>
-            </span>
-           </em>
-           <span class="sig-paren">
-            )
-           </span>
-           <a class="reference internal" href="../_modules/oras/decorator.html#Decorator">
-            <span class="viewcode-link">
-             <span class="pre">
-              [source]
-             </span>
-            </span>
-           </a>
-           <a class="headerlink" href="#oras.decorator.Decorator" title="Link to this definition">
-            ¶
-           </a>
-          </dt>
-          <dd>
-           <p>
-            Bases:
-            <code class="xref py py-class docutils literal notranslate">
-             <span class="pre">
-              object
-             </span>
-            </code>
-           </p>
-           <p>
-            Shared parent decorator class
-           </p>
-          </dd>
-         </dl>
-         <dl class="py class">
-          <dt class="sig sig-object py" id="oras.decorator.classretry">
-           <em class="property">
-            <span class="pre">
-             class
-            </span>
-            <span class="w">
-            </span>
-           </em>
-           <span class="sig-prename descclassname">
-            <span class="pre">
-             oras.decorator.
-            </span>
-           </span>
-           <span class="sig-name descname">
-            <span class="pre">
-             classretry
-            </span>
-           </span>
-           <span class="sig-paren">
-            (
-           </span>
-           <em class="sig-param">
-            <span class="n">
-             <span class="pre">
-              func
-             </span>
-            </span>
-           </em>
-           ,
-           <em class="sig-param">
-            <span class="n">
-             <span class="pre">
-              attempts
-             </span>
-            </span>
-            <span class="o">
-             <span class="pre">
-              =
-             </span>
-            </span>
-            <span class="default_value">
-             <span class="pre">
-              5
-             </span>
-            </span>
-           </em>
-           ,
-           <em class="sig-param">
-            <span class="n">
-             <span class="pre">
-              timeout
-             </span>
-            </span>
-            <span class="o">
-             <span class="pre">
-              =
-             </span>
-            </span>
-            <span class="default_value">
-             <span class="pre">
-              2
-             </span>
-            </span>
-           </em>
-           <span class="sig-paren">
-            )
-           </span>
-           <a class="reference internal" href="../_modules/oras/decorator.html#classretry">
-            <span class="viewcode-link">
-             <span class="pre">
-              [source]
-             </span>
-            </span>
-           </a>
-           <a class="headerlink" href="#oras.decorator.classretry" title="Link to this definition">
-            ¶
-           </a>
-          </dt>
-          <dd>
-           <p>
-            Bases:
-            <a class="reference internal" href="#oras.decorator.Decorator" title="oras.decorator.Decorator">
-             <code class="xref py py-class docutils literal notranslate">
-              <span class="pre">
-               Decorator
-              </span>
-             </code>
-            </a>
-           </p>
-           <p>
-            Retry a function that is part of a class
-           </p>
-          </dd>
-         </dl>
-         <dl class="py class">
+         <dl class="py function">
           <dt class="sig sig-object py" id="oras.decorator.ensure_container">
-           <em class="property">
-            <span class="pre">
-             class
-            </span>
-            <span class="w">
-            </span>
-           </em>
            <span class="sig-prename descclassname">
             <span class="pre">
              oras.decorator.
@@ -3613,16 +3418,6 @@
           </dt>
           <dd>
            <p>
-            Bases:
-            <a class="reference internal" href="#oras.decorator.Decorator" title="oras.decorator.Decorator">
-             <code class="xref py py-class docutils literal notranslate">
-              <span class="pre">
-               Decorator
-              </span>
-             </code>
-            </a>
-           </p>
-           <p>
             Ensure the first argument is a container, and not a string.
            </p>
           </dd>
@@ -3646,6 +3441,16 @@
             <span class="n">
              <span class="pre">
               attempts
+             </span>
+            </span>
+            <span class="o">
+             <span class="pre">
+              =
+             </span>
+            </span>
+            <span class="default_value">
+             <span class="pre">
+              5
              </span>
             </span>
            </em>
@@ -7575,25 +7380,130 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                container
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                <span class="pre">
+                 Container
+                </span>
+               </a>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                tag
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                str
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <span class="sig-return">
+              <span class="sig-return-icon">
+               →
+              </span>
+              <span class="sig-return-typehint">
+               <span class="pre">
+                bool
+               </span>
+              </span>
+             </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.delete_tag">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.delete_tag" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Delete a tag for a container.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <ul class="simple">
+                <li>
+                 <p>
+                  <strong>
+                   container
+                  </strong>
+                  (
+                  <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                   <em>
+                    oras.container.Container
+                   </em>
+                  </a>
+                  <em>
+                   or
+                  </em>
+                  <em>
+                   str
+                  </em>
+                  ) – parsed container URI
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   tag
+                  </strong>
+                  (
+                  <em>
+                   str
+                  </em>
+                  ) – name of tag to delete
+                 </p>
+                </li>
+               </ul>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -7735,25 +7645,350 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                url
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                method
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                str
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                'GET'
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                data
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                dict
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                bytes
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                headers
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                dict
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                json
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                dict
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                stream
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                bool
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                False
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.do_request">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.do_request" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Do a request. This is a wrapper around requests to handle retry auth.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <ul class="simple">
+                <li>
+                 <p>
+                  <strong>
+                   url
+                  </strong>
+                  (
+                  <em>
+                   str
+                  </em>
+                  ) – the URL to issue the request to
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   method
+                  </strong>
+                  (
+                  <em>
+                   str
+                  </em>
+                  ) – the method to use (GET, DELETE, POST, PUT, PATCH)
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   data
+                  </strong>
+                  (
+                  <em>
+                   dict
+                  </em>
+                  <em>
+                   or
+                  </em>
+                  <em>
+                   bytes
+                  </em>
+                  ) – data for requests
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   headers
+                  </strong>
+                  (
+                  <em>
+                   dict
+                  </em>
+                  ) – headers for the request
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   json
+                  </strong>
+                  (
+                  <em>
+                   dict
+                  </em>
+                  ) – json data for requests
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   stream
+                  </strong>
+                  (
+                  <em>
+                   bool
+                  </em>
+                  ) – stream the responses
+                 </p>
+                </li>
+               </ul>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -7767,25 +8002,137 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                container
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                <span class="pre">
+                 Container
+                </span>
+               </a>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                digest
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                str
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                outfile
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                str
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <span class="sig-return">
+              <span class="sig-return-icon">
+               →
+              </span>
+              <span class="sig-return-typehint">
+               <span class="pre">
+                str
+               </span>
+              </span>
+             </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.download_blob">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.download_blob" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Stream download a blob into an output file.
+             </p>
+             <p>
+              This function is a wrapper around get_blob.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <p>
+                <strong>
+                 container
+                </strong>
+                (
+                <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                 <em>
+                  oras.container.Container
+                 </em>
+                </a>
+                <em>
+                 or
+                </em>
+                <em>
+                 str
+                </em>
+                ) – parsed container URI
+               </p>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -7799,25 +8146,222 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                container
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                <span class="pre">
+                 Container
+                </span>
+               </a>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                digest
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                str
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                stream
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                bool
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                False
+               </span>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                head
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                bool
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                False
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <span class="sig-return">
+              <span class="sig-return-icon">
+               →
+              </span>
+              <span class="sig-return-typehint">
+               <span class="pre">
+                Response
+               </span>
+              </span>
+             </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.get_blob">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.get_blob" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Retrieve a blob for a package.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <ul class="simple">
+                <li>
+                 <p>
+                  <strong>
+                   container
+                  </strong>
+                  (
+                  <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                   <em>
+                    oras.container.Container
+                   </em>
+                  </a>
+                  <em>
+                   or
+                  </em>
+                  <em>
+                   str
+                  </em>
+                  ) – parsed container URI
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   digest
+                  </strong>
+                  (
+                  <em>
+                   str
+                  </em>
+                  ) – sha256 digest of the blob to retrieve
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   stream
+                  </strong>
+                  (
+                  <em>
+                   bool
+                  </em>
+                  ) – stream the response (or not)
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   head
+                  </strong>
+                  (
+                  <em>
+                   bool
+                  </em>
+                  ) – use head to determine if blob exists
+                 </p>
+                </li>
+               </ul>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -7934,25 +8478,156 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                container
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                <span class="pre">
+                 Container
+                </span>
+               </a>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                allowed_media_type
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                list
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <span class="sig-return">
+              <span class="sig-return-icon">
+               →
+              </span>
+              <span class="sig-return-typehint">
+               <span class="pre">
+                dict
+               </span>
+              </span>
+             </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.get_manifest">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.get_manifest" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Retrieve a manifest for a package.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <ul class="simple">
+                <li>
+                 <p>
+                  <strong>
+                   container
+                  </strong>
+                  (
+                  <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                   <em>
+                    oras.container.Container
+                   </em>
+                  </a>
+                  <em>
+                   or
+                  </em>
+                  <em>
+                   str
+                  </em>
+                  ) – parsed container URI
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   allowed_media_type
+                  </strong>
+                  (
+                  <em>
+                   str
+                  </em>
+                  ) – one or more allowed media types
+                 </p>
+                </li>
+               </ul>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -7966,25 +8641,150 @@ and the registry isn’t necessarily the “remote” endpoint.
               (
              </span>
              <em class="sig-param">
-              <span class="o">
+              <span class="n">
                <span class="pre">
-                **
+                container
                </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
               </span>
               <span class="n">
                <span class="pre">
-                kwargs
+                str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                <span class="pre">
+                 Container
+                </span>
+               </a>
+              </span>
+             </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                N
+               </span>
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
                </span>
               </span>
              </em>
              <span class="sig-paren">
               )
              </span>
+             <span class="sig-return">
+              <span class="sig-return-icon">
+               →
+              </span>
+              <span class="sig-return-typehint">
+               <span class="pre">
+                List
+               </span>
+               <span class="p">
+                <span class="pre">
+                 [
+                </span>
+               </span>
+               <span class="pre">
+                str
+               </span>
+               <span class="p">
+                <span class="pre">
+                 ]
+                </span>
+               </span>
+              </span>
+             </span>
+             <a class="reference internal" href="../_modules/oras/provider.html#Registry.get_tags">
+              <span class="viewcode-link">
+               <span class="pre">
+                [source]
+               </span>
+              </span>
+             </a>
              <a class="headerlink" href="#oras.provider.Registry.get_tags" title="Link to this definition">
               ¶
              </a>
             </dt>
             <dd>
+             <p>
+              Retrieve tags for a package.
+             </p>
+             <dl class="field-list simple">
+              <dt class="field-odd">
+               Parameters
+               <span class="colon">
+                :
+               </span>
+              </dt>
+              <dd class="field-odd">
+               <ul class="simple">
+                <li>
+                 <p>
+                  <strong>
+                   container
+                  </strong>
+                  (
+                  <a class="reference internal" href="#oras.container.Container" title="oras.container.Container">
+                   <em>
+                    oras.container.Container
+                   </em>
+                  </a>
+                  <em>
+                   or
+                  </em>
+                  <em>
+                   str
+                  </em>
+                  ) – parsed container URI
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   N
+                  </strong>
+                  (
+                  <em>
+                   Optional
+                  </em>
+                  <em>
+                   [
+                  </em>
+                  <em>
+                   int
+                  </em>
+                  <em>
+                   ]
+                  </em>
+                  ) – limit number of tags, None for all (default)
+                 </p>
+                </li>
+               </ul>
+              </dd>
+             </dl>
             </dd>
            </dl>
            <dl class="py method">
@@ -10192,7 +10992,7 @@ Set do_chunked=True for chunked upload.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 21, 2024.
+              Nov 13, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
