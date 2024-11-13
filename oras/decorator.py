@@ -37,7 +37,17 @@ def retry(attempts=5, timeout=2):
             attempt = 0
             while attempt < attempts:
                 try:
-                    return func(*args, **kwargs)
+                    res = func(*args, **kwargs)
+                    if res.status_code == 500:
+                        try:
+                            msg = res.json()
+                            for error in msg.get("errors", []):
+                                if isinstance(error, dict) and "message" in error:
+                                    logger.error(error["message"])
+                        except Exception:
+                            pass
+                        raise ValueError(f"Issue with {res.request.url}: {res.reason}")
+                    return res
                 except oras.auth.AuthenticationException as e:
                     raise e
                 except Exception as e:
