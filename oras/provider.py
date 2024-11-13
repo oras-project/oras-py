@@ -840,6 +840,9 @@ class Registry:
         response = self.upload_manifest(
             manifest, container
         )  # make the returned response from this method, the one pertaining to the uploaded Manifest
+        if response.status_code == 500:
+            # retry once
+            response = self.upload_manifest(manifest, container)
         self._check_200_response(response)
         print(f"Successfully pushed {container}")
         return response
