@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - use same annotation as oras-go for determining whether to unpack a layer or not
  - retry on 500 (0.2.25)
  - align provider config_path type annotations (0.2.24)
  - add missing prefix property to auth backend (0.2.23)
