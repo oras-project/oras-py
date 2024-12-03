@@ -274,6 +274,12 @@ class Registry:
         blob = os.path.abspath(blob)
         container = self.get_container(container)
 
+        if self.blob_exists(layer, container):
+            logger.debug(f'layer already exists: {layer["digest"]}')
+            response = requests.Response()
+            response.status_code = 200
+            return response
+
         # Chunked for large, otherwise POST and PUT
         # This is currently disabled unless the user asks for it, as
         # it doesn't seem to work for all registries
@@ -550,6 +556,21 @@ class Registry:
                 headers=headers,
             )
         return response
+
+    def blob_exists(
+        self, layer: oras.oci.Layer, container: oras.container.Container
+    ) -> bool:
+        """
+        Check if a layer already exists in the registry.
+
+        :param layer: the layer to check for existence
+        :type layer: oras.oci.Layer
+        :param container: the container to determine where to look for layer existence
+        :type container: oras.container.Container
+        """
+        blob_url = container.get_blob_url(layer["digest"])
+        response = self.do_request(f"{self.prefix}://{blob_url}", "HEAD")
+        return response.status_code == 200
 
     def _get_location(
         self, r: requests.Response, container: oras.container.Container
@@ -944,7 +965,7 @@ class Registry:
         headers: Optional[dict] = None,
         json: Optional[dict] = None,
         stream: bool = False,
-    ):
+    ) -> requests.Response:
         """
         Do a request. This is a wrapper around requests to handle retry auth.
 
