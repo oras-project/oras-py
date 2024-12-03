@@ -591,6 +591,12 @@
         <span class="n">blob</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
         <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_exists</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">'layer already exists: </span><span class="si">{</span><span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">()</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="k">return</span> <span class="n">response</span>
+
         <span class="c1"># Chunked for large, otherwise POST and PUT</span>
         <span class="c1"># This is currently disabled unless the user asks for it, as</span>
         <span class="c1"># it doesn't seem to work for all registries</span>
@@ -885,6 +891,24 @@
                 <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="Registry.blob_exists">
+<a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.blob_exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">blob_exists</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Check if a layer already exists in the registry.</span>
+
+<span class="sd">        :param layer: the layer to check for existence</span>
+<span class="sd">        :type layer: oras.oci.Layer</span>
+<span class="sd">        :param container: the container to determine where to look for layer existence</span>
+<span class="sd">        :type container: oras.container.Container</span>
+<span class="sd">        """</span>
+        <span class="n">blob_url</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_blob_url</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">blob_url</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"HEAD"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_location</span><span class="p">(</span>
@@ -1297,7 +1321,7 @@
         <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">json</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">stream</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Do a request. This is a wrapper around requests to handle retry auth.</span>
 
@@ -1382,7 +1406,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Nov 13, 2024.
+              Dec 03, 2024.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
