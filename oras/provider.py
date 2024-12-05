@@ -398,7 +398,7 @@ class Registry:
                 break
 
             # use link + base url to continue with next page
-            url = f"{base_url}{link}"
+            url = urllib.parse.urljoin(base_url, link)
 
     @decorator.ensure_container
     def get_blob(
