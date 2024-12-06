@@ -123,5 +123,10 @@
     "MichaelKopfMkf": {
         "name": "MichaelKopfMkf",
         "blog": "https://github.com/MichaelKopfMkf"
+    },
+    "natefaerber": {
+        "name": "Nate Faerber",
+        "email": "natefaerber@gmail.com",
+        "blog": "https://github.com/natefaerber"
     }
 }
