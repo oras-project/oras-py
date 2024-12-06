@@ -16,6 +16,15 @@ See our ⭐️ [Documentation](https://oras-project.github.io/oras-py/) ⭐️ t
 Please note that this project has adopted the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
 Please follow it in all your interactions with the project members and users.
 
+## Contributing
+
+To contribute to oras python, if you want to have discussion about a change, feature, or fix, you can open an issue first. We then ask that you open a pull request against the main branch. In the description please include the details of your change, e.g., why it is needed, what you did, and any further points for discussion. In addition:
+
+- For changes to the code:
+  - Please bump the version in the `oras/version.py` file
+  - Please also make a corresponding note in the `CHANGELOG.md`
+
+For any changes to functionality or code that are not tested, please add one or more tests. Thank you for your contributions!
 
 ## 😁️ Contributors 😁️
 
