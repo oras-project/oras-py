@@ -722,7 +722,7 @@
                 <span class="k">break</span>
 
             <span class="c1"># use link + base url to continue with next page</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base_url</span><span class="si">}{</span><span class="n">link</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Registry.get_blob">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_blob">[docs]</a>
