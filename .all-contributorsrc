@@ -284,6 +284,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/2000835?v=4"
             ]
+        },
+        {
+            "login": "MichaelKopfMkf",
+            "name": "MichaelKopfMkf",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/MichaelKopfMkf",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/189326443?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
