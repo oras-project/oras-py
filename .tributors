@@ -119,5 +119,14 @@
         "email": "dwalsh@redhat.com",
         "bio": "Mr SELinux, Red Hat Senior Distinguished Engineer. Works on  @containers  projects: ai-lab-recipes, Podman, Skopeo, Buildah, image, storage...",
         "blog": "http://danwalsh.livejournal.com"
+    },
+    "natefaerber": {
+        "name": "Nate Faerber",
+        "email": "natefaerber@gmail.com",
+        "blog": "https://github.com/natefaerber"
+    },
+    "MichaelKopfMkf": {
+        "name": "MichaelKopfMkf",
+        "blog": "https://github.com/MichaelKopfMkf"
     }
 }
