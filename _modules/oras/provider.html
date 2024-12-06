@@ -1339,7 +1339,11 @@
 <span class="sd">        :type stream: bool</span>
 <span class="sd">        """</span>
         <span class="c1"># Make the request and return to calling function, but attempt to use auth token if previously obtained</span>
-        <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">TokenAuth</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">headers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">TokenAuth</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
             <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_auth_header</span><span class="p">())</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
             <span class="n">method</span><span class="p">,</span>
