@@ -295,6 +295,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/189326443?v=4"
             ]
+        },
+        {
+            "login": "natefaerber",
+            "name": "Nate Faerber",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/natefaerber",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/3720207?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
