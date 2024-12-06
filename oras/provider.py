@@ -983,7 +983,11 @@ class Registry:
         :type stream: bool
         """
         # Make the request and return to calling function, but attempt to use auth token if previously obtained
-        if headers is not None and isinstance(self.auth, oras.auth.TokenAuth):
+        if (
+            headers is not None
+            and isinstance(self.auth, oras.auth.TokenAuth)
+            and self.auth.token is not None
+        ):
             headers.update(self.auth.get_auth_header())
         response = self.session.request(
             method,
