@@ -2,12 +2,14 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import json
 import os
 import shutil
 
 import pytest
 
 import oras.client
+import oras.oci
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -168,14 +170,18 @@ def test_directory_push_pull_skip_unpack(tmp_path, registry, credentials, target
     """
     client = oras.client.OrasClient(hostname=registry, insecure=True)
 
-    # Test upload of a directory
+    # Test upload of a directory with an annotation file setting oras.defaults.annotation_unpack to False
     upload_dir = os.path.join(here, "upload_data")
-    res = client.push(files=[upload_dir], target=target_dir)
+    annotation_file = os.path.join(here, "annotations.json")
+    with open(annotation_file, "w") as f:
+        json.dump({str(upload_dir):{"oras.defaults.annotation_unpack": "False"}}, f)
+    
+    res = client.push(files=[upload_dir], target=target_dir, annotation_file=annotation_file)
     assert res.status_code == 201
-    files = client.pull(target=target_dir, outdir=tmp_path, skip_unpack=True)
+    files = client.pull(target=target_dir, outdir=tmp_path)
 
     assert len(files) == 1
-    assert os.path.basename(files[0]) == "upload_data.tar.gz"
+    assert os.path.basename(files[0]) == os.path.basename(upload_dir)
     assert str(tmp_path) in files[0]
     assert os.path.exists(files[0])
 
