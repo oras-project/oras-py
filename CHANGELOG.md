@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - use same annotation as oras-go for determining whether to unpack a layer or not (0.2.26)
  - check for blob existence before uploading (0.2.26)
    - fix get_tags for ECR when limit is None, closes issue [173](https://github.com/oras-project/oras-py/issues/173)
    - fix empty token for anon tokens to work, closes issue [167](https://github.com/oras-project/oras-py/issues/167)
