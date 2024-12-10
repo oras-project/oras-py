@@ -888,8 +888,6 @@ class Registry:
         :type overwrite: bool
         :param outdir: output directory path
         :type outdir: str
-        :param skip_unpack: skip unpacking layers
-        :type skip_unpack: bool
         """
         container = self.get_container(target)
         self.auth.load_configs(
@@ -906,9 +904,6 @@ class Registry:
             # A directory will need to be uncompressed and moved
             unpack_layer = annotations.get(oras.defaults.annotation_unpack, False)
 
-            if unpack_layer and skip_unpack:
-                filename += ".tar.gz"
-
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
                 filename = layer["digest"]
@@ -922,7 +917,7 @@ class Registry:
                 )
                 continue
 
-            if unpack_layer and not skip_unpack:
+            if unpack_layer:
                 targz = oras.utils.get_tmpfile(suffix=".tar.gz")
                 self.download_blob(container, layer["digest"], targz)
 
