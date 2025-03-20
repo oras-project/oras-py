@@ -32,7 +32,9 @@ class TokenAuth(AuthBackend):
         self.token = token
 
     def get_auth_header(self):
-        return {"Authorization": "Bearer %s" % self.token}
+        if self.token:
+            return {"Authorization": "Bearer %s" % self.token}
+        return {}
 
     def reset_basic_auth(self):
         """
