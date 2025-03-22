@@ -39,7 +39,7 @@
   <title>
    oras.tests.test_provider — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,17 +297,17 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
-<span class="kn">import</span> <span class="nn">oras.client</span>
-<span class="kn">import</span> <span class="nn">oras.defaults</span>
-<span class="kn">import</span> <span class="nn">oras.oci</span>
-<span class="kn">import</span> <span class="nn">oras.provider</span>
-<span class="kn">import</span> <span class="nn">oras.utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.client</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.defaults</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.oci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.provider</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.utils</span>
 
 <span class="n">here</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
 
@@ -315,7 +315,7 @@
 <div class="viewcode-block" id="test_annotated_registry_push">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_annotated_registry_push">[docs]</a>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test_annotated_registry_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_annotated_registry_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras push with annotations</span>
 <span class="sd">    """</span>
@@ -364,7 +364,7 @@
 <div class="viewcode-block" id="test_file_contains_column">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_file_contains_column">[docs]</a>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test_file_contains_column</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_file_contains_column</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test for file containing column symbol</span>
 <span class="sd">    """</span>
@@ -426,7 +426,7 @@
 <div class="viewcode-block" id="test_chunked_push">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_chunked_push">[docs]</a>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">with_auth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test_chunked_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_chunked_push</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Basic tests for oras chunked push</span>
 <span class="sd">    """</span>
@@ -482,7 +482,7 @@
 
 <div class="viewcode-block" id="test_parse_manifest">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_parse_manifest">[docs]</a>
-<span class="k">def</span> <span class="nf">test_parse_manifest</span><span class="p">(</span><span class="n">registry</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_manifest</span><span class="p">(</span><span class="n">registry</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test parse manifest function.</span>
 
@@ -514,7 +514,7 @@
 
 <div class="viewcode-block" id="test_sanitize_path">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_sanitize_path">[docs]</a>
-<span class="k">def</span> <span class="nf">test_sanitize_path</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sanitize_path</span><span class="p">():</span>
     <span class="n">HOME_DIR</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
     <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">sanitize_path</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span> <span class="n">HOME_DIR</span><span class="p">))</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">HOME_DIR</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">assert</span> <span class="p">(</span>
@@ -570,7 +570,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

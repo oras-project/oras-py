@@ -39,7 +39,7 @@
   <title>
    oras.utils.fileio — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,28 +297,28 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">errno</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">tarfile</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">errno</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
 
 
 <div class="viewcode-block" id="PathAndOptionalContent">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.PathAndOptionalContent">[docs]</a>
-<span class="k">class</span> <span class="nc">PathAndOptionalContent</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathAndOptionalContent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Class for holding a path reference and optional content parsed from a string."""</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span></div>
 
@@ -326,7 +326,7 @@
 
 <div class="viewcode-block" id="make_targz">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.make_targz">[docs]</a>
-<span class="k">def</span> <span class="nf">make_targz</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dest_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_targz</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dest_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Make a targz (compressed) archive from a source directory.</span>
 <span class="sd">    """</span>
@@ -339,7 +339,7 @@
 
 <div class="viewcode-block" id="sanitize_path">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.sanitize_path">[docs]</a>
-<span class="k">def</span> <span class="nf">sanitize_path</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sanitize_path</span><span class="p">(</span><span class="n">expected_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ensure a path resolves to be in the expected parent directory.</span>
 
@@ -357,7 +357,7 @@
 <div class="viewcode-block" id="workdir">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.workdir">[docs]</a>
 <span class="nd">@contextmanager</span>
-<span class="k">def</span> <span class="nf">workdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">workdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Provide context for a working directory, e.g.,</span>
 
@@ -375,7 +375,7 @@
 
 <div class="viewcode-block" id="readline">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.readline">[docs]</a>
-<span class="k">def</span> <span class="nf">readline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">readline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read lines from stdin</span>
 <span class="sd">    """</span>
@@ -386,7 +386,7 @@
 
 <div class="viewcode-block" id="extract_targz">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.extract_targz">[docs]</a>
-<span class="k">def</span> <span class="nf">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numeric_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numeric_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract a .tar.gz to an output directory.</span>
 <span class="sd">    """</span>
@@ -401,7 +401,7 @@
 
 <div class="viewcode-block" id="is_within_directory">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.is_within_directory">[docs]</a>
-<span class="k">def</span> <span class="nf">is_within_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_within_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine whether a file is within a directory</span>
 <span class="sd">    """</span>
@@ -414,7 +414,7 @@
 
 <div class="viewcode-block" id="get_size">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_size">[docs]</a>
-<span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_size</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the size of a blob</span>
 
@@ -427,7 +427,7 @@
 
 <div class="viewcode-block" id="get_file_hash">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_file_hash">[docs]</a>
-<span class="k">def</span> <span class="nf">get_file_hash</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sha256"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_file_hash</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sha256"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return an sha256 hash of the file based on an algorithm</span>
 <span class="sd">    Raises AttributeError if incorrect algorithm supplied.</span>
@@ -447,7 +447,7 @@
 
 <div class="viewcode-block" id="mkdir_p">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.mkdir_p">[docs]</a>
-<span class="k">def</span> <span class="nf">mkdir_p</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mkdir_p</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Make a directory path if it does not exist, akin to mkdir -p</span>
 
@@ -466,7 +466,7 @@
 
 <div class="viewcode-block" id="get_tmpfile">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_tmpfile">[docs]</a>
-<span class="k">def</span> <span class="nf">get_tmpfile</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tmpfile</span><span class="p">(</span>
     <span class="n">tmpdir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -495,7 +495,7 @@
 
 <div class="viewcode-block" id="get_tmpdir">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.get_tmpdir">[docs]</a>
-<span class="k">def</span> <span class="nf">get_tmpdir</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tmpdir</span><span class="p">(</span>
     <span class="n">tmpdir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">create</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -522,7 +522,7 @@
 
 <div class="viewcode-block" id="recursive_find">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.recursive_find">[docs]</a>
-<span class="k">def</span> <span class="nf">recursive_find</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">recursive_find</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Find filenames that match a particular pattern, and yield them.</span>
 
@@ -545,7 +545,7 @@
 
 <div class="viewcode-block" id="copyfile">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.copyfile">[docs]</a>
-<span class="k">def</span> <span class="nf">copyfile</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">copyfile</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Copy a file from a source to its destination.</span>
 
@@ -571,7 +571,7 @@
 
 <div class="viewcode-block" id="write_file">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.write_file">[docs]</a>
-<span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_file</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">make_exec</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -599,7 +599,7 @@
 
 <div class="viewcode-block" id="read_in_chunks">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.read_in_chunks">[docs]</a>
-<span class="k">def</span> <span class="nf">read_in_chunks</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TextIO</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BufferedReader</span><span class="p">],</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_in_chunks</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TextIO</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BufferedReader</span><span class="p">],</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Helper function to read file in chunks, with default size 1k.</span>
 
@@ -618,7 +618,7 @@
 
 <div class="viewcode-block" id="write_json">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.write_json">[docs]</a>
-<span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="n">json_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"w"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_json</span><span class="p">(</span><span class="n">json_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"w"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write json to a filename</span>
 
@@ -637,7 +637,7 @@
 
 <div class="viewcode-block" id="print_json">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.print_json">[docs]</a>
-<span class="k">def</span> <span class="nf">print_json</span><span class="p">(</span><span class="n">json_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_json</span><span class="p">(</span><span class="n">json_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Pretty print json.</span>
 
@@ -650,7 +650,7 @@
 
 <div class="viewcode-block" id="read_file">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.read_file">[docs]</a>
-<span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"r"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"r"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read a file.</span>
 
@@ -667,7 +667,7 @@
 
 <div class="viewcode-block" id="read_json">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.read_json">[docs]</a>
-<span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"r"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"r"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read a json file to a dictionary.</span>
 
@@ -682,7 +682,7 @@
 
 <div class="viewcode-block" id="split_path_and_content">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.split_path_and_content">[docs]</a>
-<span class="k">def</span> <span class="nf">split_path_and_content</span><span class="p">(</span><span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathAndOptionalContent</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_path_and_content</span><span class="p">(</span><span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathAndOptionalContent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parse a string containing a path and an optional content</span>
 
@@ -750,7 +750,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

@@ -39,7 +39,7 @@
   <title>
    oras.logger — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,19 +297,19 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">Union</span>
 
 
 <div class="viewcode-block" id="ColorizingStreamHandler">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.ColorizingStreamHandler">[docs]</a>
-<span class="k">class</span> <span class="nc">ColorizingStreamHandler</span><span class="p">(</span><span class="n">_logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColorizingStreamHandler</span><span class="p">(</span><span class="n">_logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">):</span>
     <span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span><span class="p">,</span> <span class="n">GREEN</span><span class="p">,</span> <span class="n">YELLOW</span><span class="p">,</span> <span class="n">BLUE</span><span class="p">,</span> <span class="n">MAGENTA</span><span class="p">,</span> <span class="n">CYAN</span><span class="p">,</span> <span class="n">WHITE</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="n">RESET_SEQ</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\033</span><span class="s2">[0m"</span>
     <span class="n">COLOR_SEQ</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\033</span><span class="s2">[</span><span class="si">%d</span><span class="s2">m"</span>
@@ -323,7 +323,7 @@
         <span class="s2">"ERROR"</span><span class="p">:</span> <span class="n">RED</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">nocolor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">stream</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
@@ -345,7 +345,7 @@
 
 <div class="viewcode-block" id="ColorizingStreamHandler.can_color_tty">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.ColorizingStreamHandler.can_color_tty">[docs]</a>
-    <span class="k">def</span> <span class="nf">can_color_tty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">can_color_tty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determine if the tty supports color</span>
 <span class="sd">        """</span>
@@ -355,7 +355,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_tty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_tty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determine if we have a tty environment</span>
 <span class="sd">        """</span>
@@ -364,7 +364,7 @@
 
 <div class="viewcode-block" id="ColorizingStreamHandler.emit">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.ColorizingStreamHandler.emit">[docs]</a>
-    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">_logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">_logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Emit a log record</span>
 
@@ -388,7 +388,7 @@
 
 <div class="viewcode-block" id="ColorizingStreamHandler.decorate">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.ColorizingStreamHandler.decorate">[docs]</a>
-    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Decorate a log record</span>
 
@@ -406,8 +406,8 @@
 
 <div class="viewcode-block" id="Logger">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger">[docs]</a>
-<span class="k">class</span> <span class="nc">Logger</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Logger</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new logger</span>
 <span class="sd">        """</span>
@@ -422,7 +422,7 @@
 
 <div class="viewcode-block" id="Logger.cleanup">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.cleanup">[docs]</a>
-    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Close open files, etc. for the logger</span>
 <span class="sd">        """</span>
@@ -434,7 +434,7 @@
 
 <div class="viewcode-block" id="Logger.handler">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.handler">[docs]</a>
-    <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Handle a log message.</span>
 
@@ -447,7 +447,7 @@
 
 <div class="viewcode-block" id="Logger.set_stream_handler">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.set_stream_handler">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_stream_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_handler</span><span class="p">:</span> <span class="n">_logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_stream_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_handler</span><span class="p">:</span> <span class="n">_logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set a stream handler.</span>
 
@@ -462,7 +462,7 @@
 
 <div class="viewcode-block" id="Logger.set_level">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.set_level">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set the logging level.</span>
 
@@ -474,7 +474,7 @@
 
 <div class="viewcode-block" id="Logger.location">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.location">[docs]</a>
-    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Debug level message with location info.</span>
 
@@ -491,7 +491,7 @@
 
 <div class="viewcode-block" id="Logger.info">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.info">[docs]</a>
-    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Info level message</span>
 
@@ -503,7 +503,7 @@
 
 <div class="viewcode-block" id="Logger.warning">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.warning">[docs]</a>
-    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Warning level message</span>
 
@@ -515,7 +515,7 @@
 
 <div class="viewcode-block" id="Logger.debug">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.debug">[docs]</a>
-    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Debug level message</span>
 
@@ -527,7 +527,7 @@
 
 <div class="viewcode-block" id="Logger.error">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.error">[docs]</a>
-    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Error level message</span>
 
@@ -539,7 +539,7 @@
 
 <div class="viewcode-block" id="Logger.exit">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.exit">[docs]</a>
-    <span class="k">def</span> <span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Error level message and exit with error code</span>
 
@@ -554,7 +554,7 @@
 
 <div class="viewcode-block" id="Logger.progress">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.progress">[docs]</a>
-    <span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">done</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">done</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Show piece of a progress bar</span>
 
@@ -568,7 +568,7 @@
 
 <div class="viewcode-block" id="Logger.shellcmd">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.shellcmd">[docs]</a>
-    <span class="k">def</span> <span class="nf">shellcmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shellcmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Shellcmd message</span>
 
@@ -581,7 +581,7 @@
 
 <div class="viewcode-block" id="Logger.text_handler">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.Logger.text_handler">[docs]</a>
-    <span class="k">def</span> <span class="nf">text_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">text_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        The default log handler that prints to the console.</span>
 
@@ -617,7 +617,7 @@
 
 <div class="viewcode-block" id="setup_logger">
 <a class="viewcode-back" href="../../source/oras.html#oras.logger.setup_logger">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_logger</span><span class="p">(</span>
     <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">printshellcmds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">nocolor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -675,7 +675,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

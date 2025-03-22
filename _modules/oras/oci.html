@@ -39,7 +39,7 @@
   <title>
    oras.oci — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,18 +297,18 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">jsonschema</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jsonschema</span>
 
-<span class="kn">import</span> <span class="nn">oras.defaults</span>
-<span class="kn">import</span> <span class="nn">oras.schemas</span>
-<span class="kn">import</span> <span class="nn">oras.utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.defaults</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.schemas</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.utils</span>
 
 <span class="n">EmptyManifest</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"schemaVersion"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
@@ -321,18 +321,18 @@
 
 <div class="viewcode-block" id="Annotations">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations">[docs]</a>
-<span class="k">class</span> <span class="nc">Annotations</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a new set of annotations</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Annotations.add">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add key/value pairs to a named section.</span>
 <span class="sd">        """</span>
@@ -343,7 +343,7 @@
 
 <div class="viewcode-block" id="Annotations.load">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.load">[docs]</a>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -352,7 +352,7 @@
 
 <div class="viewcode-block" id="Annotations.get_annotations">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Annotations.get_annotations">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given the name (a relative path or named section) get annotations</span>
 <span class="sd">        """</span>
@@ -366,8 +366,8 @@
 
 <div class="viewcode-block" id="Layer">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer">[docs]</a>
-<span class="k">class</span> <span class="nc">Layer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Layer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -385,7 +385,7 @@
 
 <div class="viewcode-block" id="Layer.set_media_type">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.set_media_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_media_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_media_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Vary the media type to be directory or default layer</span>
 
@@ -403,7 +403,7 @@
 
 <div class="viewcode-block" id="Layer.to_dict">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Layer.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return a dictionary representation of the layer</span>
 <span class="sd">        """</span>
@@ -420,7 +420,7 @@
 
 <div class="viewcode-block" id="NewLayer">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.NewLayer">[docs]</a>
-<span class="k">def</span> <span class="nf">NewLayer</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">NewLayer</span><span class="p">(</span>
     <span class="n">blob_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -439,7 +439,7 @@
 
 <div class="viewcode-block" id="ManifestConfig">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.ManifestConfig">[docs]</a>
-<span class="k">def</span> <span class="nf">ManifestConfig</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ManifestConfig</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -473,7 +473,7 @@
 
 <div class="viewcode-block" id="NewManifest">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.NewManifest">[docs]</a>
-<span class="k">def</span> <span class="nf">NewManifest</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">NewManifest</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get an empty manifest config.</span>
 <span class="sd">    """</span>
@@ -484,7 +484,7 @@
 <div class="viewcode-block" id="Subject">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Subject">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Subject</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">:</span>
     <span class="n">mediaType</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">size</span><span class="p">:</span> <span class="nb">int</span>
@@ -492,7 +492,7 @@
 <div class="viewcode-block" id="Subject.from_manifest">
 <a class="viewcode-back" href="../../source/oras.html#oras.oci.Subject.from_manifest">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_manifest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Subject"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_manifest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Subject"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a new Subject from a Manifest</span>
 
@@ -528,7 +528,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

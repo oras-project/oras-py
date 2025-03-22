@@ -39,7 +39,7 @@
   <title>
    oras.container — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -298,10 +298,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">oras.defaults</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.defaults</span>
 
 <span class="n">docker_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
     <span class="s2">"(?:(?P&lt;registry&gt;[^/@]+[.:][^/@]*)/)?"</span>
@@ -315,8 +315,8 @@
 
 <div class="viewcode-block" id="Container">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container">[docs]</a>
-<span class="k">class</span> <span class="nc">Container</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">registry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Container</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">registry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse a container name and easily get urls for registry interactions.</span>
 
@@ -331,7 +331,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">api_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">api_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return the repository prefix for the v2 API endpoints.</span>
 <span class="sd">        """</span>
@@ -341,7 +341,7 @@
 
 <div class="viewcode-block" id="Container.get_blob_url">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container.get_blob_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the URL to download a blob</span>
 
@@ -353,13 +353,13 @@
 
 <div class="viewcode-block" id="Container.upload_blob_url">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container.upload_blob_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/blobs/uploads/"</span></div>
 
 
 <div class="viewcode-block" id="Container.tags_url">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container.tags_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tags_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list"</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/tags/list?n=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">"</span></div>
@@ -367,7 +367,7 @@
 
 <div class="viewcode-block" id="Container.manifest_url">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container.manifest_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">manifest_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the manifest url for a specific tag, or the one for this container.</span>
 
@@ -383,11 +383,11 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="si">}</span><span class="s2">/v2/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_prefix</span><span class="si">}</span><span class="s2">/manifests/</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">uri</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uri</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Assemble the complete unique resource identifier</span>
 <span class="sd">        """</span>
@@ -407,7 +407,7 @@
 
 <div class="viewcode-block" id="Container.parse">
 <a class="viewcode-back" href="../../source/oras.html#oras.container.Container.parse">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse the container name into registry, repository, and tag.</span>
 
@@ -454,7 +454,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

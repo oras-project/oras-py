@@ -39,7 +39,7 @@
   <title>
    oras.auth — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -293,17 +293,17 @@
        </h1>
        <div class="highlight">
         <pre>
-<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">.basic</span> <span class="kn">import</span> <span class="n">BasicAuth</span>
-<span class="kn">from</span> <span class="nn">.token</span> <span class="kn">import</span> <span class="n">TokenAuth</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.basic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicAuth</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.token</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenAuth</span>
 
 <span class="n">auth_backends</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"token"</span><span class="p">:</span> <span class="n">TokenAuth</span><span class="p">,</span> <span class="s2">"basic"</span><span class="p">:</span> <span class="n">BasicAuth</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="AuthenticationException">
 <a class="viewcode-back" href="../../source/oras.html#oras.auth.AuthenticationException">[docs]</a>
-<span class="k">class</span> <span class="nc">AuthenticationException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AuthenticationException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An exception to raise when Authentication errors are fatal</span>
 <span class="sd">    """</span>
@@ -314,7 +314,7 @@
 
 <div class="viewcode-block" id="get_auth_backend">
 <a class="viewcode-back" href="../../source/oras.html#oras.auth.get_auth_backend">[docs]</a>
-<span class="k">def</span> <span class="nf">get_auth_backend</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_auth_backend</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">auth_backends</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">backend</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Authentication backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2"> is not known."</span><span class="p">)</span>
@@ -342,7 +342,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

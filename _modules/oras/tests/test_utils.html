@@ -39,7 +39,7 @@
   <title>
    oras.tests.test_utils — Oras Python
   </title>
-  <link href="../../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,19 +297,19 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
-<span class="kn">import</span> <span class="nn">oras.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
 
 <div class="viewcode-block" id="test_write_read_files">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_write_read_files">[docs]</a>
-<span class="k">def</span> <span class="nf">test_write_read_files</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_write_read_files</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.write_file..."</span><span class="p">)</span>
 
     <span class="n">tmpfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"written_file.txt"</span><span class="p">)</span>
@@ -326,7 +326,7 @@
 
 <div class="viewcode-block" id="test_workdir">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_workdir">[docs]</a>
-<span class="k">def</span> <span class="nf">test_workdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_workdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.workdir"</span><span class="p">)</span>
     <span class="n">noodle_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s2">"noodles"</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">noodle_base</span><span class="p">)</span>
@@ -339,7 +339,7 @@
 
 <div class="viewcode-block" id="test_write_bad_json">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_write_bad_json">[docs]</a>
-<span class="k">def</span> <span class="nf">test_write_bad_json</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_write_bad_json</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="n">bad_json</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Wakkawakkawakka'}"</span><span class="p">:</span> <span class="p">[{</span><span class="kc">True</span><span class="p">},</span> <span class="s2">"2"</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
     <span class="n">tmpfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"json_file.txt"</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">)</span>
@@ -350,7 +350,7 @@
 
 <div class="viewcode-block" id="test_write_json">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_write_json">[docs]</a>
-<span class="k">def</span> <span class="nf">test_write_json</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_write_json</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="n">good_json</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Wakkawakkawakka"</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
     <span class="n">tmpfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"good_json_file.txt"</span><span class="p">)</span>
 
@@ -367,7 +367,7 @@
 
 <div class="viewcode-block" id="test_copyfile">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_copyfile">[docs]</a>
-<span class="k">def</span> <span class="nf">test_copyfile</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_copyfile</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.copyfile"</span><span class="p">)</span>
 
     <span class="n">original</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"location1.txt"</span><span class="p">)</span>
@@ -383,7 +383,7 @@
 
 <div class="viewcode-block" id="test_get_tmpdir_tmpfile">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_get_tmpdir_tmpfile">[docs]</a>
-<span class="k">def</span> <span class="nf">test_get_tmpdir_tmpfile</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_get_tmpdir_tmpfile</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.get_tmpdir, get_tmpfile"</span><span class="p">)</span>
 
     <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_tmpdir</span><span class="p">()</span>
@@ -404,7 +404,7 @@
 
 <div class="viewcode-block" id="test_mkdir_p">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_mkdir_p">[docs]</a>
-<span class="k">def</span> <span class="nf">test_mkdir_p</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_mkdir_p</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.mkdir_p"</span><span class="p">)</span>
 
     <span class="n">dirname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"input"</span><span class="p">)</span>
@@ -416,7 +416,7 @@
 
 <div class="viewcode-block" id="test_print_json">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_print_json">[docs]</a>
-<span class="k">def</span> <span class="nf">test_print_json</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_json</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing utils.print_json"</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">print_json</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
     <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">'{</span><span class="se">\n</span><span class="s1">    "1": 1</span><span class="se">\n</span><span class="s1">}'</span></div>
@@ -425,7 +425,7 @@
 
 <div class="viewcode-block" id="test_split_path_and_content">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_split_path_and_content">[docs]</a>
-<span class="k">def</span> <span class="nf">test_split_path_and_content</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_path_and_content</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Test split path and content function.</span>
 
@@ -471,7 +471,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

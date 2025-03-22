@@ -39,7 +39,7 @@
   <title>
    oras.provider — Oras Python
   </title>
-  <link href="../../_static/pygments.css?v=83e35b93" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/pygments.css?v=75810a84" rel="stylesheet" type="text/css"/>
   <link href="../../_static/material.css?v=79c92029" rel="stylesheet" type="text/css"/>
   <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
   <link href="../../_static/css/rtd_sphinx_search.min.css" rel="stylesheet" type="text/css"/>
@@ -297,36 +297,36 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span><span class="p">,</span> <span class="n">nullcontext</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">asdict</span>
-<span class="kn">from</span> <span class="nn">http.cookiejar</span> <span class="kn">import</span> <span class="n">DefaultCookiePolicy</span>
-<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span><span class="p">,</span> <span class="n">nullcontext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">http.cookiejar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultCookiePolicy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">jsonschema</span>
-<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jsonschema</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
-<span class="kn">import</span> <span class="nn">oras.auth</span>
-<span class="kn">import</span> <span class="nn">oras.container</span>
-<span class="kn">import</span> <span class="nn">oras.decorator</span> <span class="k">as</span> <span class="nn">decorator</span>
-<span class="kn">import</span> <span class="nn">oras.defaults</span>
-<span class="kn">import</span> <span class="nn">oras.main.login</span> <span class="k">as</span> <span class="nn">login</span>
-<span class="kn">import</span> <span class="nn">oras.oci</span>
-<span class="kn">import</span> <span class="nn">oras.schemas</span>
-<span class="kn">import</span> <span class="nn">oras.utils</span>
-<span class="kn">from</span> <span class="nn">oras.logger</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">from</span> <span class="nn">oras.types</span> <span class="kn">import</span> <span class="n">container_type</span>
-<span class="kn">from</span> <span class="nn">oras.utils.fileio</span> <span class="kn">import</span> <span class="n">PathAndOptionalContent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.auth</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.container</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.decorator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">decorator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.defaults</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.main.login</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">login</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.oci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.schemas</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oras.utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">oras.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">oras.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">container_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">oras.utils.fileio</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathAndOptionalContent</span>
 
 
 <div class="viewcode-block" id="temporary_empty_config">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.temporary_empty_config">[docs]</a>
 <span class="nd">@contextmanager</span>
-<span class="k">def</span> <span class="nf">temporary_empty_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">temporary_empty_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
         <span class="n">config_file</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">tmpdir</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".json"</span><span class="p">)</span>
         <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">"</span><span class="p">)</span>
@@ -336,7 +336,7 @@
 
 <div class="viewcode-block" id="Registry">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry">[docs]</a>
-<span class="k">class</span> <span class="nc">Registry</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Registry</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Direct interactions with an OCI registry.</span>
 
@@ -344,7 +344,7 @@
 <span class="sd">    and the registry isn't necessarily the "remote" endpoint.</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -380,15 +380,15 @@
         <span class="c1"># Get custom backend, pass on session to share</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_auth_backend</span><span class="p">(</span><span class="n">auth_backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">insecure</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"[oras-client]"</span>
 
 <div class="viewcode-block" id="Registry.version">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.version">[docs]</a>
-    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_items</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_items</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the version of the client.</span>
 
@@ -414,7 +414,7 @@
 
 <div class="viewcode-block" id="Registry.delete_tags">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.delete_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Delete one or more tags for a unique resource identifier.</span>
 
@@ -436,7 +436,7 @@
 
 <div class="viewcode-block" id="Registry.logout">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.logout">[docs]</a>
-    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If auths are loaded, remove a hostname.</span>
 
@@ -448,7 +448,7 @@
 
 <div class="viewcode-block" id="Registry.login">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.login">[docs]</a>
-    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -519,7 +519,7 @@
 
 <div class="viewcode-block" id="Registry.set_header">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.set_header">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Courtesy function to set a header</span>
 
@@ -531,7 +531,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_validate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Ensure a blob path is in the present working directory or below.</span>
 
@@ -540,7 +540,7 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_parse_manifest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_manifest_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse an optional manifest config.</span>
 
@@ -562,7 +562,7 @@
 
 <div class="viewcode-block" id="Registry.upload_blob">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_blob">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_blob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
@@ -623,7 +623,7 @@
 <div class="viewcode-block" id="Registry.delete_tag">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.delete_tag">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">delete_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Delete a tag for a container.</span>
 
@@ -660,7 +660,7 @@
 <div class="viewcode-block" id="Registry.get_tags">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_tags">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve tags for a package.</span>
 
@@ -673,7 +673,7 @@
         <span class="n">tags_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">tags_url</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># type: ignore</span>
         <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">def</span> <span class="nf">extract_tags</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">extract_tags</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">"""</span>
 <span class="sd">            Determine if we should continue based on new tags and under limit.</span>
 <span class="sd">            """</span>
@@ -690,7 +690,7 @@
         <span class="k">return</span> <span class="n">tags</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_do_paginated_request</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_paginated_request</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -727,7 +727,7 @@
 <div class="viewcode-block" id="Registry.get_blob">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_blob">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">get_blob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -753,7 +753,7 @@
 
 <div class="viewcode-block" id="Registry.get_container">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_container">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">container_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">container_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Courtesy function to get a container from a URI.</span>
 
@@ -767,7 +767,7 @@
 
     <span class="c1"># Functions to be deprecated in favor of exposed ones</span>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">_download_blob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_download_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -775,7 +775,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_put_upload</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_put_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -783,7 +783,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_chunked_upload</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_chunked_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -791,7 +791,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunked_upload</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_upload_manifest</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_upload_manifest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -799,7 +799,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_upload_blob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_upload_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
@@ -814,7 +814,7 @@
 <div class="viewcode-block" id="Registry.download_blob">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.download_blob">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">download_blob</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">download_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -847,7 +847,7 @@
 
 <div class="viewcode-block" id="Registry.put_upload">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.put_upload">[docs]</a>
-    <span class="k">def</span> <span class="nf">put_upload</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">put_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
@@ -895,7 +895,7 @@
 
 <div class="viewcode-block" id="Registry.blob_exists">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.blob_exists">[docs]</a>
-    <span class="k">def</span> <span class="nf">blob_exists</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blob_exists</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -911,7 +911,7 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_get_location</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_location</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -939,7 +939,7 @@
 
 <div class="viewcode-block" id="Registry.chunked_upload">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.chunked_upload">[docs]</a>
-    <span class="k">def</span> <span class="nf">chunked_upload</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chunked_upload</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">blob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
@@ -1002,7 +1002,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">session_url</span><span class="p">,</span> <span class="s2">"PUT"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_200_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Helper function to ensure some flavor of 200</span>
 
@@ -1013,7 +1013,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_response_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Issue with </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_parse_response_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_response_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given a failed request, look for OCI formatted error messages.</span>
 
@@ -1030,7 +1030,7 @@
 
 <div class="viewcode-block" id="Registry.upload_manifest">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.upload_manifest">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_manifest</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_manifest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">Container</span><span class="p">,</span>
@@ -1058,7 +1058,7 @@
 
 <div class="viewcode-block" id="Registry.push">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.push">[docs]</a>
-    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1215,7 +1215,7 @@
 
 <div class="viewcode-block" id="Registry.pull">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.pull">[docs]</a>
-    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pull</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1285,7 +1285,7 @@
 <div class="viewcode-block" id="Registry.get_manifest">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.get_manifest">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">ensure_container</span>
-    <span class="k">def</span> <span class="nf">get_manifest</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_manifest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">container</span><span class="p">:</span> <span class="n">container_type</span><span class="p">,</span>
         <span class="n">allowed_media_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1313,7 +1313,7 @@
 <div class="viewcode-block" id="Registry.do_request">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry.do_request">[docs]</a>
     <span class="nd">@decorator</span><span class="o">.</span><span class="n">retry</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">do_request</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_request</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"GET"</span><span class="p">,</span>
@@ -1410,7 +1410,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Dec 06, 2024.
+              Mar 22, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
