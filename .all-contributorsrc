@@ -306,6 +306,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/3720207?v=4"
             ]
+        },
+        {
+            "login": "Meallia",
+            "name": "Jonathan Gayvallet",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/Meallia",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/7398724?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
