@@ -314,13 +314,16 @@
 
 <div class="viewcode-block" id="get_auth_backend">
 <a class="viewcode-back" href="../../source/oras.html#oras.auth.get_auth_backend">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_auth_backend</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_auth_backend</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">auth_backends</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">backend</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Authentication backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2"> is not known."</span><span class="p">)</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">backend</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span> <span class="ow">or</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
     <span class="n">backend</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="s2">"http"</span> <span class="k">if</span> <span class="n">insecure</span> <span class="k">else</span> <span class="s2">"https"</span>
+    <span class="n">backend</span><span class="o">.</span><span class="n">_tls_verify</span> <span class="o">=</span> <span class="n">tls_verify</span>
     <span class="k">return</span> <span class="n">backend</span></div>
 
 </pre>
@@ -342,7 +345,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Mar 22, 2025.
+              Mar 31, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

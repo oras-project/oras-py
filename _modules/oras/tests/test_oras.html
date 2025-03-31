@@ -299,8 +299,11 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSLError</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">oras.client</span>
 
@@ -549,6 +552,64 @@
 
     <span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">registry</span><span class="p">)</span></div>
 
+
+
+<div class="viewcode-block" id="empty_request_ca">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.empty_request_ca">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">empty_request_ca</span><span class="p">():</span>
+    <span class="n">old_ca</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"REQUESTS_CA_BUNDLE"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># we're setting a fake CA since an empty one won't work</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"REQUESTS_CA_BUNDLE"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"snakeoil.crt"</span><span class="p">)</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">old_ca</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"REQUESTS_CA_BUNDLE"</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_ca</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"REQUESTS_CA_BUNDLE"</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="test_ssl_no_verify">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_ssl_no_verify">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ssl_no_verify</span><span class="p">(</span><span class="n">empty_request_ca</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Make sure the client works without a CA file and tls_verify set to False</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="s2">"ghcr.io"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_ssl_verify_fails_if_bad_ca">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_ssl_verify_fails_if_bad_ca">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ssl_verify_fails_if_bad_ca</span><span class="p">(</span><span class="n">empty_request_ca</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Make sure the client fails without a CA file and tls_verify set to True</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"ghcr.io"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">SSLError</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_ssl_verify_fails_fast_if_bad_ca">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_oras.test_ssl_verify_fails_fast_if_bad_ca">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ssl_verify_fails_fast_if_bad_ca</span><span class="p">(</span><span class="n">empty_request_ca</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The client should fail fast in case of SSL errors</span>
+<span class="sd">    """</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"ghcr.io"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">SSLError</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">get_tags</span><span class="p">(</span><span class="s2">"channel-mirrors/conda-forge/linux-aarch64/arrow-cpp"</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">et</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">et</span> <span class="o">-</span> <span class="n">st</span> <span class="o">&lt;</span> <span class="mi">5</span></div>
+
 </pre>
        </div>
       </article>
@@ -568,7 +629,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Mar 22, 2025.
+              Mar 31, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

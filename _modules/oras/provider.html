@@ -378,7 +378,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">DefaultCookiePolicy</span><span class="p">(</span><span class="n">allowed_domains</span><span class="o">=</span><span class="p">[]))</span>
 
         <span class="c1"># Get custom backend, pass on session to share</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_auth_backend</span><span class="p">(</span><span class="n">auth_backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">insecure</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">get_auth_backend</span><span class="p">(</span>
+            <span class="n">auth_backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">insecure</span><span class="p">,</span> <span class="n">tls_verify</span><span class="o">=</span><span class="n">tls_verify</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1410,7 +1412,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Mar 22, 2025.
+              Mar 31, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
