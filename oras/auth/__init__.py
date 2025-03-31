@@ -14,11 +14,14 @@ class AuthenticationException(Exception):
     pass
 
 
-def get_auth_backend(name="token", session=None, insecure=False, **kwargs):
+def get_auth_backend(
+    name="token", session=None, insecure=False, tls_verify=True, **kwargs
+):
     backend = auth_backends.get(name)
     if not backend:
         raise ValueError(f"Authentication backend {backend} is not known.")
     backend = backend(**kwargs)
     backend.session = session or requests.Session()
     backend.prefix = "http" if insecure else "https"
+    backend._tls_verify = tls_verify
     return backend

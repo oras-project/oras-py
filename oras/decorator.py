@@ -5,6 +5,8 @@ __license__ = "Apache-2.0"
 import time
 from functools import wraps
 
+import requests.exceptions
+
 import oras.auth
 from oras.logger import logger
 
@@ -50,6 +52,8 @@ def retry(attempts=5, timeout=2):
                     return res
                 except oras.auth.AuthenticationException as e:
                     raise e
+                except requests.exceptions.SSLError:
+                    raise
                 except Exception as e:
                     sleep = timeout + 3**attempt
                     logger.info(f"Retrying in {sleep} seconds - error: {e}")
