@@ -78,7 +78,9 @@ class Registry:
         self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
 
         # Get custom backend, pass on session to share
-        self.auth = oras.auth.get_auth_backend(auth_backend, self.session, insecure)
+        self.auth = oras.auth.get_auth_backend(
+            auth_backend, self.session, insecure, tls_verify=tls_verify
+        )
 
     def __repr__(self) -> str:
         return str(self)

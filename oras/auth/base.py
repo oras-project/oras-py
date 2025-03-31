@@ -5,6 +5,8 @@ __license__ = "Apache-2.0"
 
 from typing import Optional
 
+import requests
+
 import oras.auth.utils as auth_utils
 import oras.container
 import oras.decorator as decorator
@@ -16,6 +18,9 @@ class AuthBackend:
     """
     Generic (and default) auth backend.
     """
+
+    session: requests.Session
+    _tls_verify: bool
 
     def __init__(self, *args, **kwargs):
         self._auths: dict = {}

@@ -4,8 +4,11 @@ __license__ = "Apache-2.0"
 
 import os
 import shutil
+import time
+from pathlib import Path
 
 import pytest
+from requests.exceptions import SSLError
 
 import oras.client
 
@@ -227,3 +230,49 @@ def test_custom_docker_config_path(tmp_path, registry, credentials, target_dir):
     assert "artifact.txt" in os.listdir(files[0])
 
     client.logout(registry)
+
+
+@pytest.fixture
+def empty_request_ca():
+    old_ca = os.environ.get("REQUESTS_CA_BUNDLE", None)
+    try:
+        # we're setting a fake CA since an empty one won't work
+        os.environ["REQUESTS_CA_BUNDLE"] = str(Path(__file__).parent / "snakeoil.crt")
+        yield
+    finally:
+        if old_ca is not None:
+            os.environ["REQUESTS_CA_BUNDLE"] = old_ca
+        else:
+            del os.environ["REQUESTS_CA_BUNDLE"]
+
+
+def test_ssl_no_verify(empty_request_ca):
+    """
+    Make sure the client works without a CA file and tls_verify set to False
+    """
+    client = oras.client.OrasClient(
+        hostname="ghcr.io", insecure=False, tls_verify=False
+    )
+    client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=1)
+
+
+def test_ssl_verify_fails_if_bad_ca(empty_request_ca):
+    """
+    Make sure the client fails without a CA file and tls_verify set to True
+    """
+    client = oras.client.OrasClient(hostname="ghcr.io", insecure=False, tls_verify=True)
+
+    with pytest.raises(SSLError):
+        client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=1)
+
+
+def test_ssl_verify_fails_fast_if_bad_ca(empty_request_ca):
+    """
+    The client should fail fast in case of SSL errors
+    """
+    client = oras.client.OrasClient(hostname="ghcr.io", insecure=False, tls_verify=True)
+    st = time.monotonic()
+    with pytest.raises(SSLError):
+        client.get_tags("channel-mirrors/conda-forge/linux-aarch64/arrow-cpp", N=1)
+    et = time.monotonic()
+    assert et - st < 5
