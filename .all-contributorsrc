@@ -317,6 +317,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/7398724?v=4"
             ]
+        },
+        {
+            "login": "Sojamann",
+            "name": "Sojamann",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/Sojamann",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/10118597?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
