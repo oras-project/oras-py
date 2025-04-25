@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-28-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-29-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![ORAS Logo](https://raw.githubusercontent.com/oras-project/oras-www/main/static/img/oras.png)
@@ -71,6 +71,9 @@ tool to generate a contributors graphic below.
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MichaelKopfMkf"><img src="https://avatars.githubusercontent.com/u/189326443?v=4?s=100" width="100px;" alt="MichaelKopfMkf"/><br /><sub><b>MichaelKopfMkf</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=MichaelKopfMkf" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/natefaerber"><img src="https://avatars.githubusercontent.com/u/3720207?v=4?s=100" width="100px;" alt="Nate Faerber"/><br /><sub><b>Nate Faerber</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=natefaerber" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Meallia"><img src="https://avatars.githubusercontent.com/u/7398724?v=4?s=100" width="100px;" alt="Jonathan Gayvallet"/><br /><sub><b>Jonathan Gayvallet</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=Meallia" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Sojamann"><img src="https://avatars.githubusercontent.com/u/10118597?v=4?s=100" width="100px;" alt="Sojamann"/><br /><sub><b>Sojamann</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=Sojamann" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
