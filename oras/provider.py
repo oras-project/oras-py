@@ -704,7 +704,6 @@ class Registry:
         jsonschema.validate(manifest, schema=oras.schemas.manifest)
         headers = {
             "Content-Type": oras.defaults.default_manifest_media_type,
-            "Content-Length": str(len(manifest)),
         }
         return self.do_request(
             f"{self.prefix}://{container.manifest_url()}",  # noqa
