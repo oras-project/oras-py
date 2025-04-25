@@ -1048,7 +1048,6 @@
         <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">oras</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">manifest</span><span class="p">)</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"Content-Type"</span><span class="p">:</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_manifest_media_type</span><span class="p">,</span>
-            <span class="s2">"Content-Length"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">manifest</span><span class="p">)),</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">container</span><span class="o">.</span><span class="n">manifest_url</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>  <span class="c1"># noqa</span>
@@ -1412,7 +1411,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Mar 31, 2025.
+              Apr 25, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
