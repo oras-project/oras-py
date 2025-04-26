@@ -57,6 +57,7 @@ class TokenAuth(AuthBackend):
         :param original: original response to get the Www-Authenticate header
         :type original: requests.Response
         """
+        headers = headers or {}
         if refresh:
             self.token = None
         authHeaderRaw = original.headers.get("Www-Authenticate")
