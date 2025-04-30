@@ -12,6 +12,7 @@ import re
 import shutil
 import stat
 import sys
+import gzip
 import tarfile
 import tempfile
 from contextlib import contextmanager
@@ -26,13 +27,23 @@ class PathAndOptionalContent:
         self.content = content
 
 
+def reset(tarinfo):
+    """Helper to reset modification time for tar entries"""
+    tarinfo.mtime = 0
+    return tarinfo
+
+
 def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     """
-    Make a targz (compressed) archive from a source directory.
+    Make a reproducible (no mtime) targz (compressed) archive from a source directory.
     """
     dest_name = dest_name or get_tmpfile(suffix=".tar.gz")
-    with tarfile.open(dest_name, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
+
+    with os.fdopen(os.open(dest_name, os.O_WRONLY | os.O_CREAT, 0o644), 'wb') as out_file:
+        with gzip.GzipFile(mode='wb', fileobj=out_file, mtime=0) as gzip_file:
+            with tarfile.open(fileobj=gzip_file, mode='w:') as tar_file:
+                tar_file.add(source_dir, filter=reset, arcname=os.path.basename(source_dir))
+
     return dest_name
 
 
