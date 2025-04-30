@@ -130,3 +130,19 @@ def test_split_path_and_content():
     path_content = utils.split_path_and_content(testref)
     assert path_content.path == "path/to/config.json"
     assert not path_content.content
+
+
+def test_make_targz_files_with_same_content_generates_same_hash(tmp_path):
+    tmp_file = str(tmp_path / "written_file.txt")
+    utils.write_file(tmp_file, "hello!")
+
+    tmp_tar_1 = str(tmp_path / "test1.tar.gz")
+    utils.make_targz(tmp_file, tmp_tar_1)
+
+    tmp_tar_2 = str(tmp_path / "test2.tar.gz")
+    utils.make_targz(tmp_file, tmp_tar_2)
+
+    hash_tar_1 = utils.get_file_hash(tmp_tar_1)
+    hash_tar_2 = utils.get_file_hash(tmp_tar_2)
+
+    assert hash_tar_1 == hash_tar_2
