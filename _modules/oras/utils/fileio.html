@@ -298,6 +298,7 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">errno</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -324,15 +325,34 @@
 
 
 
+<div class="viewcode-block" id="reset">
+<a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.reset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">tarinfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Helper to reset modification time for tar entries"""</span>
+    <span class="n">tarinfo</span><span class="o">.</span><span class="n">mtime</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">tarinfo</span></div>
+
+
+
 <div class="viewcode-block" id="make_targz">
 <a class="viewcode-back" href="../../../source/oras.utils.html#oras.utils.fileio.make_targz">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_targz</span><span class="p">(</span><span class="n">source_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dest_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Make a targz (compressed) archive from a source directory.</span>
+<span class="sd">    Make a reproducible (no mtime) targz (compressed) archive from a source directory.</span>
 <span class="sd">    """</span>
     <span class="n">dest_name</span> <span class="o">=</span> <span class="n">dest_name</span> <span class="ow">or</span> <span class="n">get_tmpfile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".tar.gz"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dest_name</span><span class="p">,</span> <span class="s2">"w:gz"</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
-        <span class="n">tar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_dir</span><span class="p">))</span>
+
+    <span class="c1"># os.O_WRONLY tells the computer you are only going to writo to the file, not read</span>
+    <span class="c1"># os.O_CREATE tells the computer to create the file if it doesn't exist</span>
+    <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dest_name</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span><span class="p">,</span> <span class="mo">0o644</span><span class="p">),</span> <span class="s2">"wb"</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"wb"</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">out_file</span><span class="p">,</span> <span class="n">mtime</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzip_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">gzip_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"w:"</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar_file</span><span class="p">:</span>
+                <span class="n">tar_file</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">source_dir</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">reset</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+                <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">dest_name</span></div>
 
 
@@ -750,7 +770,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Apr 26, 2025.
+              May 01, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

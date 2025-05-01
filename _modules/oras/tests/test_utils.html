@@ -452,6 +452,25 @@
     <span class="k">assert</span> <span class="n">path_content</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">"path/to/config.json"</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">path_content</span><span class="o">.</span><span class="n">content</span></div>
 
+
+
+<div class="viewcode-block" id="test_make_targz_files_with_same_content_generates_same_hash">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_utils.test_make_targz_files_with_same_content_generates_same_hash">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_make_targz_files_with_same_content_generates_same_hash</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">tmp_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"written_file.txt"</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">,</span> <span class="s2">"hello!"</span><span class="p">)</span>
+
+    <span class="n">tmp_tar_1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"test1.tar.gz"</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">,</span> <span class="n">tmp_tar_1</span><span class="p">)</span>
+
+    <span class="n">tmp_tar_2</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"test2.tar.gz"</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">,</span> <span class="n">tmp_tar_2</span><span class="p">)</span>
+
+    <span class="n">hash_tar_1</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_hash</span><span class="p">(</span><span class="n">tmp_tar_1</span><span class="p">)</span>
+    <span class="n">hash_tar_2</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_hash</span><span class="p">(</span><span class="n">tmp_tar_2</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">hash_tar_1</span> <span class="o">==</span> <span class="n">hash_tar_2</span></div>
+
 </pre>
        </div>
       </article>
@@ -471,7 +490,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Apr 26, 2025.
+              May 01, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
