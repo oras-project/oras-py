@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - Make reproducible targz without mimetype (0.2.30)
  - don't include Content-Length header in upload_manifest (0.2.29)
  - propagate the tls_verify parameter to auth backends (0.2.28)
  - don't add an Authorization header is there is no token (0.2.27), closes issue [182](https://github.com/oras-project/oras-py/issues/182)

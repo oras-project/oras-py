@@ -3,6 +3,7 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import errno
+import gzip
 import hashlib
 import io
 import json
@@ -26,13 +27,29 @@ class PathAndOptionalContent:
         self.content = content
 
 
+def reset(tarinfo):
+    """Helper to reset modification time for tar entries"""
+    tarinfo.mtime = 0
+    return tarinfo
+
+
 def make_targz(source_dir: str, dest_name: Optional[str] = None) -> str:
     """
-    Make a targz (compressed) archive from a source directory.
+    Make a reproducible (no mtime) targz (compressed) archive from a source directory.
     """
     dest_name = dest_name or get_tmpfile(suffix=".tar.gz")
-    with tarfile.open(dest_name, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
+
+    # os.O_WRONLY tells the computer you are only going to writo to the file, not read
+    # os.O_CREATE tells the computer to create the file if it doesn't exist
+    with os.fdopen(
+        os.open(dest_name, os.O_WRONLY | os.O_CREAT, 0o644), "wb"
+    ) as out_file:
+        with gzip.GzipFile(mode="wb", fileobj=out_file, mtime=0) as gzip_file:
+            with tarfile.open(fileobj=gzip_file, mode="w:") as tar_file:
+                tar_file.add(
+                    source_dir, filter=reset, arcname=os.path.basename(source_dir)
+                )
+
     return dest_name
 
 
