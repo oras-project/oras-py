@@ -559,9 +559,7 @@ class Registry:
             )
         return response
 
-    def blob_exists(
-        self, layer: oras.oci.Layer, container: oras.container.Container
-    ) -> bool:
+    def blob_exists(self, layer: dict, container: oras.container.Container) -> bool:
         """
         Check if a layer already exists in the registry.
 
@@ -983,12 +981,11 @@ class Registry:
         :param stream: stream the responses
         :type stream: bool
         """
+        if headers is None:
+            headers = {}
+
         # Make the request and return to calling function, but attempt to use auth token if previously obtained
-        if (
-            headers is not None
-            and isinstance(self.auth, oras.auth.TokenAuth)
-            and self.auth.token is not None
-        ):
+        if isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None:
             headers.update(self.auth.get_auth_header())
         response = self.session.request(
             method,
