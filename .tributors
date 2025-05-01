@@ -136,5 +136,10 @@
     "Sojamann": {
         "name": "Sojamann",
         "blog": "https://github.com/Sojamann"
+    },
+    "joseacl": {
+        "name": "José Antonio Cortés López",
+        "email": "joseacl@gmail.com",
+        "blog": "https://github.com/joseacl"
     }
 }
