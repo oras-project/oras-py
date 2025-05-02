@@ -50,6 +50,9 @@ class Registry:
         insecure: bool = False,
         tls_verify: bool = True,
         auth_backend: str = "token",
+        tls_cert: Optional[str] = None,
+        tls_key: Optional[str] = None,
+        ca_bundle: Optional[str] = None,
     ):
         """
         Create an ORAS client.
@@ -58,16 +61,23 @@ class Registry:
 
         :param hostname: the hostname of the registry to ping
         :type hostname: str
-        :param registry: if provided, use this custom provider instead of default
-        :type registry: oras.provider.Registry or None
         :param insecure: use http instead of https
         :type insecure: bool
+        :param tls_verify: perform tls verification
+        :type tls_verify: bool
+        :param auth_backend: name of the auth backend to use
+        :type auth_backend: str
+        :param tls_cert: path to the client certificate to use
+        :type tls_cert: str
+        :param tls_key: path to the client key to use
+        :type tls_key: str
+        :param ca_bundle: path to the CA bundle to use (enables tls verification)
+        :type ca_bundle: str
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
         self.session: requests.Session = requests.Session()
         self.prefix: str = "http" if insecure else "https"
-        self._tls_verify = tls_verify
 
         if not tls_verify:
             requests.packages.urllib3.disable_warnings()  # type: ignore
@@ -77,10 +87,14 @@ class Registry:
         # trying to set further CSRF cookies (Harbor is such a case)
         self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
 
+        self.session.verify = ca_bundle or tls_verify
+        if tls_cert and tls_key:
+            self.session.cert = (tls_cert, tls_key)
+        elif tls_cert:
+            self.session.cert = tls_cert
+
         # Get custom backend, pass on session to share
-        self.auth = oras.auth.get_auth_backend(
-            auth_backend, self.session, insecure, tls_verify=tls_verify
-        )
+        self.auth = oras.auth.get_auth_backend(auth_backend, self.session, insecure)
 
     def __repr__(self) -> str:
         return str(self)
@@ -994,7 +1008,6 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
-            verify=self._tls_verify,
         )
 
         # A 401 response is a request for authentication, 404 is not found
@@ -1012,7 +1025,6 @@ class Registry:
             json=json,
             headers=headers,
             stream=stream,
-            verify=self._tls_verify,
         )
 
         # One retry if 403 denied (need new token?)
@@ -1027,7 +1039,6 @@ class Registry:
                 json=json,
                 headers=headers,
                 stream=stream,
-                verify=self._tls_verify,
             )
 
         return response

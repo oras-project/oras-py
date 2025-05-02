@@ -20,7 +20,6 @@ class AuthBackend:
     """
 
     session: requests.Session
-    _tls_verify: bool
 
     def __init__(self, *args, **kwargs):
         self._auths: dict = {}
