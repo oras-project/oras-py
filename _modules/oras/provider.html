@@ -348,7 +348,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">insecure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">tls_verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">tls_verify</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">auth_backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"token"</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -358,10 +358,12 @@
 
 <span class="sd">        :param hostname: the hostname of the registry to ping</span>
 <span class="sd">        :type hostname: str</span>
-<span class="sd">        :param registry: if provided, use this custom provider instead of default</span>
-<span class="sd">        :type registry: oras.provider.Registry or None</span>
 <span class="sd">        :param insecure: use http instead of https</span>
 <span class="sd">        :type insecure: bool</span>
+<span class="sd">        :param tls_verify: enable/disable tls verification or use a custom CA-Bundle</span>
+<span class="sd">        :type tls_verify: bool</span>
+<span class="sd">        :param auth_backend: name of the auth backend to use</span>
+<span class="sd">        :type auth_backend: str</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1408,7 +1410,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              May 01, 2025.
+              May 16, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
