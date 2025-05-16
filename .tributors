@@ -27,7 +27,9 @@
     "magelisk": {
         "name": "Matt Warner",
         "bio": "Matt Warner",
-        "blog": "https://github.com/magelisk"
+        "blog": "https://github.com/magelisk",
+        "orcid": "0009-0003-7184-3099",
+        "affiliation": "British Antarctic Survey Medical Unit"
     },
     "wolfv": {
         "name": "Wolf Vollprecht",
@@ -62,7 +64,8 @@
     },
     "dev-zero": {
         "name": "Tiziano Müller",
-        "blog": "https://dev-zero.ch"
+        "blog": "https://dev-zero.ch",
+        "orcid": "0000-0002-1387-5717"
     },
     "TerryHowe": {
         "name": "Terry Howe",
@@ -104,7 +107,8 @@
         "name": "Isabella Basso",
         "email": "idoamara@redhat.com",
         "bio": "wibbly-wobbly mathsy-computesey stuff",
-        "blog": "crosscat.me"
+        "blog": "crosscat.me",
+        "orcid": "0000-0001-5549-1220"
     },
     "xarses": {
         "name": "Andrew Woodward",
@@ -118,7 +122,9 @@
         "name": "Daniel J Walsh",
         "email": "dwalsh@redhat.com",
         "bio": "Mr SELinux, Red Hat Senior Distinguished Engineer. Works on  @containers  projects: ai-lab-recipes, Podman, Skopeo, Buildah, image, storage...",
-        "blog": "http://danwalsh.livejournal.com"
+        "blog": "http://danwalsh.livejournal.com",
+        "orcid": "0000-0002-7479-5016",
+        "affiliation": "Limerick Institute of Technology"
     },
     "MichaelKopfMkf": {
         "name": "MichaelKopfMkf",
