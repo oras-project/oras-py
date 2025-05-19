@@ -782,23 +782,24 @@ class Registry:
                         f"Blob {blob} is not in the present working directory context."
                     )
 
-            # Save directory or blob name before compressing
-            blob_name = os.path.basename(blob)
-
             # If it's a directory, we need to compress
-            cleanup_blob = False
-            if os.path.isdir(blob):
-                blob = oras.utils.make_targz(blob)
-                cleanup_blob = True
+            is_dir_layer = os.path.isdir(blob)
 
+            blob_to_use_for_layer = (
+                oras.utils.make_targz(blob) if is_dir_layer else blob
+            )
             # Create a new layer from the blob
-            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
+            layer = oras.oci.NewLayer(
+                blob_to_use_for_layer, is_dir=is_dir_layer, media_type=media_type
+            )
             annotations = annotset.get_annotations(blob)
 
             # Always strip blob_name of path separator
-            layer["annotations"] = {
-                oras.defaults.annotation_title: blob_name.strip(os.sep)
-            }
+            layer["annotations"] = {oras.defaults.annotation_title: blob.strip(os.sep)}
+
+            if is_dir_layer:
+                layer["annotations"][oras.defaults.annotation_unpack] = "True"
+
             if annotations:
                 layer["annotations"].update(annotations)
 
@@ -808,7 +809,7 @@ class Registry:
 
             # Upload the blob layer
             response = self.upload_blob(
-                blob,
+                blob_to_use_for_layer,
                 container,
                 layer,
                 do_chunked=do_chunked,
@@ -817,8 +818,8 @@ class Registry:
             self._check_200_response(response)
 
             # Do we need to cleanup a temporary targz?
-            if cleanup_blob and os.path.exists(blob):
-                os.remove(blob)
+            if is_dir_layer and os.path.exists(blob_to_use_for_layer):
+                os.remove(blob_to_use_for_layer)
 
         # Add annotations to the manifest, if provided
         manifest_annots = annotset.get_annotations("$manifest") or {}
@@ -873,22 +874,21 @@ class Registry:
         allowed_media_type: Optional[List] = None,
         overwrite: bool = True,
         outdir: Optional[str] = None,
+        skip_unpack: bool = False,
     ) -> List[str]:
         """
         Pull an artifact from a target
 
+        :param target: target location to pull from
+        :type target: str
         :param config_path: path to a config file
         :type config_path: str
         :param allowed_media_type: list of allowed media types
         :type allowed_media_type: list or None
         :param overwrite: if output file exists, overwrite
         :type overwrite: bool
-        :param manifest_config_ref: save manifest config to this file
-        :type manifest_config_ref: str
         :param outdir: output directory path
         :type outdir: str
-        :param target: target location to pull from
-        :type target: str
         """
         container = self.get_container(target)
         self.auth.load_configs(
@@ -900,9 +900,10 @@ class Registry:
 
         files = []
         for layer in manifest.get("layers", []):
-            filename = (layer.get("annotations") or {}).get(
-                oras.defaults.annotation_title
-            )
+            annotations: dict = layer.get("annotations", {})
+            filename = annotations.get(oras.defaults.annotation_title)
+            # A directory will need to be uncompressed and moved
+            unpack_layer = annotations.get(oras.defaults.annotation_unpack, False)
 
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
@@ -917,8 +918,7 @@ class Registry:
                 )
                 continue
 
-            # A directory will need to be uncompressed and moved
-            if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
+            if unpack_layer:
                 targz = oras.utils.get_tmpfile(suffix=".tar.gz")
                 self.download_blob(container, layer["digest"], targz)
 
@@ -928,7 +928,7 @@ class Registry:
             # Anything else just extracted directly
             else:
                 self.download_blob(container, layer["digest"], outfile)
-            logger.info(f"Successfully pulled {outfile}.")
+            logger.info(f"Successfully pulled {outfile}")
             files.append(outfile)
         return files
 
