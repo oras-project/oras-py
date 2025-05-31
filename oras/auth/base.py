@@ -10,6 +10,7 @@ import requests
 import oras.auth.utils as auth_utils
 import oras.container
 import oras.decorator as decorator
+import oras.utils
 from oras.logger import logger
 from oras.types import container_type
 
@@ -87,7 +88,7 @@ class AuthBackend:
             return True
         return False
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
     def load_configs(self, container: container_type, configs: Optional[list] = None):
         """
         Load configs to discover credentials for a specific container.
@@ -102,6 +103,26 @@ class AuthBackend:
         """
         if not self._auths:
             self._auths = auth_utils.load_configs(configs)
+        for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
+            if self._load_auth(registry):
+                return
+
+    def ensure_auth_for_container(self, container: container_type):
+        """
+        Ensure authentication is loaded for a specific container's registry.
+        This assumes auths have already been loaded via load_configs or __init__.
+
+        :param container: the parsed container URI with components
+        :type container: oras.container.Container
+        """
+        # At this point, container should already be a Container object
+        # since the decorators handle conversion
+        if not isinstance(container, oras.container.Container):
+            raise ValueError(
+                "Container must be a Container object when ensure_auth_for_container is called"
+            )
+
+        # Try to load auth for this container's registry
         for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
             if self._load_auth(registry):
                 return
