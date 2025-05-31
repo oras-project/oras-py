@@ -60,7 +60,9 @@
     "mariusbertram": {
         "name": "Marius Bertram",
         "email": "marius@brtrm.de",
-        "blog": "https://github.com/mariusbertram"
+        "blog": "https://github.com/mariusbertram",
+        "orcid": "0009-0006-8522-2287",
+        "affiliation": "University of Copenhagen"
     },
     "dev-zero": {
         "name": "Tiziano Müller",
@@ -147,5 +149,9 @@
         "name": "José Antonio Cortés López",
         "email": "joseacl@gmail.com",
         "blog": "https://github.com/joseacl"
+    },
+    "diverger": {
+        "name": "diverger",
+        "blog": "https://github.com/diverger"
     }
 }
