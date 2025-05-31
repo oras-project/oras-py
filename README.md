@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-30-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![ORAS Logo](https://raw.githubusercontent.com/oras-project/oras-www/main/static/img/oras.png)
@@ -75,6 +75,7 @@ tool to generate a contributors graphic below.
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Sojamann"><img src="https://avatars.githubusercontent.com/u/10118597?v=4?s=100" width="100px;" alt="Sojamann"/><br /><sub><b>Sojamann</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=Sojamann" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/joseacl"><img src="https://avatars.githubusercontent.com/u/8399784?v=4?s=100" width="100px;" alt="José Antonio Cortés López"/><br /><sub><b>José Antonio Cortés López</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=joseacl" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/diverger"><img src="https://avatars.githubusercontent.com/u/335566?v=4?s=100" width="100px;" alt="diverger"/><br /><sub><b>diverger</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=diverger" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

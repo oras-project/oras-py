@@ -339,6 +339,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/8399784?v=4"
             ]
+        },
+        {
+            "login": "diverger",
+            "name": "diverger",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/diverger",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/335566?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
