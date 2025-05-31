@@ -946,12 +946,17 @@ class Registry:
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
         """
+        # Load authentication configs for the container's registry
+        # This ensures credentials are available for authenticated registries
+        self.auth.load_configs(container)
+
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
+
         self._check_200_response(response)
         manifest = response.json()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)

@@ -34,6 +34,7 @@ def load_configs(configs: Optional[List[str]] = None):
             continue
         cfg = oras.utils.read_json(config)
         auths.update(cfg.get("auths", {}))
+
     return auths
 
 
