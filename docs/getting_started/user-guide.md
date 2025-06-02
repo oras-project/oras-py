@@ -628,7 +628,7 @@ here is asking for the default.
 ```python
 import oras.client
 client = oras.client.OrasClient(auth_backend="token")
-client.login(password="myuser", username="myuser", insecure=True)
+client.auth.set_token_auth("my_bearer_token")
 ```
 
 If you wanted to always maintain the basic auth you might do:
