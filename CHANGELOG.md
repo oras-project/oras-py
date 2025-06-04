@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - Add authentication config loading before making requests to container registry (0.2.34)
  - fix 'get_manifest()' method with adding 'load_configs()' calling (0.2.33)
  - fix 'Provider' method signature to allow custom CA-Bundles (0.2.32)
  - initialize headers variable in do_request (0.2.31)

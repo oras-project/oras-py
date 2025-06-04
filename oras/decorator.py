@@ -11,21 +11,73 @@ import oras.auth
 from oras.logger import logger
 
 
-def ensure_container(func):
+def ensure_container(container_arg_index=0):
     """
-    Ensure the first argument is a container, and not a string.
+    Ensure the specified argument is a container, and not a string.
+
+    :param container_arg_index: The index of the container argument (0 for first arg, 1 for second arg)
+    :type container_arg_index: int
+
+    Usage examples:
+        @ensure_container()     # Container is first argument (default)
+        @ensure_container(0)    # Container is first argument (explicit)
+        @ensure_container(1)    # Container is second argument
     """
 
-    @wraps(func)
-    def wrapper(cls, *args, **kwargs):
-        if "container" in kwargs:
-            kwargs["container"] = cls.get_container(kwargs["container"])
-        elif args:
-            container = cls.get_container(args[0])
-            args = (container, *args[1:])
-        return func(cls, *args, **kwargs)
+    def decorator(func):
+        @wraps(func)
+        def wrapper(cls, *args, **kwargs):
+            if "container" in kwargs:
+                kwargs["container"] = cls.get_container(kwargs["container"])
+            elif len(args) > container_arg_index:
+                # Convert the specified argument to a container
+                container = cls.get_container(args[container_arg_index])
+                # Rebuild args tuple with the converted container
+                args = (
+                    args[:container_arg_index]
+                    + (container,)
+                    + args[container_arg_index + 1 :]
+                )
+            return func(cls, *args, **kwargs)
 
-    return wrapper
+        return wrapper
+
+    return decorator
+
+
+def ensure_auth(container_arg_index=0):
+    """
+    Ensure authentication is loaded for the container's registry.
+    This decorator should be applied after @ensure_container.
+
+    :param container_arg_index: The index of the container argument (0 for first arg, 1 for second arg)
+    :type container_arg_index: int
+
+    Usage examples:
+        @ensure_auth()          # Container is first argument (default)
+        @ensure_auth(0)         # Container is first argument (explicit)
+        @ensure_auth(1)         # Container is second argument
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(cls, *args, **kwargs):
+            # Get the container from the specified argument position
+            container = None
+            if "container" in kwargs:
+                container = kwargs["container"]
+            elif len(args) > container_arg_index:
+                container = args[container_arg_index]
+
+            if container and hasattr(cls, "auth"):
+                # Load auth for this specific container's registry without reloading configs
+                cls.auth.ensure_auth_for_container(container)
+
+            return func(cls, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def retry(attempts=5, timeout=2):

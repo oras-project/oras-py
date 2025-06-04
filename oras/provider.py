@@ -16,6 +16,7 @@ import jsonschema
 import requests
 
 import oras.auth
+import oras.auth.utils
 import oras.container
 import oras.decorator as decorator
 import oras.defaults
@@ -83,6 +84,10 @@ class Registry:
         self.auth = oras.auth.get_auth_backend(
             auth_backend, self.session, insecure, tls_verify=tls_verify
         )
+
+        # Load all authentication configs once during initialization
+        # This avoids re-reading the docker config file for each operation
+        self.auth._auths = oras.auth.utils.load_configs()
 
     def __repr__(self) -> str:
         return str(self)
@@ -249,6 +254,8 @@ class Registry:
             path_content.content = oras.defaults.unknown_config_media_type
         return path_content.path, path_content.content
 
+    @decorator.ensure_container(1)
+    @decorator.ensure_auth(1)
     def upload_blob(
         self,
         blob: str,
@@ -276,7 +283,6 @@ class Registry:
         :type chunk_size: int
         """
         blob = os.path.abspath(blob)
-        container = self.get_container(container)
 
         if self.blob_exists(layer, container):
             logger.debug(f'layer already exists: {layer["digest"]}')
@@ -306,7 +312,8 @@ class Registry:
             response.status_code = 200
         return response
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def delete_tag(self, container: container_type, tag: str) -> bool:
         """
         Delete a tag for a container.
@@ -340,7 +347,8 @@ class Registry:
             raise RuntimeError("Delete was not successful: {response.json()}")
         return True
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def get_tags(self, container: container_type, N=None) -> List[str]:
         """
         Retrieve tags for a package.
@@ -404,7 +412,8 @@ class Registry:
             # use link + base url to continue with next page
             url = urllib.parse.urljoin(base_url, link)
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def get_blob(
         self,
         container: container_type,
@@ -440,7 +449,8 @@ class Registry:
         return oras.container.Container(name, registry=self.hostname)
 
     # Functions to be deprecated in favor of exposed ones
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def _download_blob(
         self, container: container_type, digest: str, outfile: str
     ) -> str:
@@ -485,7 +495,8 @@ class Registry:
         )
         return self.upload_blob(blob, container, layer, do_chunked)
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def download_blob(
         self, container: container_type, digest: str, outfile: str
     ) -> str:
@@ -516,6 +527,8 @@ class Registry:
             raise e
         return outfile
 
+    @decorator.ensure_container(1)
+    @decorator.ensure_auth(1)
     def put_upload(
         self,
         blob: str,
@@ -561,6 +574,8 @@ class Registry:
             )
         return response
 
+    @decorator.ensure_container(1)
+    @decorator.ensure_auth(1)
     def blob_exists(self, layer: dict, container: oras.container.Container) -> bool:
         """
         Check if a layer already exists in the registry.
@@ -600,6 +615,8 @@ class Registry:
             session_url = f"{prefix}{session_url}"
         return session_url
 
+    @decorator.ensure_container(1)
+    @decorator.ensure_auth(1)
     def chunked_upload(
         self,
         blob: str,
@@ -688,6 +705,8 @@ class Registry:
         except Exception:
             pass
 
+    @decorator.ensure_container(1)
+    @decorator.ensure_auth(1)
     def upload_manifest(
         self,
         manifest: dict,
@@ -751,9 +770,13 @@ class Registry:
         """
         container = self.get_container(target)
         files = files or []
-        self.auth.load_configs(
-            container, configs=[config_path] if config_path else None
-        )
+
+        # If a custom config path is provided, load those configs
+        if config_path:
+            self.auth.load_configs(container, configs=[config_path])
+        else:
+            # Use the already loaded auths with ensure_auth pattern
+            self.auth.ensure_auth_for_container(container)
 
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
@@ -891,9 +914,13 @@ class Registry:
         :type target: str
         """
         container = self.get_container(target)
-        self.auth.load_configs(
-            container, configs=[config_path] if config_path else None
-        )
+
+        # If a custom config path is provided, load those configs
+        if config_path:
+            self.auth.load_configs(container, configs=[config_path])
+        else:
+            # Use the already loaded auths with ensure_auth pattern
+            self.auth.ensure_auth_for_container(container)
         manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
         overwrite = overwrite
@@ -932,7 +959,8 @@ class Registry:
             files.append(outfile)
         return files
 
-    @decorator.ensure_container
+    @decorator.ensure_container()
+    @decorator.ensure_auth()
     def get_manifest(
         self,
         container: container_type,
@@ -946,10 +974,6 @@ class Registry:
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
         """
-        # Load authentication configs for the container's registry
-        # This ensures credentials are available for authenticated registries
-        self.auth.load_configs(container)
-
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
