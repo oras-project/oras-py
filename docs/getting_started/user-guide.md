@@ -678,17 +678,13 @@ More verbose output should appear.
 
 > I get unauthorized when trying to login to an Amazon ECR Registry
 
-Note that for [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html)
-you might need to login per the instructions at the link provided. If you look at your `~/.docker/config.json` and see
-that there is a "credsStore" section that is populated, you might also need to comment this out
-while using oras-py. Oras-py currently doesn't support reading external credential stores, so you will
-need to comment it out, login again, and then try your request. To sanity check that you've done
-this correctly, you should see an "auth" key under a hostname under "auths" in this file with a base64
-encoded string (this is actually your username and password!) An empty dictionary there indicates that you
-are using a helper. Finally, it would be cool if we supported these external stores! If you
-want to contribute this or help think about how to do it, @vsoch would be happy to help.
+You can use the ECR auth backend by setting the `auth_backend` to `ecr`:
 
-
+```python
+import oras.client
+client = oras.client.OrasClient(auth_backend="ecr")
+client.pull(target="123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest")   
+```
 
 ## Custom Clients
 

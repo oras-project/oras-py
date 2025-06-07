@@ -67,6 +67,7 @@ if __name__ == "__main__":
     TESTS_REQUIRES = get_reqs(lookup, "TESTS_REQUIRES")
     INSTALL_REQUIRES_ALL = get_reqs(lookup, "INSTALL_REQUIRES_ALL")
     DOCKER_REQUIRES = get_reqs(lookup, "DOCKER_REQUIRES")
+    ECR_REQUIRES = get_reqs(lookup, "ECR_REQUIRES")
 
     setup(
         name=NAME,
@@ -90,6 +91,7 @@ if __name__ == "__main__":
             "all": [INSTALL_REQUIRES_ALL],
             "tests": [TESTS_REQUIRES],
             "docker": [DOCKER_REQUIRES],
+            "ecr": [ECR_REQUIRES],
         },
         classifiers=[
             "Intended Audience :: Science/Research",
