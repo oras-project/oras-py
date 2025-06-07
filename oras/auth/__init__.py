@@ -1,9 +1,10 @@
 import requests
 
 from .basic import BasicAuth
+from .ecr import EcrAuth
 from .token import TokenAuth
 
-auth_backends = {"token": TokenAuth, "basic": BasicAuth}
+auth_backends = {"token": TokenAuth, "basic": BasicAuth, "ecr": EcrAuth}
 
 
 class AuthenticationException(Exception):

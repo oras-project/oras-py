@@ -23,4 +23,8 @@ TESTS_REQUIRES = (("pytest", {"min_version": "4.6.2"}),)
 
 DOCKER_REQUIRES = (("docker", {"exact_version": "5.0.1"}),)
 
-INSTALL_REQUIRES_ALL = INSTALL_REQUIRES + TESTS_REQUIRES + DOCKER_REQUIRES
+ECR_REQUIRES = (("boto3", {"min_version": "1.33.0"}),)
+
+INSTALL_REQUIRES_ALL = (
+    INSTALL_REQUIRES + TESTS_REQUIRES + DOCKER_REQUIRES + ECR_REQUIRES
+)
