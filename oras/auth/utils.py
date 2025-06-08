@@ -26,16 +26,24 @@ def load_configs(configs: Optional[List[str]] = None):
         configs.append(default_config)
     configs = set(configs)  # type: ignore
 
-    # Load configs until we find our registry hostname
+    # Load configs
     auths = {}
+    creds_store = None
+    cred_helpers = {}
     for config in configs:
         if not os.path.exists(config):
             logger.warning(f"{config} does not exist.")
             continue
         cfg = oras.utils.read_json(config)
         auths.update(cfg.get("auths", {}))
+        creds_store = cfg.get("credsStore")
+        cred_helpers.update(cfg.get("credHelpers", {}))
 
-    return auths
+    return {
+        "auths": auths,
+        "credsStore": creds_store,
+        "credHelpers": cred_helpers,
+    }
 
 
 def get_basic_auth(username: str, password: str):

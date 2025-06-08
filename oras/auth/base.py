@@ -2,7 +2,8 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
-
+import json
+import subprocess
 from typing import Optional
 
 import requests
@@ -23,7 +24,7 @@ class AuthBackend:
     _tls_verify: bool
 
     def __init__(self, *args, **kwargs):
-        self._auths: dict = {}
+        self._auth_config: dict = {}
         self.prefix: str = "https"
 
     def get_auth_header(self):
@@ -48,19 +49,40 @@ class AuthBackend:
         :type hostname: str
         """
         self._logout()
-        if not self._auths:
+        if not self._auth_config or not self._auth_config.get("auths"):
             logger.info(f"You are not logged in to {hostname}")
             return
 
         for host in oras.utils.iter_localhosts(hostname):
-            if host in self._auths:
-                del self._auths[host]
+            auths = self._auth_config.get("auths", {})
+            if host in auths:
+                del auths[host]
                 logger.info(f"You have successfully logged out of {hostname}")
                 return
         logger.info(f"You are not logged in to {hostname}")
 
     def _logout(self):
         pass
+
+    def _get_auth_from_creds_store(self, binary: str, hostname: str) -> str:
+        try:
+            proc = subprocess.run(
+                [binary, "get"],
+                input=hostname.encode(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True,
+            )
+        except FileNotFoundError as exc:
+            raise RuntimeError(
+                f"Credential helper '{binary}' not found in PATH"
+            ) from exc
+        except subprocess.CalledProcessError as exc:
+            raise RuntimeError(
+                f"Credential helper '{binary}' failed: {exc.stderr.decode().strip()}"
+            ) from exc
+        payload = json.loads(proc.stdout)
+        return auth_utils.get_basic_auth(payload["Username"], payload["Secret"])
 
     def _load_auth(self, hostname: str) -> bool:
         """
@@ -70,21 +92,35 @@ class AuthBackend:
         :type hostname: str
         """
         # Note that the hostname can be defined without a token
-        if hostname in self._auths:
-            auth = self._auths[hostname].get("auth")
+        auths = self._auth_config.get("auths", {})
+        auth = auths.get(hostname)
+        if auth is not None:
+            auth = auths[hostname].get("auth")
 
-            # Case 1: they use a credsStore we don't know how to read
-            if not auth and "credsStore" in self._auths[hostname]:
-                logger.warning(
-                    '"credsStore" found in your ~/.docker/config.json, which is not supported by oras-py. Remove it, docker login, and try again.'
-                )
-                return False
-
-            # Case 2: no auth there (wonky file)
-            elif not auth:
+            if not auth:
+                # no auth there (wonky file)
                 return False
             self._basic_auth = auth
             return True
+        # Check for credsStore:
+        if self._auth_config.get("credsStore"):
+            auth = self._get_auth_from_creds_store(
+                self._auth_config["credsStore"], hostname
+            )
+            if auth is not None:
+                self._basic_auth = auth
+                auths[hostname] = {"auth": auth}
+                return True
+        # Check for credHelper
+        if self._auth_config.get("credHelpers", {}).get(hostname):
+            auth = self._get_auth_from_creds_store(
+                self._auth_config["credHelpers"][hostname], hostname
+            )
+            if auth is not None:
+                self._basic_auth = auth
+                auths[hostname] = {"auth": auth}
+                return True
+
         return False
 
     @decorator.ensure_container
@@ -100,8 +136,8 @@ class AuthBackend:
         :param configs: list of configs to read (optional)
         :type configs: list
         """
-        if not self._auths:
-            self._auths = auth_utils.load_configs(configs)
+        if not self._auth_config:
+            self._auth_config = auth_utils.load_configs(configs)
         for registry in oras.utils.iter_localhosts(container.registry):  # type: ignore
             if self._load_auth(registry):
                 return
