@@ -15,7 +15,7 @@ The versions coincide with releases on pip. Only major versions will be released
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
  - Add support for authentication with ECR registries (0.2.34)
- - Add support for Docker credsStore and credHelpers (0.2.34)
+ - Add support for Docker credsStore and credHelpers
  - fix 'get_manifest()' method with adding 'load_configs()' calling (0.2.33)
  - fix 'Provider' method signature to allow custom CA-Bundles (0.2.32)
  - initialize headers variable in do_request (0.2.31)
