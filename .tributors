@@ -153,5 +153,9 @@
     "diverger": {
         "name": "diverger",
         "blog": "https://github.com/diverger"
+    },
+    "rasmusfaber": {
+        "name": "rasmusfaber",
+        "blog": "https://github.com/rasmusfaber"
     }
 }

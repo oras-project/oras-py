@@ -350,6 +350,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/335566?v=4"
             ]
+        },
+        {
+            "login": "rasmusfaber",
+            "name": "rasmusfaber",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/rasmusfaber",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/2798829?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
