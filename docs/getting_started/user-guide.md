@@ -678,9 +678,15 @@ More verbose output should appear.
 
 > I get unauthorized when trying to login to an Amazon ECR Registry
 
-If you have configured a credsStore or a credHelper in your Docker config, you should remember
-to use the basic auth backend.
+If you have configured a credsStore or a credHelper in your Docker config, you
+should remember to use the basic auth backend. Alternatively, you can use the ECR
+auth backend by setting the `auth_backend` to `ecr`:
 
+```python
+import oras.client
+client = oras.client.OrasClient(auth_backend="ecr")
+client.pull(target="123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest")
+```
 
 ## Custom Clients
 
