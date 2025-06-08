@@ -1482,9 +1482,30 @@ provided client:
            </div>
           </blockquote>
           <p>
-           If you have configured a credsStore or a credHelper in your Docker config, you should remember
-to use the basic auth backend.
+           If you have configured a credsStore or a credHelper in your Docker config, you
+should remember to use the basic auth backend. Alternatively, you can use the ECR
+auth backend by setting the
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             auth_backend
+            </span>
+           </code>
+           to
+           <code class="docutils literal notranslate">
+            <span class="pre">
+             ecr
+            </span>
+           </code>
+           :
           </p>
+          <div class="highlight-python notranslate">
+           <div class="highlight">
+            <pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">oras.client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">OrasClient</span><span class="p">(</span><span class="n">auth_backend</span><span class="o">=</span><span class="s2">"ecr"</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">"123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest"</span><span class="p">)</span>
+</pre>
+           </div>
+          </div>
          </section>
         </section>
         <section id="custom-clients">
