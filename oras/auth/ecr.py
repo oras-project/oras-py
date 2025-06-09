@@ -54,7 +54,7 @@ class EcrAuth(TokenAuth):
                 logger.warning(f"realm: {h.realm} did not match expected pattern.")
                 return super().request_token(h)
             region = m.group("region")
-            try: # avoid mandatory requirement on `boto3`
+            try:  # avoid mandatory requirement on `boto3`
                 import boto3
             except ImportError as e:
                 msg = """the `boto3` dependency is required to support authentication to this registry.
