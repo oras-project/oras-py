@@ -54,6 +54,8 @@ def retry(attempts=5, timeout=2):
                     raise e
                 except requests.exceptions.SSLError:
                     raise
+                except ImportError as e:
+                    raise e
                 except Exception as e:
                     sleep = timeout + 3**attempt
                     logger.info(f"Retrying in {sleep} seconds - error: {e}")

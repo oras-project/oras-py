@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 
 import re
 
-import boto3
+# do not `import boto3` as it's the `ecr` extra, see setup.py
 import requests
 
 import oras.auth.utils as auth_utils
@@ -54,6 +54,17 @@ class EcrAuth(TokenAuth):
                 logger.warning(f"realm: {h.realm} did not match expected pattern.")
                 return super().request_token(h)
             region = m.group("region")
+            try: # avoid mandatory requirement on `boto3`
+                import boto3
+            except ImportError as e:
+                msg = """the `boto3` dependency is required to support authentication to this registry.
+                Make sure to install the required extra, e.g.:
+
+                ```sh
+                pip install oras[ecr]
+                ```
+                """
+                raise ImportError(msg) from e
             ecr = boto3.client("ecr", region_name=region)
             auth = ecr.get_authorization_token()["authorizationData"][0]
             token = auth.get("authorizationToken", "")
