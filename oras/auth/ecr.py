@@ -4,7 +4,6 @@ __license__ = "Apache-2.0"
 
 import re
 
-# do not `import boto3` as it's the `ecr` extra, see setup.py
 import requests
 
 import oras.auth.utils as auth_utils
