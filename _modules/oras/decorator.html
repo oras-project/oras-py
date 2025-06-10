@@ -352,7 +352,7 @@
                     <span class="k">return</span> <span class="n">res</span>
                 <span class="k">except</span> <span class="n">oras</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">AuthenticationException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">e</span>
-                <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">SSLError</span><span class="p">:</span>
+                <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">SSLError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
                     <span class="k">raise</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">sleep</span> <span class="o">=</span> <span class="n">timeout</span> <span class="o">+</span> <span class="mi">3</span><span class="o">**</span><span class="n">attempt</span>
@@ -384,7 +384,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 08, 2025.
+              Jun 10, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

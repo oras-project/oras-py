@@ -341,7 +341,7 @@
                  </a>
                 </li>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.main.html#oras-main-login-module">
+                 <a class="reference internal" href="oras.main.html#module-oras.main.login">
                   oras.main.login module
                  </a>
                 </li>
@@ -363,12 +363,12 @@
                  </a>
                 </li>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.tests.html#oras-tests-test-oras-module">
+                 <a class="reference internal" href="oras.tests.html#module-oras.tests.test_oras">
                   oras.tests.test_oras module
                  </a>
                 </li>
                 <li class="toctree-l4">
-                 <a class="reference internal" href="oras.tests.html#oras-tests-test-provider-module">
+                 <a class="reference internal" href="oras.tests.html#module-oras.tests.test_provider">
                   oras.tests.test_provider module
                  </a>
                 </li>
@@ -419,12 +419,32 @@
              </a>
             </li>
             <li class="toctree-l2">
-             <a class="reference internal" href="oras.html#oras-auth-module">
+             <a class="reference internal" href="oras.html#module-oras.auth">
               oras.auth module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.AuthenticationException">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  AuthenticationException
+                 </span>
+                </code>
+               </a>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.auth.get_auth_backend">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  get_auth_backend()
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
-             <a class="reference internal" href="oras.html#oras-client-module">
+             <a class="reference internal" href="oras.html#module-oras.client">
               oras.client module
              </a>
             </li>
@@ -1036,9 +1056,202 @@
              </ul>
             </li>
             <li class="toctree-l2">
-             <a class="reference internal" href="oras.html#oras-provider-module">
+             <a class="reference internal" href="oras.html#module-oras.provider">
               oras.provider module
              </a>
+             <ul>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.provider.Registry">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  Registry
+                 </span>
+                </code>
+               </a>
+               <ul>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.blob_exists">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.blob_exists()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.chunked_upload">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.chunked_upload()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.delete_tag">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.delete_tag()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.delete_tags">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.delete_tags()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.do_request">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.do_request()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.download_blob">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.download_blob()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_blob">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_blob()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_container">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_container()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_manifest">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_manifest()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.get_tags">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.get_tags()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.login">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.login()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.logout">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.logout()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.pull">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.pull()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.push">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.push()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.put_upload">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.put_upload()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.set_header">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.set_header()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.upload_blob">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.upload_blob()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.upload_manifest">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.upload_manifest()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="toctree-l4">
+                 <a class="reference internal" href="oras.html#oras.provider.Registry.version">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    Registry.version()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toctree-l3">
+               <a class="reference internal" href="oras.html#oras.provider.temporary_empty_config">
+                <code class="docutils literal notranslate">
+                 <span class="pre">
+                  temporary_empty_config()
+                 </span>
+                </code>
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toctree-l2">
              <a class="reference internal" href="oras.html#module-oras.schemas">
@@ -1105,7 +1318,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Jun 08, 2025.
+              Jun 10, 2025.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
