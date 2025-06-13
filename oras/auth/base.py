@@ -102,19 +102,19 @@ class AuthBackend:
                 return False
             self._basic_auth = auth
             return True
-        # Check for credsStore:
-        if self._auth_config.get("credsStore"):
+        # Check for credHelper
+        if self._auth_config.get("credHelpers", {}).get(hostname):
             auth = self._get_auth_from_creds_store(
-                self._auth_config["credsStore"], hostname
+                self._auth_config["credHelpers"][hostname], hostname
             )
             if auth is not None:
                 self._basic_auth = auth
                 auths[hostname] = {"auth": auth}
                 return True
-        # Check for credHelper
-        if self._auth_config.get("credHelpers", {}).get(hostname):
+        # Check for credsStore:
+        if self._auth_config.get("credsStore"):
             auth = self._get_auth_from_creds_store(
-                self._auth_config["credHelpers"][hostname], hostname
+                self._auth_config["credsStore"], hostname
             )
             if auth is not None:
                 self._basic_auth = auth
