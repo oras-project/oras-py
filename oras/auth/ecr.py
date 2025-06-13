@@ -17,14 +17,21 @@ class EcrAuth(TokenAuth):
     """
     Auth backend for AWS ECR (Elastic Container Registry) using token-based authentication.
     """
-    AWS_ECR_PATTERN = re.compile(r"(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com")
-    AWS_ECR_REALM_PATTERN = re.compile(r"https://(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com/")
+
+    AWS_ECR_PATTERN = re.compile(
+        r"(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com"
+    )
+    AWS_ECR_REALM_PATTERN = re.compile(
+        r"https://(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com/"
+    )
 
     def __init__(self):
         super().__init__()
         self._tokens = {}
 
-    def load_configs(self, container: container_type, configs: Optional[list] = None) -> None:
+    def load_configs(
+        self, container: container_type, configs: Optional[list] = None
+    ) -> None:
         if not self.AWS_ECR_PATTERN.fullmatch(container.registry):
             super().load_configs(container, configs)
 

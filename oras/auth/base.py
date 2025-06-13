@@ -77,7 +77,9 @@ class AuthBackend:
             logger.warning(f"Credential helper '{binary}' not found in PATH")
             return None
         except subprocess.CalledProcessError as exc:
-            logger.warning(f"Credential helper '{binary}' failed: {exc.stderr.decode().strip()}")
+            logger.warning(
+                f"Credential helper '{binary}' failed: {exc.stderr.decode().strip()}"
+            )
             return None
         payload = json.loads(proc.stdout)
         return auth_utils.get_basic_auth(payload["Username"], payload["Secret"])
