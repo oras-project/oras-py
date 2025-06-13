@@ -3,12 +3,14 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import re
+from typing import Optional
 
 import requests
 
 import oras.auth.utils as auth_utils
 from oras.auth.token import TokenAuth
 from oras.logger import logger
+from oras.types import container_type
 
 
 class EcrAuth(TokenAuth):
@@ -16,9 +18,22 @@ class EcrAuth(TokenAuth):
     Auth backend for AWS ECR (Elastic Container Registry) using token-based authentication.
     """
 
+    AWS_ECR_PATTERN = re.compile(
+        r"(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com"
+    )
+    AWS_ECR_REALM_PATTERN = re.compile(
+        r"https://(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com/"
+    )
+
     def __init__(self):
         super().__init__()
         self._tokens = {}
+
+    def load_configs(
+        self, container: container_type, configs: Optional[list] = None
+    ) -> None:
+        if not self.AWS_ECR_PATTERN.fullmatch(container.registry):
+            super().load_configs(container, configs)
 
     def authenticate_request(
         self, original: requests.Response, headers: dict, refresh=False
@@ -46,7 +61,7 @@ class EcrAuth(TokenAuth):
         token = self._tokens.get(h.realm)
         if not token or refresh:
             m = re.fullmatch(
-                r"https://(?P<account_id>\d{12})\.dkr\.ecr\.(?P<region>[^.]+)\.amazonaws\.com/",
+                self.AWS_ECR_REALM_PATTERN,
                 h.realm,
             )
             if not m:

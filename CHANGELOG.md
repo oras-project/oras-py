@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - Properly prioritize auth methods (0.2.36)
  - fix 'authentication with ECR' to be an extra as intended (0.2.35)
  - Add support for authentication with ECR registries (0.2.34)
  - Add support for Docker credsStore and credHelpers

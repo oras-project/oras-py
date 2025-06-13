@@ -64,7 +64,7 @@ class AuthBackend:
     def _logout(self):
         pass
 
-    def _get_auth_from_creds_store(self, binary: str, hostname: str) -> str:
+    def _get_auth_from_creds_store(self, binary: str, hostname: str) -> str | None:
         try:
             proc = subprocess.run(
                 [binary, "get"],
@@ -73,14 +73,14 @@ class AuthBackend:
                 stderr=subprocess.PIPE,
                 check=True,
             )
-        except FileNotFoundError as exc:
-            raise RuntimeError(
-                f"Credential helper '{binary}' not found in PATH"
-            ) from exc
+        except FileNotFoundError:
+            logger.warning(f"Credential helper '{binary}' not found in PATH")
+            return None
         except subprocess.CalledProcessError as exc:
-            raise RuntimeError(
+            logger.warning(
                 f"Credential helper '{binary}' failed: {exc.stderr.decode().strip()}"
-            ) from exc
+            )
+            return None
         payload = json.loads(proc.stdout)
         return auth_utils.get_basic_auth(payload["Username"], payload["Secret"])
 
@@ -102,19 +102,19 @@ class AuthBackend:
                 return False
             self._basic_auth = auth
             return True
-        # Check for credsStore:
-        if self._auth_config.get("credsStore"):
+        # Check for credHelper
+        if self._auth_config.get("credHelpers", {}).get(hostname):
             auth = self._get_auth_from_creds_store(
-                self._auth_config["credsStore"], hostname
+                self._auth_config["credHelpers"][hostname], hostname
             )
             if auth is not None:
                 self._basic_auth = auth
                 auths[hostname] = {"auth": auth}
                 return True
-        # Check for credHelper
-        if self._auth_config.get("credHelpers", {}).get(hostname):
+        # Check for credsStore:
+        if self._auth_config.get("credsStore"):
             auth = self._get_auth_from_creds_store(
-                self._auth_config["credHelpers"][hostname], hostname
+                self._auth_config["credsStore"], hostname
             )
             if auth is not None:
                 self._basic_auth = auth
