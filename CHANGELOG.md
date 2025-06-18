@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - fix Python 3.7+ compatibility by avoiding union syntax and rely on typing (0.2.38)
  - Use the correct credsStore/credHelpers binary (0.2.37)
  - Properly prioritize auth methods (0.2.36)
  - fix 'authentication with ECR' to be an extra as intended (0.2.35)

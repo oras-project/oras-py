@@ -64,7 +64,7 @@ class AuthBackend:
     def _logout(self):
         pass
 
-    def _get_auth_from_creds_store(self, suffix: str, hostname: str) -> str | None:
+    def _get_auth_from_creds_store(self, suffix: str, hostname: str) -> Optional[str]:
         binary = f"docker-credential-{suffix}"
         try:
             proc = subprocess.run(
