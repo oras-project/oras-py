@@ -30,6 +30,7 @@ The versions coincide with releases on pip. Only major versions will be released
  - check for blob existence before uploading (0.2.26)
    - fix get_tags for ECR when limit is None, closes issue [173](https://github.com/oras-project/oras-py/issues/173)
    - fix empty token for anon tokens to work, closes issue [167](https://github.com/oras-project/oras-py/issues/167)
+   - use same annotation as oras-go for determining whether to unpack a layer or not [119](https://github.com/oras-project/oras-py/issues/119)
  - retry on 500 (0.2.25)
  - align provider config_path type annotations (0.2.24)
  - add missing prefix property to auth backend (0.2.23)
