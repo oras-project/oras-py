@@ -992,7 +992,13 @@ class Registry:
             headers = {}
 
         # Make the request and return to calling function, but attempt to use auth token if previously obtained
-        if isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None:
+        if (
+            isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None
+        ) or (
+            isinstance(self.auth, oras.auth.BasicAuth)
+            and hasattr(self.auth, "_basic_auth")
+            and self.auth._basic_auth is not None
+        ):
             headers.update(self.auth.get_auth_header())
         response = self.session.request(
             method,
