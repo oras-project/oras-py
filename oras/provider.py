@@ -337,7 +337,7 @@ class Registry:
         delete_url = f"{self.prefix}://{container.manifest_url(digest)}"  # type: ignore
         response = self.do_request(delete_url, "DELETE")
         if response.status_code != 202:
-            raise RuntimeError("Delete was not successful: {response.json()}")
+            raise RuntimeError(f"Delete was not successful: {response.json()}")
         return True
 
     @decorator.ensure_container
