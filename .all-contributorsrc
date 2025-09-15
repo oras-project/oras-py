@@ -361,6 +361,28 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/2798829?v=4"
             ]
+        },
+        {
+            "login": "kerthcet",
+            "name": "Kante Yin",
+            "contributions": [
+                "code"
+            ],
+            "profile": "ky.dev",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/18364341?v=4"
+            ]
+        },
+        {
+            "login": "antisaling",
+            "name": "Isabella Basso",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://crosscat.me",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/39812919?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
