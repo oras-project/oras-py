@@ -1,6 +1,6 @@
 name: Oras Auth Tests
 on:
-  pull_request: []
+  pull_request: {}
 
 jobs:
   test-auth:
