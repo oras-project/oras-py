@@ -76,7 +76,9 @@
     "saketjajoo": {
         "name": "Saket Jajoo",
         "email": "saketjajoo77@gmail.com",
-        "blog": "https://saketjajoo.github.io"
+        "blog": "https://saketjajoo.github.io",
+        "orcid": "0009-0000-3594-6398",
+        "affiliation": "University of Illinois Urbana-Champaign"
     },
     "miker985": {
         "name": "Mike",
@@ -157,5 +159,18 @@
     "rasmusfaber": {
         "name": "rasmusfaber",
         "blog": "https://github.com/rasmusfaber"
+    },
+    "antisaling": {
+        "name": "Isabella Basso",
+        "email": "isabellabdoamaral@usp.br",
+        "bio": "wibbly-wobbly mathsy-computesey stuff",
+        "blog": "https://crosscat.me",
+        "orcid": "0000-0001-5549-1220"
+    },
+    "kerthcet": {
+        "name": "Kante Yin",
+        "email": "kerthcet@gmail.com",
+        "bio": "Building @InftyAI @kubernetes | Cooking @modelspec-ai ",
+        "blog": "ky.dev"
     }
 }
