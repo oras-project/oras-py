@@ -5,7 +5,7 @@ on:
   release:
     types: [published]
 
-  pull_request: []
+  pull_request: {}
 
   # On push to main we build and deploy images
   push:
