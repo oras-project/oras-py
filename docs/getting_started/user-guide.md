@@ -11,7 +11,7 @@ or jump to our [developer guide](developer-guide.md) to learn about running test
 or contributing to the project. If you want to create your own client, you likely want to:
 
 
- 1. Start a local registry (described below), or have access to an ORAS [supported registry](https://oras.land/implementors/#docker-distribution)
+ 1. Start a local registry (described below), or have access to an ORAS [supported registry](https://oras.land/docs/compatible_oci_registries)
  2. Decide on the context for your code (e.g., it's easy to start with Python functions in a single file and move to a client setup if appropriate for your tool)
  3. Subclass the `oras.provider.Registry` for your custom class (examples below!)
  4. Add custom functions to push, pull, or create manifests / layers
