@@ -802,6 +802,12 @@ class Registry:
             if annotations:
                 layer["annotations"].update(annotations)
 
+            # if filepath annotation is present, set it
+            if oras.defaults.annotation_filepath in layer["annotations"]:
+                layer["annotations"][oras.defaults.annotation_filepath] = (
+                    blob_name.strip(os.sep)
+                )
+
             # update the manifest with the new layer
             manifest["layers"].append(layer)
             logger.debug(f"Preparing layer {layer}")
@@ -901,8 +907,8 @@ class Registry:
         files = []
         for layer in manifest.get("layers", []):
             filename = (layer.get("annotations") or {}).get(
-                oras.defaults.annotation_title
-            )
+                oras.defaults.annotation_filepath
+            ) or (layer.get("annotations") or {}).get(oras.defaults.annotation_title)
 
             # If we don't have a filename, default to digest. Hopefully does not happen
             if not filename:
@@ -917,18 +923,32 @@ class Registry:
                 )
                 continue
 
-            # A directory will need to be uncompressed and moved
-            if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
-                targz = oras.utils.get_tmpfile(suffix=".tar.gz")
-                self.download_blob(container, layer["digest"], targz)
+            # Determine compression format from mediaType and handle accordingly
+            media_type = layer["mediaType"]
+            compression = oras.utils.get_compression_from_media_type(media_type)
 
-                # The artifact will be extracted to the correct name
-                oras.utils.extract_targz(targz, os.path.dirname(outfile))
+            # Handle compressed archives that need extraction
+            if compression in ["gzip", "zstd", "tar"]:
+                # Get appropriate file extension based on compression
+                if compression == "gzip":
+                    suffix = ".tar.gz"
+                elif compression == "zstd":
+                    suffix = ".tar.zst"
+                else:  # tar
+                    suffix = ".tar"
+
+                archive_file = oras.utils.get_tmpfile(suffix=suffix)
+                self.download_blob(container, layer["digest"], archive_file)
+
+                # Extract the archive to the correct location
+                oras.utils.extract_by_compression(
+                    archive_file, os.path.dirname(outfile), compression
+                )
 
             # Anything else just extracted directly
             else:
                 self.download_blob(container, layer["digest"], outfile)
-            logger.info(f"Successfully pulled {outfile}.")
+            logger.info(f"Successfully pulled {outfile}")
             files.append(outfile)
         return files
 
