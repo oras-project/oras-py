@@ -21,6 +21,7 @@ default_blob_dir_media_type = "application/vnd.oci.image.layer.v1.tar+gzip"
 default_blob_media_type = "application/vnd.oci.image.layer.v1.tar"
 unknown_config_media_type = "application/vnd.unknown.config.v1+json"
 default_manifest_media_type = "application/vnd.oci.image.manifest.v1+json"
+default_index_media_type = "application/vnd.oci.image.index.v1+json"
 
 # AnnotationDigest is the annotation key for the digest of the uncompressed content
 annotation_digest = "io.deis.oras.content.digest"
@@ -34,6 +35,14 @@ annotation_unpack = "io.deis.oras.content.unpack"
 # OCIImageIndexFile is the file name of the index from the OCI Image Layout Specification
 # Reference: https://github.com/opencontainers/image-spec/blob/master/image-layout.md#indexjson-file
 oci_image_index_file = "index.json"
+
+# OCI Image Layout constants
+# Reference: https://github.com/opencontainers/image-spec/blob/master/image-layout.md
+oci_blobs_dir = "blobs"
+oci_layout_file = "oci-layout"
+oci_layout_version_pin = "1.0.0"
+oci_index_schema_version = 2
+oci_ref_name_annotation = "org.opencontainers.image.ref.name"
 
 # DefaultBlocksize default size of each slice of bytes read in each write through in gunzipand untar.
 default_blocksize = 32768

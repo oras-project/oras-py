@@ -56,3 +56,15 @@ def target(registry):
 @pytest.fixture
 def target_dir(registry):
     return f"{registry}/dinosaur/directory:v1"
+
+
+@pytest.fixture
+def target_layout_single(registry):
+    """Target for single-arch OCI layout push tests"""
+    return f"{registry}/dinosaur/layout-single:v1"
+
+
+@pytest.fixture
+def target_layout_multi(registry):
+    """Target for multi-arch OCI layout push tests"""
+    return f"{registry}/dinosaur/layout-multi:v1"
