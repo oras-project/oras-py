@@ -46,9 +46,9 @@
   <link href="../../_static/custom.css?v=d68d0989" rel="stylesheet" type="text/css"/>
   <script src="../../_static/documentation_options.js?v=0e525676">
   </script>
-  <script src="../../_static/doctools.js?v=9bcbadda">
+  <script src="../../_static/doctools.js?v=fd6eb6e6">
   </script>
-  <script src="../../_static/sphinx_highlight.js?v=dc90522c">
+  <script src="../../_static/sphinx_highlight.js?v=6ffebe34">
   </script>
   <script src="../../_static/clipboard.min.js?v=a7894cd8">
   </script>
@@ -319,6 +319,7 @@
 <span class="n">default_blob_media_type</span> <span class="o">=</span> <span class="s2">"application/vnd.oci.image.layer.v1.tar"</span>
 <span class="n">unknown_config_media_type</span> <span class="o">=</span> <span class="s2">"application/vnd.unknown.config.v1+json"</span>
 <span class="n">default_manifest_media_type</span> <span class="o">=</span> <span class="s2">"application/vnd.oci.image.manifest.v1+json"</span>
+<span class="n">default_index_media_type</span> <span class="o">=</span> <span class="s2">"application/vnd.oci.image.index.v1+json"</span>
 
 <span class="c1"># AnnotationDigest is the annotation key for the digest of the uncompressed content</span>
 <span class="n">annotation_digest</span> <span class="o">=</span> <span class="s2">"io.deis.oras.content.digest"</span>
@@ -332,6 +333,14 @@
 <span class="c1"># OCIImageIndexFile is the file name of the index from the OCI Image Layout Specification</span>
 <span class="c1"># Reference: https://github.com/opencontainers/image-spec/blob/master/image-layout.md#indexjson-file</span>
 <span class="n">oci_image_index_file</span> <span class="o">=</span> <span class="s2">"index.json"</span>
+
+<span class="c1"># OCI Image Layout constants</span>
+<span class="c1"># Reference: https://github.com/opencontainers/image-spec/blob/master/image-layout.md</span>
+<span class="n">oci_blobs_dir</span> <span class="o">=</span> <span class="s2">"blobs"</span>
+<span class="n">oci_layout_file</span> <span class="o">=</span> <span class="s2">"oci-layout"</span>
+<span class="n">oci_layout_version_pin</span> <span class="o">=</span> <span class="s2">"1.0.0"</span>
+<span class="n">oci_index_schema_version</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">oci_ref_name_annotation</span> <span class="o">=</span> <span class="s2">"org.opencontainers.image.ref.name"</span>
 
 <span class="c1"># DefaultBlocksize default size of each slice of bytes read in each write through in gunzipand untar.</span>
 <span class="n">default_blocksize</span> <span class="o">=</span> <span class="mi">32768</span>
@@ -365,13 +374,13 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 15, 2025.
+              Feb 11, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
        Sphinx
       </a>
-      8.1.3.
+      9.0.4.
              and
       <a href="https://github.com/bashtage/sphinx-material/">
        Material for
