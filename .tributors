@@ -154,7 +154,9 @@
     },
     "diverger": {
         "name": "diverger",
-        "blog": "https://github.com/diverger"
+        "blog": "https://github.com/diverger",
+        "email": "diverger@live.com",
+        "bio": "⚡ Hardware hands: giving code form. 💡 Software soul: making circuits learn."
     },
     "rasmusfaber": {
         "name": "rasmusfaber",
