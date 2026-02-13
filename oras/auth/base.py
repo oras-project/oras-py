@@ -66,10 +66,11 @@ class AuthBackend:
 
     def _get_auth_from_creds_store(self, suffix: str, hostname: str) -> Optional[str]:
         binary = f"docker-credential-{suffix}"
+        stdin = hostname
         try:
             proc = subprocess.run(
                 [binary, "get"],
-                input=hostname.encode(),
+                input=stdin.encode(),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 check=True,
@@ -79,7 +80,8 @@ class AuthBackend:
             return None
         except subprocess.CalledProcessError as exc:
             logger.warning(
-                f"Credential helper '{binary}' failed: {exc.stderr.decode().strip()}"
+                f"Credential helper '{binary}' for {stdin!r} failed: "
+                f"{(exc.stderr or exc.stdout).decode().strip()}"
             )
             return None
         payload = json.loads(proc.stdout)
