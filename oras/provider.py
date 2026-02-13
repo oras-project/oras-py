@@ -541,7 +541,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            raise ValueError(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url (HTTP {r.status_code}): Check auth credentials and registry permissions")
 
         # PUT to upload blob url
         headers = {
@@ -587,7 +587,8 @@ class Registry:
         :param container:  parsed container URI
         :type container: oras.container.Container or str
         """
-        session_url = r.headers.get("location", "")
+        # Try both lowercase and capitalized Location header
+        session_url = r.headers.get("location") or r.headers.get("Location") or ""
         if not session_url:
             return session_url
 
@@ -629,7 +630,7 @@ class Registry:
         # Location should be in the header
         session_url = self._get_location(r, container)
         if not session_url:
-            raise ValueError(f"Issue retrieving session url: {r.json()}")
+            raise ValueError(f"Issue retrieving session url (HTTP {r.status_code}): Check auth credentials and registry permissions")
 
         # Read the blob in chunks, for each do a patch
         start = 0
@@ -654,7 +655,7 @@ class Registry:
                 )
                 session_url = self._get_location(r, container)
                 if not session_url:
-                    raise ValueError(f"Issue retrieving session url: {r.json()}")
+                    raise ValueError(f"Issue retrieving session url (HTTP {r.status_code}): Check auth credentials and registry permissions")
 
         # Finally, issue a PUT request to close blob
         session_url = oras.utils.append_url_params(
@@ -992,8 +993,10 @@ class Registry:
             headers = {}
 
         # Make the request and return to calling function, but attempt to use auth token if previously obtained
-        if isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None:
-            headers.update(self.auth.get_auth_header())
+        if self.auth and hasattr(self.auth, 'get_auth_header'):
+            auth_headers = self.auth.get_auth_header()
+            if auth_headers:  # Only update if we got actual headers
+                headers.update(auth_headers)
         response = self.session.request(
             method,
             url,
