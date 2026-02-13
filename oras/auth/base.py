@@ -97,12 +97,11 @@ class AuthBackend:
         auth = auths.get(hostname)
         if auth is not None:
             auth = auths[hostname].get("auth")
+            if auth:
+                self._basic_auth = auth
+                return True
+            # No inline auth, but this can be normal if a credsStore or credHelper is in use
 
-            if not auth:
-                # no auth there (wonky file)
-                return False
-            self._basic_auth = auth
-            return True
         # Check for credHelper
         if self._auth_config.get("credHelpers", {}).get(hostname):
             auth = self._get_auth_from_creds_store(
