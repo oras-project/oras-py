@@ -937,6 +937,7 @@ class Registry:
         self,
         container: container_type,
         allowed_media_type: Optional[list] = None,
+        validation_schema: Optional[dict] = None,
     ) -> dict:
         """
         Retrieve a manifest for a package.
@@ -945,6 +946,9 @@ class Registry:
         :type container: oras.container.Container or str
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
+        :param validation_schema: optional json schema to validate the manifest against, defaults to media type if a
+            schema exists
+        :type validation_schema: dict
         """
         # Load authentication configs for the container's registry
         # This ensures credentials are available for authenticated registries
@@ -958,8 +962,11 @@ class Registry:
         response = self.do_request(get_manifest, "GET", headers=headers)
 
         self._check_200_response(response)
+        response_content_type = response.headers.get("Content-Type")
+        schema = validation_schema or oras.defaults.type_map.get(response_content_type)
         manifest = response.json()
-        jsonschema.validate(manifest, schema=oras.schemas.manifest)
+        if schema:
+            jsonschema.validate(manifest, schema=schema)
         return manifest
 
     @decorator.retry()

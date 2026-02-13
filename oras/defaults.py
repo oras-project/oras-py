@@ -2,6 +2,8 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors"
 __license__ = "Apache-2.0"
 
+import oras.schemas
+
 # Default tag to use
 default_tag = "latest"
 
@@ -57,3 +59,10 @@ blank_hash = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 blank_config_hash = (
     "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
 )
+
+type_map = {
+    default_blob_dir_media_type: oras.schemas.layer,
+    default_blob_media_type: oras.schemas.layer,
+    default_manifest_media_type: oras.schemas.manifest,
+    default_index_media_type: oras.schemas.index,
+}
