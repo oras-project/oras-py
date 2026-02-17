@@ -174,5 +174,11 @@
         "email": "kerthcet@gmail.com",
         "bio": "Building @InftyAI @kubernetes | Cooking @modelspec-ai ",
         "blog": "ky.dev"
+    },
+    "ianpittwood": {
+        "name": "Ian Pittwood",
+        "email": "pittwoodian@gmail.com",
+        "bio": "Software Engineer at Posit, PBC",
+        "blog": "https://github.com/ianpittwood"
     }
 }
