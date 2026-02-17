@@ -383,6 +383,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/39812919?v=4"
             ]
+        },
+        {
+            "login": "ianpittwood",
+            "name": "Ian Pittwood",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/ianpittwood",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/9877347?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
