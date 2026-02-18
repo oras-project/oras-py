@@ -962,11 +962,9 @@ class Registry:
         response = self.do_request(get_manifest, "GET", headers=headers)
 
         self._check_200_response(response)
-        response_content_type = response.headers.get("Content-Type")
-        schema = validation_schema or oras.defaults.type_map.get(response_content_type)
         manifest = response.json()
-        if schema:
-            jsonschema.validate(manifest, schema=schema)
+        if validation_schema:
+            jsonschema.validate(manifest, schema=validation_schema)
         return manifest
 
     @decorator.retry()
