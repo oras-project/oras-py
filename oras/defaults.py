@@ -22,6 +22,15 @@ default_blob_media_type = "application/vnd.oci.image.layer.v1.tar"
 unknown_config_media_type = "application/vnd.unknown.config.v1+json"
 default_manifest_media_type = "application/vnd.oci.image.manifest.v1+json"
 default_index_media_type = "application/vnd.oci.image.index.v1+json"
+docker_manifest_media_type = "application/vnd.docker.distribution.manifest.v2+json"
+docker_manifest_list_media_type = "application/vnd.docker.distribution.manifest.list.v2+json"
+
+default_manifest_accepted_media_types = [
+    default_manifest_media_type,
+    default_index_media_type,
+    docker_manifest_media_type,
+    docker_manifest_list_media_type,
+]
 
 # AnnotationDigest is the annotation key for the digest of the uncompressed content
 annotation_digest = "io.deis.oras.content.digest"

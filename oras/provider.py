@@ -946,8 +946,7 @@ class Registry:
         :type container: oras.container.Container or str
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
-        :param validation_schema: optional json schema to validate the manifest against, defaults to media type if a
-            schema exists
+        :param validation_schema: optional json schema to validate the manifest against
         :type validation_schema: dict
         """
         # Load authentication configs for the container's registry
@@ -955,7 +954,7 @@ class Registry:
         self.auth.load_configs(container)
 
         if not allowed_media_type:
-            allowed_media_type = [oras.defaults.default_manifest_media_type]
+            allowed_media_type = oras.defaults.default_manifest_accepted_media_types
         headers = {"Accept": ", ".join(allowed_media_type)}
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
