@@ -956,7 +956,7 @@ class Registry:
 
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
-        headers = {"Accept": ";".join(allowed_media_type)}
+        headers = {"Accept": ", ".join(allowed_media_type)}
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
