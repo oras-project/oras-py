@@ -8878,6 +8878,52 @@ and the registry isn’t necessarily the “remote” endpoint.
                </span>
               </span>
              </em>
+             ,
+             <em class="sig-param">
+              <span class="n">
+               <span class="pre">
+                validation_schema
+               </span>
+              </span>
+              <span class="p">
+               <span class="pre">
+                :
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="n">
+               <span class="pre">
+                dict
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
+               </span>
+              </span>
+             </em>
              <span class="sig-paren">
               )
              </span>
@@ -8945,6 +8991,18 @@ and the registry isn’t necessarily the “remote” endpoint.
                    str
                   </em>
                   ) – one or more allowed media types
+                 </p>
+                </li>
+                <li>
+                 <p>
+                  <strong>
+                   validation_schema
+                  </strong>
+                  (
+                  <em>
+                   dict
+                  </em>
+                  ) – optional json schema to validate the manifest against
                  </p>
                 </li>
                </ul>
@@ -11314,7 +11372,7 @@ Set do_chunked=True for chunked upload.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Feb 17, 2026.
+              Feb 19, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
