@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - make `get_manifest()` validation optional, fix `Accept` header join, and expand default `Accept` header types to cover all supported response types for the `/v2/<name>/manifests/<reference>` endpoint (0.2.41)
  - fix preemptive exit in non-empty `auths` lookup when `credsStore` or `credHelpers` is used (0.2.40)
  - introduce API to copy from oci-layout to OCI registry (0.2.39)
  - fix Python 3.7+ compatibility by avoiding union syntax and rely on typing (0.2.38)
