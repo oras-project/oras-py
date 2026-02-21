@@ -9,7 +9,7 @@ import pytest
 import oras.client
 import oras.provider
 import oras.utils as utils
-from oras.layout import Layout, NewLayout
+from oras.layout import Layout, NewLayout, NewLayoutFromRegistry
 
 
 def test_validate_oci_layout_valid_minimal(tmp_path):
@@ -572,6 +572,37 @@ def test_get_ordered_blobs_tag_not_found():
         Layout(layout_path).get_ordered_blobs("nonexistent")
 
 
+def test_blob_exists():
+    """Test _blob_exists returns True for blobs on disk and False otherwise"""
+    layout_path = pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"
+
+    # known blobs from ocilayout1
+    assert (
+        Layout._blob_exists(
+            layout_path,
+            "sha256:cfcb44ade8c9b2579247ceec82c2f18bf03d956b9b2c050753b7d47d1edd369d",
+        )
+        is True
+    )
+    assert (
+        Layout._blob_exists(
+            layout_path,
+            "sha256:6a315ec0732bc64a9763b6da6df8326f836c3661991c8ba3f5e83e1ad4fd57b7",
+        )
+        is True
+    )
+    assert (
+        Layout._blob_exists(
+            layout_path,
+            "sha256:1a88c78449cd2ce9961de409273deac250a60e55b1d8c4beef858b8618ddaba5",
+        )
+        is True
+    )
+
+    # non-existent blobs
+    assert Layout._blob_exists(layout_path, "sha256:0000000000000000") is False
+
+
 @pytest.mark.with_auth(False)
 def test_push_from_layout_single_arch(
     registry, credentials, target_layout_single
@@ -672,3 +703,214 @@ def test_push_from_layout_invalid_tag(
             target=target,
             tag="nonexistent",  # This tag doesn't exist in ocilayout1's index.json
         )
+
+
+@pytest.mark.with_auth(False)
+def test_pull_to_layout_single_arch(
+    registry, credentials, target_layout_single, tmp_path
+):  # using `with_auth` marker requires `credentials` fixture
+    """
+    Round-trip test: push single-arch OCI layout to registry, pull back to temp dir, compare.
+    Requires running registry (ORAS_HOST and ORAS_PORT env variables).
+    """
+    source_layout_path = str(
+        pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"
+    )
+    provider = oras.provider.Registry(insecure=True)
+    Layout(source_layout_path).push_to_registry(
+        provider=provider,
+        target=target_layout_single,
+        tag="latest",
+    )
+
+    pull_dir = str(tmp_path / "pulled_layout")
+    pulled_layout = Layout(pull_dir, validate=False)
+    pulled_layout.pull_from_registry(
+        provider=provider,
+        target=target_layout_single,
+        tag="latest",
+    )
+
+    pulled_layout.validate()
+    source_blobs = sorted(Layout(source_layout_path).get_ordered_blobs("latest"))
+    pulled_blobs = sorted(Layout(pull_dir).get_ordered_blobs("latest"))
+    assert source_blobs == pulled_blobs
+
+    # compare test oci-layout with Pulled tmp oci-layout bytewise
+    for digest in source_blobs:
+        source_path = Layout._digest_to_blob_path(
+            pathlib.Path(source_layout_path), digest
+        )
+        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
+        assert (
+            source_path.read_bytes() == pulled_path.read_bytes()
+        ), f"Blob content mismatch: {digest}"
+
+
+@pytest.mark.with_auth(False)
+def test_pull_to_layout_multi_arch(
+    registry, credentials, target_layout_multi, tmp_path
+):  # using `with_auth` marker requires `credentials` fixture
+    """
+    Round-trip test: push multi-arch OCI layout to registry, pull back to temp dir, compare.
+    Requires running registry (ORAS_HOST and ORAS_PORT env variables).
+    """
+    source_layout_path = str(
+        pathlib.Path(__file__).parent / "ocilayout_data/ocilayout2"
+    )
+    provider = oras.provider.Registry(insecure=True)
+    Layout(source_layout_path).push_to_registry(
+        provider=provider,
+        target=target_layout_multi,
+        tag="latest",
+    )
+
+    pull_dir = str(tmp_path / "pulled_layout")
+    pulled_layout = Layout(pull_dir, validate=False)
+    pulled_layout.pull_from_registry(
+        provider=provider,
+        target=target_layout_multi,
+        tag="latest",
+    )
+
+    pulled_layout.validate()
+    source_blobs = sorted(Layout(source_layout_path).get_ordered_blobs("latest"))
+    pulled_blobs = sorted(Layout(pull_dir).get_ordered_blobs("latest"))
+    assert source_blobs == pulled_blobs
+    assert len(pulled_blobs) == len(set(pulled_blobs))
+
+    # compare test oci-layout with Pulled tmp oci-layout bytewise
+    for digest in source_blobs:
+        source_path = Layout._digest_to_blob_path(
+            pathlib.Path(source_layout_path), digest
+        )
+        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
+        assert (
+            source_path.read_bytes() == pulled_path.read_bytes()
+        ), f"Blob content mismatch: {digest}"
+
+
+def test_pull_from_registry_invalid_target(tmp_path):
+    """
+    Test error handling when pulling with a malformed target.
+    """
+    provider = oras.provider.Registry(insecure=True)
+    pull_dir = str(tmp_path / "pulled_layout")
+    pulled_layout = Layout(pull_dir, validate=False)
+
+    with pytest.raises(ValueError, match="does not match"):
+        pulled_layout.pull_from_registry(
+            provider=provider,
+            target="",
+        )
+
+
+@pytest.mark.with_auth(False)
+def test_pull_to_layout_custom_tag(
+    registry, credentials, target_layout_single, tmp_path
+):  # using `with_auth` marker requires `credentials` fixture
+    """
+    Test that the tag parameter controls the annotation written in the pulled layout's index.json.
+    Requires running registry (ORAS_HOST and ORAS_PORT env variables).
+    """
+    source_layout_path = str(
+        pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"
+    )
+    provider = oras.provider.Registry(insecure=True)
+    Layout(source_layout_path).push_to_registry(
+        provider=provider,
+        target=target_layout_single,
+        tag="latest",
+    )
+
+    pull_dir = str(tmp_path / "pulled_layout")
+    pulled_layout = Layout(pull_dir, validate=False)
+    pulled_layout.pull_from_registry(
+        provider=provider,
+        target=target_layout_single,
+        tag="my-custom-tag",
+    )
+
+    index_data = utils.read_json(str(pathlib.Path(pull_dir) / "index.json"))
+    annotations = index_data["manifests"][0]["annotations"]
+    assert annotations["org.opencontainers.image.ref.name"] == "my-custom-tag"
+    source_blobs = sorted(Layout(source_layout_path).get_ordered_blobs("latest"))
+    pulled_blobs = sorted(Layout(pull_dir).get_ordered_blobs("my-custom-tag"))
+    assert source_blobs == pulled_blobs
+
+    # compare test oci-layout with Pulled tmp oci-layout bytewise
+    for digest in source_blobs:
+        source_path = Layout._digest_to_blob_path(
+            pathlib.Path(source_layout_path), digest
+        )
+        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
+        assert (
+            source_path.read_bytes() == pulled_path.read_bytes()
+        ), f"Blob content mismatch: {digest}"
+
+
+def test_new_layout_from_registry_rejects_non_empty_dir(tmp_path):
+    """NewLayoutFromRegistry should reject a non-empty directory."""
+    (tmp_path / "somefile.txt").write_text("Hello, World!")
+    provider = oras.provider.Registry(insecure=True)
+
+    with pytest.raises(FileExistsError, match="not empty"):
+        NewLayoutFromRegistry(
+            str(tmp_path), provider=provider, target="localhost:5000/repo:v1"
+        )
+
+
+def test_new_layout_from_registry_rejects_file_path(tmp_path):
+    """NewLayoutFromRegistry should reject a path that is a file."""
+    file_path = tmp_path / "afile"
+    file_path.write_text("Hello, World!")
+    provider = oras.provider.Registry(insecure=True)
+
+    with pytest.raises(ValueError, match="not a directory"):
+        NewLayoutFromRegistry(
+            str(file_path), provider=provider, target="localhost:5000/repo:v1"
+        )
+
+
+@pytest.mark.with_auth(False)
+def test_pull_to_layout_by_digest(
+    registry, credentials, target_layout_single, tmp_path
+):  # using `with_auth` marker requires `credentials` fixture
+    """
+    Test pulling by digest reference (repo@sha256:...) instead of tag,
+    using the factory NewLayoutFromRegistry.
+    Requires running registry (ORAS_HOST and ORAS_PORT env variables).
+    """
+    source_layout_path = str(
+        pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"
+    )
+    provider = oras.provider.Registry(insecure=True)
+    push_response = Layout(source_layout_path).push_to_registry(
+        provider=provider,
+        target=target_layout_single,
+        tag="latest",
+    )
+
+    # construct a digest-based reference from the Push response
+    digest = push_response.headers["Docker-Content-Digest"]
+    ref_without_tag = target_layout_single.rsplit(":", 1)[0]
+    digest_ref = f"{ref_without_tag}@{digest}"
+
+    # now Pull using the digest reference via the factory
+    pull_dir = str(tmp_path / "pulled_layout")
+    pulled_layout = NewLayoutFromRegistry(
+        pull_dir, provider=provider, target=digest_ref
+    )
+
+    pulled_layout.validate()
+    source_blobs = sorted(Layout(source_layout_path).get_ordered_blobs("latest"))
+    pulled_blobs = sorted(pulled_layout.get_ordered_blobs("latest"))
+    assert source_blobs == pulled_blobs
+    # compare test oci-layout with Pulled tmp oci-layout bytewise
+    for d in source_blobs:
+        source_path = Layout._digest_to_blob_path(pathlib.Path(source_layout_path), d)
+        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), d)
+        assert source_path.read_bytes() == pulled_path.read_bytes()

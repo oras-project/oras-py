@@ -19,7 +19,7 @@ from oras.layout.validation import (
     _validate_oci_layout_file,
 )
 from oras.logger import logger
-from oras.utils.fileio import read_json
+from oras.utils.fileio import read_json, write_json
 
 if TYPE_CHECKING:
     from oras.provider import Registry
@@ -39,6 +39,45 @@ def NewLayout(path: str, validate: bool = True) -> Layout:
     :raises ValueError: if path is not a directory, or validation fails (when validate=True)
     """
     return Layout(path=path, validate=validate)
+
+
+def NewLayoutFromRegistry(
+    path: str,
+    provider: Registry,
+    target: str,
+    tag: str = "latest",
+) -> Layout:
+    """
+    Create a new OCI Layout on disk by pulling from a remote registry.
+
+    The path must either not exist or be an empty directory.
+
+    :param path: path to create the Layout directory
+    :type path: str
+    :param provider: Registry provider instance for downloading
+    :type provider: oras.provider.Registry
+    :param target: source registry/repository with tag or digest
+        (e.g., "ghcr.io/user/repo:v1.0" or "ghcr.io/user/repo@sha256:abc123...")
+    :type target: str
+    :param tag: tag to write in the layout's index.json annotation (default: "latest")
+    :type tag: str
+    :return: Layout instance for the pulled Layout directory
+    :rtype: Layout
+    :raises FileExistsError: if path exists and is not an empty directory
+    :raises ValueError: if path exists but is not a directory
+    """
+    p = pathlib.Path(path)
+    if p.exists():
+        if not p.is_dir():
+            raise ValueError(f"Path exists and is not a directory: {path}")
+        if any(p.iterdir()):
+            raise FileExistsError(f"Directory is not empty: {path}")
+    else:
+        p.mkdir(parents=True)
+
+    layout = Layout(path=path, validate=False)
+    layout.pull_from_registry(provider=provider, target=target, tag=tag)
+    return layout
 
 
 class Layout:
@@ -211,6 +250,20 @@ class Layout:
         return layout_dir / oras.defaults.oci_blobs_dir / algorithm / hash_value
 
     @staticmethod
+    def _blob_exists(layout_dir: pathlib.Path, digest: str) -> bool:
+        """
+        Check if a blob already exists in the OCI layout on disk.
+
+        :param layout_dir: path to OCI layout directory
+        :type layout_dir: pathlib.Path
+        :param digest: digest with algorithm prefix (e.g., "sha256:abc123...")
+        :type digest: str
+        :return: True if blob file exists on disk
+        :rtype: bool
+        """
+        return Layout._digest_to_blob_path(layout_dir, digest).exists()
+
+    @staticmethod
     def _create_layer_dict(
         blob_path: pathlib.Path, digest: str, media_type: str
     ) -> dict:
@@ -232,6 +285,144 @@ class Layout:
             "size": size,
             "mediaType": media_type or oras.defaults.unknown_config_media_type,
         }
+
+    @staticmethod
+    def _pull_manifest_blobs(
+        provider: Registry,
+        container,
+        manifest_data: dict,
+        manifest_digest: str,
+        manifest_bytes: bytes,
+        layout_dir: pathlib.Path,
+    ) -> None:
+        """
+        Download all blobs referenced by an Image Manifest and store them in the OCI layout.
+
+        Downloads layer blobs and config blob via the registry blob endpoint,
+        then stores the manifest itself from its already-fetched raw bytes.
+        Skips blobs that already exist on disk (deduplication).
+
+        :param provider: Registry provider instance for downloading
+        :type provider: oras.provider.Registry
+        :param container: parsed container URI
+        :type container: oras.container.Container
+        :param manifest_data: parsed manifest JSON
+        :type manifest_data: dict
+        :param manifest_digest: digest of the manifest (with algorithm prefix)
+        :type manifest_digest: str
+        :param manifest_bytes: raw bytes of the manifest
+        :type manifest_bytes: bytes
+        :param layout_dir: path to OCI layout directory
+        :type layout_dir: pathlib.Path
+        """
+        # layer blobs
+        for layer in manifest_data.get("layers", []):
+            layer_digest = layer["digest"]
+            if not Layout._blob_exists(layout_dir, layer_digest):
+                provider.download_blob(
+                    container,
+                    layer_digest,
+                    str(Layout._digest_to_blob_path(layout_dir, layer_digest)),
+                )
+                logger.debug(f"Downloaded layer blob: {layer_digest}")
+
+        # config blob
+        config_digest = manifest_data.get("config", {}).get("digest")
+        if config_digest and not Layout._blob_exists(layout_dir, config_digest):
+            provider.download_blob(
+                container,
+                config_digest,
+                str(Layout._digest_to_blob_path(layout_dir, config_digest)),
+            )
+            logger.debug(f"Downloaded config blob: {config_digest}")
+
+        # manifest blob (raw bytes coming from manifest endpoint fetch)
+        if not Layout._blob_exists(layout_dir, manifest_digest):
+            blob_path = Layout._digest_to_blob_path(layout_dir, manifest_digest)
+            blob_path.parent.mkdir(parents=True, exist_ok=True)  # ensures blobs/<algo>/
+            blob_path.write_bytes(manifest_bytes)
+            logger.debug(f"Stored manifest blob: {manifest_digest}")
+
+    @staticmethod
+    def _pull_index_blobs(
+        provider: Registry,
+        container,
+        index_data: dict,
+        index_digest: str,
+        index_bytes: bytes,
+        layout_dir: pathlib.Path,
+    ) -> None:
+        """
+        Download all content referenced by an Image Index and store in the OCI layout.
+
+        Iterates sub-manifests, fetches each by digest from the registry,
+        and recursively processes them. Handles nested indexes.
+        Skips blobs that already exist on disk (deduplication).
+
+        :param provider: Registry provider instance for downloading
+        :type provider: oras.provider.Registry
+        :param container: parsed container URI
+        :type container: oras.container.Container
+        :param index_data: parsed index JSON
+        :type index_data: dict
+        :param index_digest: digest of the index (with algorithm prefix)
+        :type index_digest: str
+        :param index_bytes: raw bytes of the index
+        :type index_bytes: bytes
+        :param layout_dir: path to OCI layout directory
+        :type layout_dir: pathlib.Path
+        :raises ValueError: if a sub-manifest has an unsupported mediaType
+        """
+        for sub_manifest_ref in index_data.get("manifests", []):
+            sub_digest = sub_manifest_ref["digest"]
+            if Layout._blob_exists(layout_dir, sub_digest):
+                continue
+
+            logger.debug(f"Fetching sub-manifest: {sub_digest}")
+            sub_media_type = sub_manifest_ref.get(
+                "mediaType", oras.defaults.default_manifest_media_type
+            )
+            headers = {"Accept": sub_media_type}
+            sub_url = f"{provider.prefix}://{container.registry}/v2/{container.api_prefix}/manifests/{sub_digest}"
+            response = provider.do_request(sub_url, "GET", headers=headers)
+            provider._check_200_response(response)
+
+            sub_bytes = response.content
+            sub_data = json.loads(sub_bytes)
+            # the Index might have defaulted, so we overwrite with the actual content response
+            sub_media_type = sub_data.get("mediaType", "")
+
+            if sub_media_type == oras.defaults.default_manifest_media_type:
+                Layout._pull_manifest_blobs(
+                    provider,
+                    container,
+                    sub_data,
+                    sub_digest,
+                    sub_bytes,
+                    layout_dir,
+                )
+            elif sub_media_type == oras.defaults.default_index_media_type:
+                # nested index; rare but valid: https://github.com/opencontainers/image-spec/blob/6529f89e290d8169adbddf15e43493b9fdd37b62/image-index.md?plain=1#L40-L46
+                Layout._pull_index_blobs(
+                    provider,
+                    container,
+                    sub_data,
+                    sub_digest,
+                    sub_bytes,
+                    layout_dir,
+                )
+            else:
+                raise ValueError(
+                    f"Unsupported manifest mediaType in index: {sub_media_type}. "
+                    f"Expected '{oras.defaults.default_manifest_media_type}' or '{oras.defaults.default_index_media_type}'"
+                )
+
+        # store the index blob itself
+        if not Layout._blob_exists(layout_dir, index_digest):
+            blob_path = Layout._digest_to_blob_path(layout_dir, index_digest)
+            blob_path.parent.mkdir(parents=True, exist_ok=True)  # ensures blobs/<algo>/
+            blob_path.write_bytes(index_bytes)
+            logger.debug(f"Stored index blob: {index_digest}")
 
     def push_to_registry(
         self,
@@ -347,3 +538,102 @@ class Layout:
 
         logger.debug(f"Successfully pushed {len(ordered_blobs)} blobs to {target}")
         return last_response
+
+    def pull_from_registry(
+        self,
+        provider: Registry,
+        target: str,
+        tag: str = "latest",
+    ) -> None:
+        """
+        Pull an OCI artifact from a remote registry into this OCI layout directory,
+        overwriting the oci-layout index file.
+
+        Creates a valid OCI Layout on disk at this oci-layout's path,
+        downloading all referenced blobs (layers, configs, manifests).
+        Handles both single Image Manifests and Indexes.
+
+        :param provider: Registry provider instance for downloading
+        :type provider: oras.provider.Registry
+        :param target: source registry/repository with tag or digest
+            (e.g., "ghcr.io/user/repo:v1.0" or "ghcr.io/user/repo@sha256:abc123...")
+        :type target: str
+        :param tag: tag to write in the layout's index.json annotation (default: "latest")
+        :type tag: str
+        :raises ValueError: if target is invalid or manifest has unsupported mediaType
+        """
+        container = provider.get_container(target)
+        layout_dir = pathlib.Path(self._oci_layout_path)
+
+        # prepare directory structure for blobs
+        blobs_dir = layout_dir / oras.defaults.oci_blobs_dir / "sha256"
+        blobs_dir.mkdir(parents=True, exist_ok=True)
+
+        headers = {
+            "Accept": ", ".join(oras.defaults.default_manifest_accepted_media_types)
+        }
+        manifest_url = f"{provider.prefix}://{container.manifest_url()}"
+        response = provider.do_request(manifest_url, "GET", headers=headers)
+        provider._check_200_response(response)
+
+        manifest_bytes = response.content
+        manifest_digest = response.headers.get(
+            "Docker-Content-Digest", container.digest
+        )
+        if not manifest_digest:
+            raise RuntimeError(
+                "Expected to find Docker-Content-Digest header in manifest response."
+            )
+        manifest_data = json.loads(manifest_bytes)
+        media_type = manifest_data.get("mediaType", "")
+
+        logger.debug(
+            f"Pulling {target} (mediaType={media_type}, digest={manifest_digest}) to OCI layout"
+        )
+        if media_type == oras.defaults.default_manifest_media_type:
+            Layout._pull_manifest_blobs(
+                provider,
+                container,
+                manifest_data,
+                manifest_digest,
+                manifest_bytes,
+                layout_dir,
+            )
+        elif media_type == oras.defaults.default_index_media_type:
+            Layout._pull_index_blobs(
+                provider,
+                container,
+                manifest_data,
+                manifest_digest,
+                manifest_bytes,
+                layout_dir,
+            )
+        else:
+            raise ValueError(
+                f"Unsupported manifest mediaType: {media_type}. "
+                f"Expected '{oras.defaults.default_manifest_media_type}' or '{oras.defaults.default_index_media_type}'"
+            )
+
+        # oci-layout file
+        oci_layout_content = {
+            "imageLayoutVersion": oras.defaults.oci_layout_version_pin
+        }
+        write_json(oci_layout_content, str(layout_dir / oras.defaults.oci_layout_file))
+
+        # index.json
+        index_entry = {
+            "mediaType": media_type,
+            "digest": manifest_digest,
+            "size": len(manifest_bytes),
+            "annotations": {oras.defaults.oci_ref_name_annotation: tag},
+        }
+        index_content = {
+            "schemaVersion": oras.defaults.oci_index_schema_version,
+            "manifests": [index_entry],
+        }
+        jsonschema.validate(index_content, schema=oras.schemas.index)
+        write_json(index_content, str(layout_dir / oras.defaults.oci_image_index_file))
+
+        logger.debug(
+            f"Successfully pulled {target} to OCI layout at {self._oci_layout_path}"
+        )
