@@ -1,3 +1,3 @@
-from .layout import Layout, NewLayout
+from .layout import Layout, NewLayout, NewLayoutFromRegistry
 
-__all__ = ["Layout", "NewLayout"]
+__all__ = ["Layout", "NewLayout", "NewLayoutFromRegistry"]
