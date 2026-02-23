@@ -175,20 +175,13 @@ class Layout:
 
         # Collect blobs in dependency order
         collected = []
-        Layout._process_manifest(
-            pathlib.Path(self._oci_layout_path), target_digest, collected
-        )
+        self._process_manifest(target_digest, collected)
         return collected
 
-    @staticmethod
-    def _process_manifest(
-        layout_dir: pathlib.Path, digest: str, collected: list[str]
-    ) -> None:
+    def _process_manifest(self, digest: str, collected: list[str]) -> None:
         """
         Recursively process a manifest blob and collect dependencies.
 
-        :param layout_dir: path to OCI layout directory
-        :type layout_dir: pathlib.Path
         :param digest: digest of manifest to process (with algorithm prefix)
         :type digest: str
         :param collected: list to accumulate digests (mutated in place)
@@ -196,9 +189,7 @@ class Layout:
         :raises FileNotFoundError: if blob file doesn't exist
         :raises ValueError: if manifest structure is invalid
         """
-        # Construct blob path: blobs/sha256/abc123...
-        algorithm, hash_value = digest.split(":", 1)
-        blob_path = layout_dir / oras.defaults.oci_blobs_dir / algorithm / hash_value
+        blob_path = self.digest_to_blob_path(digest)
 
         if not blob_path.exists():
             raise FileNotFoundError(f"Blob not found: {blob_path}")
@@ -223,7 +214,7 @@ class Layout:
         elif media_type == oras.defaults.default_index_media_type:
             # Image index: recurse on sub-manifests, then add index itself
             for sub_manifest in manifest.get("manifests", []):
-                Layout._process_manifest(layout_dir, sub_manifest["digest"], collected)
+                self._process_manifest(sub_manifest["digest"], collected)
 
             if digest not in collected:
                 collected.append(digest)
@@ -234,34 +225,33 @@ class Layout:
                 f"Expected '{oras.defaults.default_manifest_media_type}' or '{oras.defaults.default_index_media_type}'"
             )
 
-    @staticmethod
-    def _digest_to_blob_path(layout_dir: pathlib.Path, digest: str) -> pathlib.Path:
+    def digest_to_blob_path(self, digest: str) -> pathlib.Path:
         """
         Convert digest string (usually `sha256:abc123`) to blob file path in OCI layout.
 
-        :param layout_dir: path to OCI layout directory
-        :type layout_dir: pathlib.Path
         :param digest: digest with algorithm prefix (e.g., "sha256:abc123...")
         :type digest: str
         :return: path to blob file (e.g., layout_dir/blobs/sha256/abc123...)
         :rtype: pathlib.Path
         """
         algorithm, hash_value = digest.split(":", 1)
-        return layout_dir / oras.defaults.oci_blobs_dir / algorithm / hash_value
+        return (
+            pathlib.Path(self._oci_layout_path)
+            / oras.defaults.oci_blobs_dir
+            / algorithm
+            / hash_value
+        )
 
-    @staticmethod
-    def _blob_exists(layout_dir: pathlib.Path, digest: str) -> bool:
+    def blob_exists(self, digest: str) -> bool:
         """
         Check if a blob already exists in the OCI layout on disk.
 
-        :param layout_dir: path to OCI layout directory
-        :type layout_dir: pathlib.Path
         :param digest: digest with algorithm prefix (e.g., "sha256:abc123...")
         :type digest: str
         :return: True if blob file exists on disk
         :rtype: bool
         """
-        return Layout._digest_to_blob_path(layout_dir, digest).exists()
+        return self.digest_to_blob_path(digest).exists()
 
     @staticmethod
     def _create_layer_dict(
@@ -286,14 +276,13 @@ class Layout:
             "mediaType": media_type or oras.defaults.unknown_config_media_type,
         }
 
-    @staticmethod
     def _pull_manifest_blobs(
+        self,
         provider: Registry,
         container,
         manifest_data: dict,
         manifest_digest: str,
         manifest_bytes: bytes,
-        layout_dir: pathlib.Path,
     ) -> None:
         """
         Download all blobs referenced by an Image Manifest and store them in the OCI layout.
@@ -312,45 +301,42 @@ class Layout:
         :type manifest_digest: str
         :param manifest_bytes: raw bytes of the manifest
         :type manifest_bytes: bytes
-        :param layout_dir: path to OCI layout directory
-        :type layout_dir: pathlib.Path
         """
         # layer blobs
         for layer in manifest_data.get("layers", []):
             layer_digest = layer["digest"]
-            if not Layout._blob_exists(layout_dir, layer_digest):
+            if not self.blob_exists(layer_digest):
                 provider.download_blob(
                     container,
                     layer_digest,
-                    str(Layout._digest_to_blob_path(layout_dir, layer_digest)),
+                    str(self.digest_to_blob_path(layer_digest)),
                 )
                 logger.debug(f"Downloaded layer blob: {layer_digest}")
 
         # config blob
         config_digest = manifest_data.get("config", {}).get("digest")
-        if config_digest and not Layout._blob_exists(layout_dir, config_digest):
+        if config_digest and not self.blob_exists(config_digest):
             provider.download_blob(
                 container,
                 config_digest,
-                str(Layout._digest_to_blob_path(layout_dir, config_digest)),
+                str(self.digest_to_blob_path(config_digest)),
             )
             logger.debug(f"Downloaded config blob: {config_digest}")
 
         # manifest blob (raw bytes coming from manifest endpoint fetch)
-        if not Layout._blob_exists(layout_dir, manifest_digest):
-            blob_path = Layout._digest_to_blob_path(layout_dir, manifest_digest)
+        if not self.blob_exists(manifest_digest):
+            blob_path = self.digest_to_blob_path(manifest_digest)
             blob_path.parent.mkdir(parents=True, exist_ok=True)  # ensures blobs/<algo>/
             blob_path.write_bytes(manifest_bytes)
             logger.debug(f"Stored manifest blob: {manifest_digest}")
 
-    @staticmethod
     def _pull_index_blobs(
+        self,
         provider: Registry,
         container,
         index_data: dict,
         index_digest: str,
         index_bytes: bytes,
-        layout_dir: pathlib.Path,
     ) -> None:
         """
         Download all content referenced by an Image Index and store in the OCI layout.
@@ -369,13 +355,11 @@ class Layout:
         :type index_digest: str
         :param index_bytes: raw bytes of the index
         :type index_bytes: bytes
-        :param layout_dir: path to OCI layout directory
-        :type layout_dir: pathlib.Path
         :raises ValueError: if a sub-manifest has an unsupported mediaType
         """
         for sub_manifest_ref in index_data.get("manifests", []):
             sub_digest = sub_manifest_ref["digest"]
-            if Layout._blob_exists(layout_dir, sub_digest):
+            if self.blob_exists(sub_digest):
                 continue
 
             logger.debug(f"Fetching sub-manifest: {sub_digest}")
@@ -393,23 +377,21 @@ class Layout:
             sub_media_type = sub_data.get("mediaType", "")
 
             if sub_media_type == oras.defaults.default_manifest_media_type:
-                Layout._pull_manifest_blobs(
+                self._pull_manifest_blobs(
                     provider,
                     container,
                     sub_data,
                     sub_digest,
                     sub_bytes,
-                    layout_dir,
                 )
             elif sub_media_type == oras.defaults.default_index_media_type:
                 # nested index; rare but valid: https://github.com/opencontainers/image-spec/blob/6529f89e290d8169adbddf15e43493b9fdd37b62/image-index.md?plain=1#L40-L46
-                Layout._pull_index_blobs(
+                self._pull_index_blobs(
                     provider,
                     container,
                     sub_data,
                     sub_digest,
                     sub_bytes,
-                    layout_dir,
                 )
             else:
                 raise ValueError(
@@ -418,8 +400,8 @@ class Layout:
                 )
 
         # store the index blob itself
-        if not Layout._blob_exists(layout_dir, index_digest):
-            blob_path = Layout._digest_to_blob_path(layout_dir, index_digest)
+        if not self.blob_exists(index_digest):
+            blob_path = self.digest_to_blob_path(index_digest)
             blob_path.parent.mkdir(parents=True, exist_ok=True)  # ensures blobs/<algo>/
             blob_path.write_bytes(index_bytes)
             logger.debug(f"Stored index blob: {index_digest}")
@@ -462,9 +444,7 @@ class Layout:
         # Upload blobs in dependency order
         last_response = None
         for i, digest in enumerate(ordered_blobs):
-            blob_path = Layout._digest_to_blob_path(
-                pathlib.Path(self._oci_layout_path), digest
-            )
+            blob_path = self.digest_to_blob_path(digest)
 
             # Verify blob exists (we don't have this check by spec in validation_oci_layout)
             if not blob_path.exists():
@@ -591,22 +571,20 @@ class Layout:
             f"Pulling {target} (mediaType={media_type}, digest={manifest_digest}) to OCI layout"
         )
         if media_type == oras.defaults.default_manifest_media_type:
-            Layout._pull_manifest_blobs(
+            self._pull_manifest_blobs(
                 provider,
                 container,
                 manifest_data,
                 manifest_digest,
                 manifest_bytes,
-                layout_dir,
             )
         elif media_type == oras.defaults.default_index_media_type:
-            Layout._pull_index_blobs(
+            self._pull_index_blobs(
                 provider,
                 container,
                 manifest_data,
                 manifest_digest,
                 manifest_bytes,
-                layout_dir,
             )
         else:
             raise ValueError(

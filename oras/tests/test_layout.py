@@ -573,34 +573,31 @@ def test_get_ordered_blobs_tag_not_found():
 
 
 def test_blob_exists():
-    """Test _blob_exists returns True for blobs on disk and False otherwise"""
-    layout_path = pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"
+    """Test blob_exists returns True for blobs on disk and False otherwise"""
+    layout = Layout(str(pathlib.Path(__file__).parent / "ocilayout_data/ocilayout1"))
 
     # known blobs from ocilayout1
     assert (
-        Layout._blob_exists(
-            layout_path,
+        layout.blob_exists(
             "sha256:cfcb44ade8c9b2579247ceec82c2f18bf03d956b9b2c050753b7d47d1edd369d",
         )
         is True
     )
     assert (
-        Layout._blob_exists(
-            layout_path,
+        layout.blob_exists(
             "sha256:6a315ec0732bc64a9763b6da6df8326f836c3661991c8ba3f5e83e1ad4fd57b7",
         )
         is True
     )
     assert (
-        Layout._blob_exists(
-            layout_path,
+        layout.blob_exists(
             "sha256:1a88c78449cd2ce9961de409273deac250a60e55b1d8c4beef858b8618ddaba5",
         )
         is True
     )
 
     # non-existent blobs
-    assert Layout._blob_exists(layout_path, "sha256:0000000000000000") is False
+    assert layout.blob_exists("sha256:0000000000000000") is False
 
 
 @pytest.mark.with_auth(False)
@@ -737,11 +734,11 @@ def test_pull_to_layout_single_arch(
     assert source_blobs == pulled_blobs
 
     # compare test oci-layout with Pulled tmp oci-layout bytewise
+    source_layout = Layout(source_layout_path)
+    pulled_layout_check = Layout(pull_dir)
     for digest in source_blobs:
-        source_path = Layout._digest_to_blob_path(
-            pathlib.Path(source_layout_path), digest
-        )
-        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        source_path = source_layout.digest_to_blob_path(digest)
+        pulled_path = pulled_layout_check.digest_to_blob_path(digest)
         assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
         assert (
             source_path.read_bytes() == pulled_path.read_bytes()
@@ -781,11 +778,11 @@ def test_pull_to_layout_multi_arch(
     assert len(pulled_blobs) == len(set(pulled_blobs))
 
     # compare test oci-layout with Pulled tmp oci-layout bytewise
+    source_layout = Layout(source_layout_path)
+    pulled_layout_check = Layout(pull_dir)
     for digest in source_blobs:
-        source_path = Layout._digest_to_blob_path(
-            pathlib.Path(source_layout_path), digest
-        )
-        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        source_path = source_layout.digest_to_blob_path(digest)
+        pulled_path = pulled_layout_check.digest_to_blob_path(digest)
         assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
         assert (
             source_path.read_bytes() == pulled_path.read_bytes()
@@ -841,11 +838,11 @@ def test_pull_to_layout_custom_tag(
     assert source_blobs == pulled_blobs
 
     # compare test oci-layout with Pulled tmp oci-layout bytewise
+    source_layout = Layout(source_layout_path)
+    pulled_layout_check = Layout(pull_dir)
     for digest in source_blobs:
-        source_path = Layout._digest_to_blob_path(
-            pathlib.Path(source_layout_path), digest
-        )
-        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), digest)
+        source_path = source_layout.digest_to_blob_path(digest)
+        pulled_path = pulled_layout_check.digest_to_blob_path(digest)
         assert pulled_path.exists(), f"Pulled layout missing blob: {digest}"
         assert (
             source_path.read_bytes() == pulled_path.read_bytes()
@@ -910,7 +907,8 @@ def test_pull_to_layout_by_digest(
     pulled_blobs = sorted(pulled_layout.get_ordered_blobs("latest"))
     assert source_blobs == pulled_blobs
     # compare test oci-layout with Pulled tmp oci-layout bytewise
+    source_layout = Layout(source_layout_path)
     for d in source_blobs:
-        source_path = Layout._digest_to_blob_path(pathlib.Path(source_layout_path), d)
-        pulled_path = Layout._digest_to_blob_path(pathlib.Path(pull_dir), d)
+        source_path = source_layout.digest_to_blob_path(d)
+        pulled_path = pulled_layout.digest_to_blob_path(d)
         assert source_path.read_bytes() == pulled_path.read_bytes()
