@@ -1,6 +1,10 @@
 from .fileio import (
     copyfile,
+    extract_by_compression,
+    extract_tar,
+    extract_tar_zstd,
     extract_targz,
+    get_compression_from_media_type,
     get_file_hash,
     get_size,
     get_tmpdir,

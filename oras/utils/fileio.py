@@ -103,6 +103,92 @@ def extract_targz(targz: str, outdir: str, numeric_owner: bool = False):
         tar.extractall(outdir, members=None, numeric_owner=numeric_owner)
 
 
+def extract_tar(tar_file: str, outdir: str, numeric_owner: bool = False):
+    """
+    Extract a .tar (uncompressed) to an output directory.
+    """
+    with tarfile.open(tar_file, "r:") as tar:
+        for member in tar.getmembers():
+            member_path = os.path.join(outdir, member.name)
+            if not is_within_directory(outdir, member_path):
+                raise Exception("Attempted Path Traversal in Tar File")
+        tar.extractall(outdir, members=None, numeric_owner=numeric_owner)
+
+
+def extract_tar_zstd(tar_zstd: str, outdir: str, numeric_owner: bool = False):
+    """
+    Extract a .tar.zst/.tar.zstd to an output directory.
+    Requires zstandard package to be installed.
+    """
+    try:
+        import zstandard as zstd
+    except ImportError:
+        raise ImportError(
+            "zstandard package is required for zstd decompression. "
+            "Install it with: pip install zstandard"
+        )
+
+    with open(tar_zstd, "rb") as compressed_file:
+        dctx = zstd.ZstdDecompressor()
+        with dctx.stream_reader(compressed_file) as reader:
+            with tarfile.open(fileobj=reader, mode="r|") as tar:
+                for member in tar:
+                    member_path = os.path.join(outdir, member.name)
+                    if not is_within_directory(outdir, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+                    tar.extract(member, outdir, numeric_owner=numeric_owner)
+
+
+def get_compression_from_media_type(media_type: str) -> str:
+    """
+    Determine compression format from media type suffix.
+
+    :param media_type: The media type string
+    :type media_type: str
+    :return: Compression format ('gzip', 'zstd', 'tar', or 'raw')
+    :rtype: str
+    """
+    if media_type.endswith("+gzip"):
+        return "gzip"
+    elif media_type.endswith("+zstd"):
+        return "zstd"
+    elif media_type.endswith(".tar"):
+        return "tar"
+    elif media_type.endswith(".raw"):
+        return "raw"
+    else:
+        # Default to gzip for backward compatibility
+        return "gzip"
+
+
+def extract_by_compression(
+    archive_file: str, outdir: str, compression: str, numeric_owner: bool = False
+):
+    """
+    Extract archive based on compression format.
+
+    :param archive_file: Path to the archive file
+    :type archive_file: str
+    :param outdir: Output directory for extraction
+    :type outdir: str
+    :param compression: Compression format ('gzip', 'zstd', 'tar', or 'raw')
+    :type compression: str
+    :param numeric_owner: Whether to use numeric owner
+    :type numeric_owner: bool
+    """
+    if compression == "gzip":
+        extract_targz(archive_file, outdir, numeric_owner)
+    elif compression == "zstd":
+        extract_tar_zstd(archive_file, outdir, numeric_owner)
+    elif compression == "tar":
+        extract_tar(archive_file, outdir, numeric_owner)
+    elif compression == "raw":
+        # For raw files, no extraction needed - they should be handled differently
+        raise ValueError("Raw files should not be extracted as archives")
+    else:
+        raise ValueError(f"Unsupported compression format: {compression}")
+
+
 def is_within_directory(directory: str, target: str) -> bool:
     """
     Determine whether a file is within a directory
