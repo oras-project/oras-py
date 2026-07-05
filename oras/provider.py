@@ -3,14 +3,25 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
+import hashlib
+import io
+import json
 import os
+import shutil
 import sys
 import urllib
 from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
 from http.cookiejar import DefaultCookiePolicy
 from tempfile import TemporaryDirectory
-from typing import Callable, Generator, List, Optional, Tuple, Union
+from typing import (
+    Callable,
+    Generator,
+    List,
+    Optional,
+    Tuple,
+    Union,
+)
 
 import jsonschema
 import requests
@@ -23,9 +34,15 @@ import oras.main.login as login
 import oras.oci
 import oras.schemas
 import oras.utils
+from oras.content.layout import LayoutTarget
+from oras.content.registry import RegistryTarget
+from oras.copy import copy as copy_fn
+from oras.copy.options import CopyOptions
+from oras.layout import Layout
 from oras.logger import logger
-from oras.types import container_type
+from oras.types import Descriptor, container_type
 from oras.utils.fileio import PathAndOptionalContent
+
 
 
 @contextmanager
@@ -90,6 +107,20 @@ class Registry:
     def __str__(self) -> str:
         return "[oras-client]"
 
+    def as_target(self, container: str):
+        """
+        Return a copy-engine Target adapter for a specific repository.
+
+        The returned RegistryTarget can be passed directly to
+        :func:`oras.copy.copy` as either a source or destination.
+
+        :param container: container URI (e.g., "ghcr.io/user/repo:latest")
+        :type container: str
+        :return: a Target adapter scoped to the given repository
+        :rtype: oras.content.registry.RegistryTarget
+        """
+        return RegistryTarget(self, container)
+
     def version(self, return_items: bool = False) -> Union[dict, str]:
         """
         Get the version of the client.
@@ -113,7 +144,7 @@ class Registry:
         # Otherwise return a string that can be printed
         return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
 
-    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
+    def delete_tags(self, name: str, tags: Union[str, list]) -> List[str]:
         """
         Delete one or more tags for a unique resource identifier.
 
@@ -439,52 +470,6 @@ class Registry:
             return name
         return oras.container.Container(name, registry=self.hostname)
 
-    # Functions to be deprecated in favor of exposed ones
-    @decorator.ensure_container
-    def _download_blob(
-        self, container: container_type, digest: str, outfile: str
-    ) -> str:
-        logger.warning(
-            "This function is deprecated in favor of download_blob and will be removed by 0.1.2"
-        )
-        return self.download_blob(container, digest, outfile)
-
-    def _put_upload(
-        self, blob: str, container: oras.container.Container, layer: dict
-    ) -> requests.Response:
-        logger.warning(
-            "This function is deprecated in favor of put_upload and will be removed by 0.1.2"
-        )
-        return self.put_upload(blob, container, layer)
-
-    def _chunked_upload(
-        self, blob: str, container: oras.container.Container, layer: dict
-    ) -> requests.Response:
-        logger.warning(
-            "This function is deprecated in favor of chunked_upload and will be removed by 0.1.2"
-        )
-        return self.chunked_upload(blob, container, layer)
-
-    def _upload_manifest(
-        self, manifest: dict, container: oras.container.Container
-    ) -> requests.Response:
-        logger.warning(
-            "This function is deprecated in favor of upload_manifest and will be removed by 0.1.2"
-        )
-        return self.upload_manifest(manifest, container)
-
-    def _upload_blob(
-        self,
-        blob: str,
-        container: container_type,
-        layer: dict,
-        do_chunked: bool = False,
-    ) -> requests.Response:
-        logger.warning(
-            "This function is deprecated in favor of upload_blob and will be removed by 0.1.2"
-        )
-        return self.upload_blob(blob, container, layer, do_chunked)
-
     @decorator.ensure_container
     def download_blob(
         self, container: container_type, digest: str, outfile: str
@@ -647,11 +632,10 @@ class Registry:
                 # Important to update with auth token if acquired
                 # TODO call to auth here
                 start = end + 1
-                self._check_200_response(
-                    r := self.do_request(
-                        session_url, "PATCH", data=chunk, headers=headers
-                    )
+                r = self.do_request(
+                    session_url, "PATCH", data=chunk, headers=headers
                 )
+                self._check_200_response(r)
                 session_url = self._get_location(r, container)
                 if not session_url:
                     raise ValueError(f"Issue retrieving session url: {r.json()}")
@@ -712,6 +696,49 @@ class Registry:
             json=manifest,
         )
 
+    def copy(
+        self,
+        src: str,
+        dst: str,
+        config_path: Optional[str] = None,
+        opts: "Optional[CopyOptions]" = None,
+    ) -> Descriptor:
+        """
+        Copy content from one repository to another using the copy engine.
+
+        Uses the copy engine's DAG-aware graph traversal to copy all content
+        (manifests, configs, and layers) from the source reference to the
+        destination reference.  Both endpoints use this Registry's credentials,
+        so the method works for same-registry cross-repository copies as well as
+        cross-registry copies where the same credentials are valid for both.
+
+        :param src: source reference, e.g. "ghcr.io/user/repo:v1.0"
+        :type src: str
+        :param dst: destination reference, e.g. "ghcr.io/user/other:v2.0"
+        :type dst: str
+        :param config_path: path to an auth config file applied to both endpoints
+        :type config_path: str
+        :param opts: copy engine options (default: None for default settings)
+        :type opts: oras.copy.options.CopyOptions
+        :return: the root descriptor that was copied
+        :rtype: dict
+        """
+
+        src_container = self.get_container(src)
+        dst_container = self.get_container(dst)
+
+        configs = [config_path] if config_path else None
+        self.auth.load_configs(src_container, configs=configs)
+        self.auth.load_configs(dst_container, configs=configs)
+
+        src_target = RegistryTarget(self, src_container, opts)
+        dst_target = RegistryTarget(self, dst_container, opts)
+
+        src_ref = src_container.digest or src_container.tag
+        dst_ref = dst_container.digest or dst_container.tag
+
+        return copy_fn(src_target, src_ref, dst_target, dst_ref, opts)
+
     def push(
         self,
         target: str,
@@ -749,12 +776,77 @@ class Registry:
         :param subject: optional subject reference
         :type subject: oras.oci.Subject
         """
+
         container = self.get_container(target)
         files = files or []
         self.auth.load_configs(
             container, configs=[config_path] if config_path else None
         )
 
+        # A push is a directional copy: local files -> registry.  Pack the
+        # files (plus manifest config) into a temporary OCI layout, then copy
+        # that layout up to the registry via the copy engine.  Note this means
+        # blobs are written to a temporary layout on disk before upload; upload
+        # failures surface as oras.copy.errors.CopyError.
+        dst_ref = container.digest or container.tag
+        opts = CopyOptions()
+        opts.graph.do_chunked = do_chunked
+        opts.graph.chunk_size = chunk_size
+
+        with TemporaryDirectory() as tmp_layout_dir:
+            layout = Layout(tmp_layout_dir, validate=False)
+            src = LayoutTarget(layout)
+            self._pack_files_to_layout(
+                src,
+                files=files,
+                disable_path_validation=disable_path_validation,
+                manifest_config=manifest_config,
+                annotation_file=annotation_file,
+                manifest_annotations=manifest_annotations,
+                subject=subject,
+                tag=dst_ref,
+            )
+
+            dst = RegistryTarget(self, container, opts)
+            copy_fn(src, dst_ref, dst, dst_ref, opts)
+            response = dst.last_manifest_response
+
+        # Return the real manifest PUT response from the copy.  Fall back to a
+        # GET only in the unexpected case that no manifest was pushed.
+        if response is None:
+            headers = {"Accept": oras.defaults.default_manifest_media_type}
+            response = self.do_request(
+                f"{self.prefix}://{container.manifest_url()}",
+                "GET",
+                headers=headers,
+            )
+        self._check_200_response(response)
+        print(f"Successfully pushed {container}")
+        return response
+
+    def _pack_files_to_layout(
+        self,
+        layout_target: "LayoutTarget",
+        files: List,
+        disable_path_validation: bool = False,
+        manifest_config: Optional[str] = None,
+        annotation_file: Optional[str] = None,
+        manifest_annotations: Optional[dict] = None,
+        subject: Optional[oras.oci.Subject] = None,
+        tag: str = oras.defaults.default_tag,
+    ) -> Descriptor:
+        """
+        Pack a set of files into an OCI layout via a LayoutTarget.
+
+        Builds layer blobs, a manifest config blob, and the image manifest,
+        writing each into the layout's content-addressable store and tagging
+        the manifest with ``tag``. Mirrors the manifest assembly done by
+        :meth:`push`, but writes to a layout (instead of uploading directly)
+        so the result can be transferred by the copy engine.
+
+        :return: the manifest descriptor that was written and tagged
+        :rtype: dict
+        """
         # Prepare a new manifest
         manifest = oras.oci.NewManifest()
 
@@ -762,7 +854,7 @@ class Registry:
         annotset = oras.oci.Annotations(annotation_file)
         media_type = None
 
-        # Upload files as blobs
+        # Pack files as blobs
         for blob in files:
             # You can provide a blob + content type
             path_content: PathAndOptionalContent = oras.utils.split_path_and_content(
@@ -806,19 +898,14 @@ class Registry:
             manifest["layers"].append(layer)
             logger.debug(f"Preparing layer {layer}")
 
-            # Upload the blob layer
-            response = self.upload_blob(
-                blob,
-                container,
-                layer,
-                do_chunked=do_chunked,
-                chunk_size=chunk_size,
-            )
-            self._check_200_response(response)
-
-            # Do we need to cleanup a temporary targz?
-            if cleanup_blob and os.path.exists(blob):
-                os.remove(blob)
+            # Write the blob layer into the layout
+            try:
+                with open(blob, "rb") as f:
+                    layout_target.push(layer, f)
+            finally:
+                # Do we need to cleanup a temporary targz?
+                if cleanup_blob and os.path.exists(blob):
+                    os.remove(blob)
 
         # Add annotations to the manifest, if provided
         manifest_annots = annotset.get_annotations("$manifest") or {}
@@ -853,18 +940,21 @@ class Registry:
             if config_file is None
             else nullcontext(config_file)
         ) as config_file:
-            response = self.upload_blob(config_file, container, conf)
+            with open(config_file, "rb") as f:
+                layout_target.push(conf, f)
 
-        self._check_200_response(response)
-
-        # Final upload of the manifest
+        # Finalize the manifest and write it into the layout
         manifest["config"] = conf
-        response = self.upload_manifest(
-            manifest, container
-        )  # make the returned response from this method, the one pertaining to the uploaded Manifest
-        self._check_200_response(response)
-        print(f"Successfully pushed {container}")
-        return response
+        jsonschema.validate(manifest, schema=oras.schemas.manifest)
+        manifest_bytes = json.dumps(manifest).encode("utf-8")
+        manifest_desc = {
+            "mediaType": oras.defaults.default_manifest_media_type,
+            "digest": "sha256:" + hashlib.sha256(manifest_bytes).hexdigest(),
+            "size": len(manifest_bytes),
+        }
+        layout_target.push(manifest_desc, io.BytesIO(manifest_bytes))
+        layout_target.tag(manifest_desc, tag)
+        return manifest_desc
 
     def pull(
         self,
@@ -890,46 +980,75 @@ class Registry:
         :param target: target location to pull from
         :type target: str
         """
+
         container = self.get_container(target)
         self.auth.load_configs(
             container, configs=[config_path] if config_path else None
         )
-        manifest = self.get_manifest(container, allowed_media_type)
         outdir = outdir or oras.utils.get_tmpdir()
-        overwrite = overwrite
 
-        files = []
-        for layer in manifest.get("layers", []):
-            filename = (layer.get("annotations") or {}).get(
-                oras.defaults.annotation_title
+        # Resolve and validate the manifest up front.  This preserves the
+        # original Accept-header content negotiation and media-type rejection
+        # (raised before any blob transfer), and lets us avoid downloading a
+        # full multi-arch DAG for a reference that has no files to extract.
+        manifest = self.get_manifest(container, allowed_media_type)
+
+        layers = manifest.get("layers", [])
+        if not layers:
+            # e.g. an image index: nothing to materialize as flat files.
+            return []
+
+        # A pull is a directional copy: registry -> local OCI layout.  We copy
+        # the artifact's content DAG into a temporary layout via the copy
+        # engine, then materialize the layers as flat files in outdir.  Note
+        # blobs are written to a temporary layout on disk before extraction.
+        files: List[str] = []
+        with TemporaryDirectory() as tmp_layout_dir:
+            layout = Layout(tmp_layout_dir, validate=False)
+            src_ref = container.digest or container.tag
+            layout.copy_from_registry(
+                provider=self, source=target, tag=src_ref
             )
 
-            # If we don't have a filename, default to digest. Hopefully does not happen
-            if not filename:
-                filename = layer["digest"]
-
-            # This raises an error if there is a malicious path
-            outfile = oras.utils.sanitize_path(outdir, os.path.join(outdir, filename))
-
-            if not overwrite and os.path.exists(outfile):
-                logger.warning(
-                    f"{outfile} already exists and --keep-old-files set, will not overwrite."
+            for layer in layers:
+                filename = (layer.get("annotations") or {}).get(
+                    oras.defaults.annotation_title
                 )
-                continue
 
-            # A directory will need to be uncompressed and moved
-            if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
-                targz = oras.utils.get_tmpfile(suffix=".tar.gz")
-                self.download_blob(container, layer["digest"], targz)
+                # If we don't have a filename, default to digest.
+                if not filename:
+                    filename = layer["digest"]
 
-                # The artifact will be extracted to the correct name
-                oras.utils.extract_targz(targz, os.path.dirname(outfile))
+                # This raises an error if there is a malicious path
+                outfile = oras.utils.sanitize_path(
+                    outdir, os.path.join(outdir, filename)
+                )
 
-            # Anything else just extracted directly
-            else:
-                self.download_blob(container, layer["digest"], outfile)
-            logger.info(f"Successfully pulled {outfile}.")
-            files.append(outfile)
+                if not overwrite and os.path.exists(outfile):
+                    logger.warning(
+                        f"{outfile} already exists and --keep-old-files set, will not overwrite."
+                    )
+                    continue
+
+                blob_path = layout.digest_to_blob_path(layer["digest"])
+
+                # Ensure the destination directory exists (mirrors the
+                # behavior of download_blob, which created it before writing).
+                dest_dir = os.path.dirname(outfile)
+                if dest_dir and not os.path.exists(dest_dir):
+                    oras.utils.mkdir_p(dest_dir)
+
+                # A directory will need to be uncompressed and moved
+                if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
+                    oras.utils.extract_targz(
+                        str(blob_path), os.path.dirname(outfile)
+                    )
+
+                # Anything else just copied directly to the output path
+                else:
+                    shutil.copyfile(str(blob_path), outfile)
+                logger.info(f"Successfully pulled {outfile}.")
+                files.append(outfile)
         return files
 
     @decorator.ensure_container
@@ -995,18 +1114,21 @@ class Registry:
         if headers is None:
             headers = {}
 
-        # Make the request and return to calling function, but attempt to use auth token if previously obtained
+        def send() -> requests.Response:
+            return self.session.request(
+                method,
+                url,
+                data=data,
+                json=json,
+                headers=headers,
+                stream=stream,
+                verify=self._tls_verify,
+            )
+
+        # Make the request, attempting to use an auth token if previously obtained
         if isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None:
             headers.update(self.auth.get_auth_header())
-        response = self.session.request(
-            method,
-            url,
-            data=data,
-            json=json,
-            headers=headers,
-            stream=stream,
-            verify=self._tls_verify,
-        )
+        response = send()
 
         # A 401 response is a request for authentication, 404 is not found
         if response.status_code not in [401, 403]:
@@ -1016,29 +1138,13 @@ class Registry:
         headers, changed = self.auth.authenticate_request(response, headers)
         if not changed:
             raise ValueError("Cannot respond to request for authentication.")
-        response = self.session.request(
-            method,
-            url,
-            data=data,
-            json=json,
-            headers=headers,
-            stream=stream,
-            verify=self._tls_verify,
-        )
+        response = send()
 
         # One retry if 403 denied (need new token?)
         if response.status_code == 403:
             headers, changed = self.auth.authenticate_request(
                 response, headers, refresh=True
             )
-            response = self.session.request(
-                method,
-                url,
-                data=data,
-                json=json,
-                headers=headers,
-                stream=stream,
-                verify=self._tls_verify,
-            )
+            response = send()
 
         return response

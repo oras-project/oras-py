@@ -68,3 +68,15 @@ def target_layout_single(registry):
 def target_layout_multi(registry):
     """Target for multi-arch OCI layout push tests"""
     return f"{registry}/dinosaur/layout-multi:v1"
+
+
+@pytest.fixture
+def target_copy_src(registry):
+    """Source target for registry-to-registry copy tests"""
+    return f"{registry}/dinosaur/copy-src:v1"
+
+
+@pytest.fixture
+def target_copy_dst(registry):
+    """Destination target for registry-to-registry copy tests"""
+    return f"{registry}/dinosaur/copy-dst:v1"

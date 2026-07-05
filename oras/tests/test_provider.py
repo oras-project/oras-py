@@ -5,6 +5,7 @@ __license__ = "Apache-2.0"
 import os
 import subprocess
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -13,6 +14,8 @@ import oras.defaults
 import oras.oci
 import oras.provider
 import oras.utils
+from oras.copy.options import CopyOptions
+from oras.layout import Layout
 
 here = Path(__file__).resolve().parent
 
@@ -241,3 +244,221 @@ def test_sanitize_path():
         str(e.value)
         == f"Filename {Path(os.path.join(os.getcwd(), '..', '..')).resolve()} is not in {Path('../').resolve()} directory"
     )
+
+
+# ---------------------------------------------------------------------------
+# Tests: Registry.copy — unit (mock-based)
+# ---------------------------------------------------------------------------
+
+
+def test_copy_calls_copy_engine():
+    """
+    Registry.copy() should resolve src/dst refs and invoke the copy engine.
+    Verified using a mock copy_fn that captures arguments.
+    """
+    remote = oras.provider.Registry(insecure=True)
+
+    captured = {}
+
+    def fake_copy(src_target, src_ref, dst_target, dst_ref, opts):
+        captured["src_ref"] = src_ref
+        captured["dst_ref"] = dst_ref
+        captured["src_target"] = src_target
+        captured["dst_target"] = dst_target
+        return {"mediaType": "application/vnd.oci.image.manifest.v1+json", "digest": "sha256:abc", "size": 42}
+
+    with patch("oras.provider.copy_fn", side_effect=fake_copy):
+        result = remote.copy(
+            "registry.example.com/user/repo:v1.0",
+            "registry.example.com/user/other:v2.0",
+        )
+
+    assert captured["src_ref"] == "v1.0"
+    assert captured["dst_ref"] == "v2.0"
+    assert result["digest"] == "sha256:abc"
+
+
+def test_copy_uses_digest_ref_when_present():
+    """When src contains a digest, that digest becomes src_ref (not the tag)."""
+    remote = oras.provider.Registry(insecure=True)
+
+    captured = {}
+
+    def fake_copy(src_target, src_ref, dst_target, dst_ref, opts):
+        captured["src_ref"] = src_ref
+        captured["dst_ref"] = dst_ref
+        return {"digest": "sha256:deadbeef", "size": 0, "mediaType": ""}
+
+    with patch("oras.provider.copy_fn", side_effect=fake_copy):
+        remote.copy(
+            "registry.example.com/user/repo@sha256:deadbeef",
+            "registry.example.com/user/other:stable",
+        )
+
+    assert captured["src_ref"] == "sha256:deadbeef"
+    assert captured["dst_ref"] == "stable"
+
+
+def test_copy_passes_opts_to_engine():
+    """opts kwarg is forwarded unchanged to the copy engine."""
+    remote = oras.provider.Registry(insecure=True)
+    opts = CopyOptions()
+
+    captured = {}
+
+    def fake_copy(src_target, src_ref, dst_target, dst_ref, received_opts):
+        captured["opts"] = received_opts
+        return {"digest": "sha256:x", "size": 0, "mediaType": ""}
+
+    with patch("oras.provider.copy_fn", side_effect=fake_copy):
+        remote.copy(
+            "registry.example.com/user/repo:v1",
+            "registry.example.com/user/other:v1",
+            opts=opts,
+        )
+
+    assert captured["opts"] is opts
+
+
+# ---------------------------------------------------------------------------
+# Tests: Registry.push / pull — unit (mock-based, no live registry)
+# ---------------------------------------------------------------------------
+
+
+def test_pull_returns_empty_for_index_without_downloading(tmp_path):
+    """
+    Pulling a reference whose manifest has no layers (e.g. an image index)
+    returns [] and must NOT copy the content DAG (no multi-arch over-fetch).
+    """
+    remote = oras.provider.Registry(insecure=True)
+
+    index_manifest = {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "manifests": [
+            {
+                "mediaType": "application/vnd.oci.image.manifest.v1+json",
+                "digest": "sha256:abc",
+                "size": 10,
+            }
+        ],
+    }
+
+    with patch.object(
+        oras.provider.Registry, "get_manifest", return_value=index_manifest
+    ), patch("oras.layout.Layout.copy_from_registry") as mock_copy:
+        files = remote.pull(
+            "registry.example.com/user/repo:v1", outdir=str(tmp_path)
+        )
+
+    assert files == []
+    mock_copy.assert_not_called()
+
+
+def test_pack_files_to_layout_roundtrip(tmp_path):
+    """
+    _pack_files_to_layout writes the layer, config, and manifest blobs into an
+    OCI layout and tags the manifest, without any registry interaction.
+    """
+    remote = oras.provider.Registry(insecure=True)
+
+    artifact = tmp_path / "hello.txt"
+    artifact.write_text("hello world")
+
+    layout = Layout(str(tmp_path / "layout"), validate=False)
+    target = layout.as_target()
+
+    manifest_desc = remote._pack_files_to_layout(
+        target,
+        files=[str(artifact)],
+        disable_path_validation=True,
+        tag="v1",
+    )
+
+    # Manifest descriptor is a manifest media type and is tagged in the layout
+    assert manifest_desc["mediaType"] == oras.defaults.default_manifest_media_type
+    assert manifest_desc["digest"].startswith("sha256:")
+    assert target.resolve("v1")["digest"] == manifest_desc["digest"]
+
+    # The manifest has one layer (our file) plus a config, all present on disk
+    manifest = oras.utils.read_json(
+        str(layout.digest_to_blob_path(manifest_desc["digest"]))
+    )
+    assert len(manifest["layers"]) == 1
+    layer = manifest["layers"][0]
+    assert layer["annotations"][oras.defaults.annotation_title] == "hello.txt"
+    assert layout.blob_exists(layer["digest"])
+    assert layout.blob_exists(manifest["config"]["digest"])
+
+    # Layer blob content matches the original file byte-for-byte
+    assert (
+        layout.digest_to_blob_path(layer["digest"]).read_bytes() == b"hello world"
+    )
+
+
+def test_push_returns_manifest_put_response(tmp_path):
+    """
+    push() routes through the copy engine and returns the real manifest PUT
+    response captured by the RegistryTarget (not a follow-up GET).
+    """
+    remote = oras.provider.Registry(insecure=True)
+
+    artifact = tmp_path / "a.txt"
+    artifact.write_text("hi")
+
+    put_response = MagicMock()
+    put_response.status_code = 201
+
+    def fake_copy(src, src_ref, dst, dst_ref, opts):
+        # Emulate the engine's atomic push+tag, which records the PUT response.
+        dst.last_manifest_response = put_response
+        return {
+            "mediaType": oras.defaults.default_manifest_media_type,
+            "digest": "sha256:deadbeef",
+            "size": 1,
+        }
+
+    with patch("oras.provider.copy_fn", side_effect=fake_copy):
+        response = remote.push(
+            files=[str(artifact)],
+            target="registry.example.com/user/repo:v1",
+            disable_path_validation=True,
+        )
+
+    assert response is put_response
+    assert response.status_code == 201
+
+
+# ---------------------------------------------------------------------------
+# Tests: Registry.copy — integration (requires live registry)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.with_auth(False)
+def test_copy_registry_to_registry(
+    registry, credentials, target_copy_src, target_copy_dst, tmp_path
+):
+    """
+    Push an artifact, copy it to a new tag, pull from the copy and verify bytes.
+    Requires running registry (ORAS_HOST and ORAS_PORT env variables).
+    """
+    artifact = os.path.join(here, "artifact.txt")
+    assert os.path.exists(artifact)
+
+    client = oras.client.OrasClient(hostname=registry, insecure=True)
+    remote = oras.provider.Registry(insecure=True)
+
+    # Push source artifact
+    res = client.push(files=[artifact], target=target_copy_src)
+    assert res.status_code in [200, 201]
+
+    # Copy to destination
+    root = remote.copy(target_copy_src, target_copy_dst)
+    assert root is not None
+    assert "digest" in root
+
+    # Pull from destination and verify content matches source
+    files = client.pull(target_copy_dst, outdir=str(tmp_path))
+    assert files, "No files pulled from copy destination"
+    pulled = str(tmp_path / "artifact.txt")
+    assert pulled in files
+    assert oras.utils.get_file_hash(artifact) == oras.utils.get_file_hash(pulled)

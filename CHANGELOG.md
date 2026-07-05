@@ -14,6 +14,12 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - restructure the copy engine into a layered call stack `provider -> copy -> content` (0.2.43)
+   - the DAG copy algorithm (`copy_graph`, `StatusTracker`, `successors`) lives in `oras.copy` (`oras.copy.graph`, `oras.copy.tracker`), removing the `content <-> copy` circular import
+   - the storage/target `Protocol` contract plus the general-purpose `CacheProxy` cache and `FetcherFunc` adapter moved to `oras.content.storage`, the in-memory store (`MemoryStorage`) to `oras.content.memory`, and the concrete adapters `RegistryTarget`/`LayoutTarget` to `oras.content.registry`/`oras.content.layout`
+   - **backward incompatible:** import `Target`/`ReadOnlyTarget`/`Storage`/`ReadOnlyStorage`/`ReferencePusher`/`ReferenceFetcher`/`Mounter` (also re-exported from `oras.copy`) and `CacheProxy`/`FetcherFunc` from `oras.content.storage`, and `MemoryStorage` from `oras.content.memory`; `RegistryTarget` moved from `oras.provider` to `oras.content.registry`; `LayoutTarget` moved from `oras.layout.layout` to `oras.content.layout`
+   - the descriptor primitives (`is_manifest`, `is_foreign_layer`, `descriptor_key`, `descriptors_equal`, `remove_foreign_layers`) moved from `oras.content.descriptor` to `oras.types`, and `oras.content.registry` no longer depends on the descriptor module — **backward incompatible:** import these helpers from `oras.types`
+   - the unused `Fetcher`/`Pusher`/`Resolver`/`Tagger`/`TagResolver` protocols were removed
  - add Layout `copy` for pull_from_registry capability (0.2.42)
  - make `get_manifest()` validation optional, fix `Accept` header join, and expand default `Accept` header types to cover all supported response types for the `/v2/<name>/manifests/<reference>` endpoint (0.2.41)
  - fix preemptive exit in non-empty `auths` lookup when `credsStore` or `credHelpers` is used (0.2.40)

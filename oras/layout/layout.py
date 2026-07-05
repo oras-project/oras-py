@@ -6,7 +6,7 @@ __license__ = "Apache-2.0"
 
 import json
 import pathlib
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 
 import jsonschema
 import requests
@@ -18,11 +18,18 @@ from oras.layout.validation import (
     _validate_index_json,
     _validate_oci_layout_file,
 )
+from oras.container import Container
+from oras.content.layout import LayoutTarget
+from oras.content.registry import RegistryTarget
+from oras.copy import copy as copy_fn
 from oras.logger import logger
 from oras.utils.fileio import read_json, write_json
 
 if TYPE_CHECKING:
+    from oras.copy.options import CopyOptions
     from oras.provider import Registry
+    from oras.types import Descriptor
+
 
 
 def NewLayout(path: str, validate: bool = True) -> Layout:
@@ -140,7 +147,7 @@ class Layout:
         except (FileNotFoundError, ValueError, OSError):
             return False
 
-    def get_ordered_blobs(self, tag: str = "latest") -> list[str]:
+    def get_ordered_blobs(self, tag: str = "latest") -> List[str]:
         """
         Traverse an OCI layout and collect blob digests in dependency order for pushing.
 
@@ -157,28 +164,39 @@ class Layout:
         :raises FileNotFoundError: if layout, index, or blob files don't exist
         :raises ValueError: if tag annotation not found or invalid structure
         """
+        # Find the manifest with matching tag annotation (usually `:latest` for oci-layout on disk)
+        manifest_entry = self.find_index_entry(tag)
+        if manifest_entry is None:
+            raise ValueError(f"Tag '{tag}' not found in index")
+
+        # Collect blobs in dependency order
+        collected: List[str] = []
+        self._process_manifest(manifest_entry["digest"], collected)
+        return collected
+
+    def find_index_entry(self, reference: str) -> Optional[dict]:
+        """
+        Find the index.json manifest entry tagged with the given reference.
+
+        Looks up the entry whose ref-name annotation
+        (``org.opencontainers.image.ref.name``) matches ``reference``.
+
+        :param reference: the reference (tag) to look up in index.json annotations
+        :type reference: str
+        :return: the matching manifest entry, or None if no entry matches
+        :rtype: Optional[dict]
+        """
         index_file = (
             pathlib.Path(self._oci_layout_path) / oras.defaults.oci_image_index_file
         )
         index_data = read_json(str(index_file))
-
-        # Find the manifest with matching tag annotation (usually `:latest` for oci-layout on disk)
-        target_digest = None
         for manifest_entry in index_data.get("manifests", []):
             annotations = manifest_entry.get("annotations", {})
-            if annotations.get(oras.defaults.oci_ref_name_annotation) == tag:
-                target_digest = manifest_entry["digest"]
-                break
+            if annotations.get(oras.defaults.oci_ref_name_annotation) == reference:
+                return manifest_entry
+        return None
 
-        if not target_digest:
-            raise ValueError(f"Tag '{tag}' not found in index")
-
-        # Collect blobs in dependency order
-        collected = []
-        self._process_manifest(target_digest, collected)
-        return collected
-
-    def _process_manifest(self, digest: str, collected: list[str]) -> None:
+    def _process_manifest(self, digest: str, collected: List[str]) -> None:
         """
         Recursively process a manifest blob and collect dependencies.
 
@@ -252,6 +270,35 @@ class Layout:
         :rtype: bool
         """
         return self.digest_to_blob_path(digest).exists()
+
+    def init(self) -> None:
+        """
+        Create the on-disk OCI image layout skeleton if it does not yet exist.
+
+        Ensures the layout directory, ``blobs`` directory, ``oci-layout``
+        marker file, and an empty ``index.json`` exist per the OCI Image
+        Layout Specification. Idempotent: existing files are left untouched.
+        """
+        layout_dir = pathlib.Path(self._oci_layout_path)
+        layout_dir.mkdir(parents=True, exist_ok=True)
+        (layout_dir / oras.defaults.oci_blobs_dir).mkdir(exist_ok=True)
+
+        oci_layout_file = layout_dir / oras.defaults.oci_layout_file
+        if not oci_layout_file.exists():
+            write_json(
+                {"imageLayoutVersion": oras.defaults.oci_layout_version_pin},
+                str(oci_layout_file),
+            )
+
+        index_file = layout_dir / oras.defaults.oci_image_index_file
+        if not index_file.exists():
+            write_json(
+                {
+                    "schemaVersion": oras.defaults.oci_index_schema_version,
+                    "manifests": [],
+                },
+                str(index_file),
+            )
 
     @staticmethod
     def _create_layer_dict(
@@ -518,6 +565,87 @@ class Layout:
 
         logger.debug(f"Successfully pushed {len(ordered_blobs)} blobs to {target}")
         return last_response
+
+    def as_target(self) -> LayoutTarget:
+        """
+        Return a copy-engine Target adapter for this layout.
+
+        The returned LayoutTarget can be passed directly to
+        :func:`oras.copy.copy` as either source or destination.
+
+        :return: a Target adapter wrapping this layout
+        :rtype: oras.content.layout.LayoutTarget
+        """
+        return LayoutTarget(self)
+
+    def copy_to_registry(
+        self,
+        provider: Registry,
+        target: str,
+        tag: str = "latest",
+        opts: CopyOptions = None,
+    ) -> Descriptor:
+        """
+        Copy this layout to a remote registry using the copy engine.
+
+        Uses the copy engine's DAG-aware graph traversal to push all
+        content from this layout to the target registry/repository.
+        This is the recommended way to push a layout to a registry.
+
+        :param provider: Registry provider instance
+        :type provider: oras.provider.Registry
+        :param target: target registry/repository with the destination tag
+            (e.g., "ghcr.io/user/repo:v1.0"). The tag/digest in this URL
+            determines the destination reference at the registry. When no
+            tag is present, "latest" is used.
+        :type target: str
+        :param tag: source tag to read from the layout's index.json annotations (default: "latest")
+        :type tag: str
+        :param opts: copy options (default: None for default settings)
+        :type opts: oras.copy.options.CopyOptions
+        :return: the root descriptor that was copied
+        :rtype: dict
+        :raises FileNotFoundError: if layout or blobs don't exist
+        :raises ValueError: if layout is invalid or tag not found
+        """
+        src = LayoutTarget(self)
+        dst = RegistryTarget(provider, target, opts)
+        dst_container = Container(target)
+        dst_ref = dst_container.digest or dst_container.tag
+        return copy_fn(src, tag, dst, dst_ref, opts)
+
+    def copy_from_registry(
+        self,
+        provider: Registry,
+        source: str,
+        tag: str = "latest",
+        opts: CopyOptions = None,
+    ) -> Descriptor:
+        """
+        Copy content from a remote registry into this layout using the copy engine.
+
+        Uses the copy engine's DAG-aware graph traversal to pull all content
+        from the source registry into this layout directory.
+        This is the recommended way to pull a registry artifact into a layout.
+
+        :param provider: Registry provider instance
+        :type provider: oras.provider.Registry
+        :param source: source registry/repository (e.g., "ghcr.io/user/repo:v1.0")
+        :type source: str
+        :param tag: tag to write in the layout's index.json annotation (default: "latest")
+        :type tag: str
+        :param opts: copy options (default: None for default settings)
+        :type opts: oras.copy.options.CopyOptions
+        :return: the root descriptor that was copied
+        :rtype: dict
+        :raises FileNotFoundError: if source tag/digest is not found in registry
+        :raises ValueError: if source is invalid
+        """
+        src = RegistryTarget(provider, source, opts)
+        dst = LayoutTarget(self)
+        src_container = Container(source)
+        src_ref = src_container.digest or src_container.tag
+        return copy_fn(src, src_ref, dst, tag, opts)
 
     def pull_from_registry(
         self,
