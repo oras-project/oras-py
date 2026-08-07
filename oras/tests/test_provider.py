@@ -5,6 +5,7 @@ __license__ = "Apache-2.0"
 import os
 import subprocess
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -15,6 +16,61 @@ import oras.provider
 import oras.utils
 
 here = Path(__file__).resolve().parent
+
+
+def test_push_quiet_output_does_not_write_stdout(tmp_path, monkeypatch, capsys):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    artifact = tmp_path / "artifact.txt"
+    artifact.write_text("content")
+
+    class Response:
+        status_code = 201
+
+    container = client.get_container("registry.example/repository:tag")
+    monkeypatch.setattr(client, "get_container", lambda target: container)
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(client, "upload_blob", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(client, "upload_manifest", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(client, "_check_200_response", lambda response: None)
+    info = Mock()
+    monkeypatch.setattr(oras.provider.logger, "info", info)
+
+    client.push(
+        files=[artifact],
+        target="registry.example/repository:tag",
+        disable_path_validation=True,
+        quiet=False,
+    )
+
+    assert capsys.readouterr().out == ""
+    info.assert_called_once_with(f"Successfully pushed {container}")
+
+
+def test_push_quiet_suppresses_completion_message(tmp_path, monkeypatch):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    artifact = tmp_path / "artifact.txt"
+    artifact.write_text("content")
+
+    class Response:
+        status_code = 201
+
+    container = client.get_container("registry.example/repository:tag")
+    monkeypatch.setattr(client, "get_container", lambda target: container)
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(client, "upload_blob", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(client, "upload_manifest", lambda *args, **kwargs: Response())
+    monkeypatch.setattr(client, "_check_200_response", lambda response: None)
+    info = Mock()
+    monkeypatch.setattr(oras.provider.logger, "info", info)
+
+    client.push(
+        files=[artifact],
+        target="registry.example/repository:tag",
+        disable_path_validation=True,
+        quiet=True,
+    )
+
+    info.assert_not_called()
 
 
 @pytest.mark.with_auth(False)

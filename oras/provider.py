@@ -724,6 +724,7 @@ class Registry:
         subject: Optional[str] = None,
         do_chunked: bool = False,
         chunk_size: int = oras.defaults.default_chunksize,
+        quiet: bool = False,
     ) -> requests.Response:
         """
         Push a set of files to a target
@@ -748,6 +749,8 @@ class Registry:
         :type chunk_size: int
         :param subject: optional subject reference
         :type subject: oras.oci.Subject
+        :param quiet: suppress the completion message
+        :type quiet: bool
         """
         container = self.get_container(target)
         files = files or []
@@ -863,7 +866,8 @@ class Registry:
             manifest, container
         )  # make the returned response from this method, the one pertaining to the uploaded Manifest
         self._check_200_response(response)
-        print(f"Successfully pushed {container}")
+        if not quiet:
+            logger.info(f"Successfully pushed {container}")
         return response
 
     def pull(
