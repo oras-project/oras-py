@@ -71,7 +71,8 @@
     },
     "TerryHowe": {
         "name": "Terry Howe",
-        "blog": "https://terryhowe.wordpress.com/"
+        "blog": "https://terryhowe.wordpress.com/",
+        "orcid": "0009-0004-4700-7215"
     },
     "saketjajoo": {
         "name": "Saket Jajoo",
@@ -180,5 +181,16 @@
         "email": "pittwoodian@gmail.com",
         "bio": "Software Engineer at Posit, PBC",
         "blog": "https://github.com/ianpittwood"
+    },
+    "tomatotomata": {
+        "name": "tomatotomata",
+        "blog": "https://github.com/tomatotomata"
+    },
+    "yarikoptic": {
+        "name": "Yaroslav Halchenko",
+        "bio": "Cheers!",
+        "blog": "www.oneukrainian.com",
+        "orcid": "0000-0003-3456-2493",
+        "affiliation": "Dartmouth College"
     }
 }

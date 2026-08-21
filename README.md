@@ -1,7 +1,7 @@
 # ORAS Python
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-35-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-37-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![ORAS Logo](https://raw.githubusercontent.com/oras-project/oras-www/main/static/img/oras.png)
@@ -80,6 +80,10 @@ tool to generate a contributors graphic below.
       <td align="center" valign="top" width="14.28%"><a href="ky.dev"><img src="https://avatars.githubusercontent.com/u/18364341?v=4?s=100" width="100px;" alt="Kante Yin"/><br /><sub><b>Kante Yin</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=kerthcet" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://crosscat.me"><img src="https://avatars.githubusercontent.com/u/39812919?v=4?s=100" width="100px;" alt="Isabella Basso"/><br /><sub><b>Isabella Basso</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=antisaling" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ianpittwood"><img src="https://avatars.githubusercontent.com/u/9877347?v=4?s=100" width="100px;" alt="Ian Pittwood"/><br /><sub><b>Ian Pittwood</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=ianpittwood" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tomatotomata"><img src="https://avatars.githubusercontent.com/u/170848582?v=4?s=100" width="100px;" alt="tomatotomata"/><br /><sub><b>tomatotomata</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=tomatotomata" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="www.oneukrainian.com"><img src="https://avatars.githubusercontent.com/u/39889?v=4?s=100" width="100px;" alt="Yaroslav Halchenko"/><br /><sub><b>Yaroslav Halchenko</b></sub></a><br /><a href="https://github.com/oras-project/oras-py/commits?author=yarikoptic" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

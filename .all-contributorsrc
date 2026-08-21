@@ -394,6 +394,28 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/9877347?v=4"
             ]
+        },
+        {
+            "login": "tomatotomata",
+            "name": "tomatotomata",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://github.com/tomatotomata",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/170848582?v=4"
+            ]
+        },
+        {
+            "login": "yarikoptic",
+            "name": "Yaroslav Halchenko",
+            "contributions": [
+                "code"
+            ],
+            "profile": "www.oneukrainian.com",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/39889?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
