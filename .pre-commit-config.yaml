@@ -22,3 +22,8 @@ repos:
     rev: 6.1.0
     hooks:
       - id: flake8
+  - repo: https://github.com/codespell-project/codespell
+    # Configuration for codespell is in .pre-commit-config.yaml
+    rev: v2.4.1
+    hooks:
+    - id: codespell

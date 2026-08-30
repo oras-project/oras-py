@@ -30,7 +30,7 @@ class Container:
         """
         self.registry = registry or oras.defaults.registry.index_name
 
-        # Registry is the name takes precendence
+        # Registry is the name takes precedence
         self.parse(name)
 
     @property
