@@ -75,7 +75,7 @@ def main(args):
     We handle login by doing the following:
 
     1. We default to the login function of the basic client. If a custom
-       provider is initiated with the client, we use it instead (self.remote.logic)
+       provider is initiated with the client, we use its login instead
     2. For the default, we ask for password / username if they are not provided.
     3. We cut out early if password and username are not defined.
     4. If defined, we set basic auth using them (so the client is ready)

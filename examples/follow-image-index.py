@@ -5,6 +5,7 @@ Follow homebrew image index to get the 'hello' bottle specific to your platform
 import re
 
 import oras.client
+import oras.defaults
 import oras.provider
 from oras import decorator
 
@@ -61,7 +62,9 @@ def get_image_for_platform(client, uri, download_to, platform_details):
             for key, requested_value in platform_details.items()
         )
 
-    index_manifest = client.remote.get_image_index(container=uri)
+    index_manifest = client.get_manifest(
+        container=uri, allowed_media_type=[oras.defaults.default_index_media_type]
+    )
     # use first compatible manifest. YMMV and a tie-breaker may be more suitable
     for manifest in index_manifest["manifests"]:
         if matches_platform(manifest):
