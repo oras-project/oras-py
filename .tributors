@@ -174,7 +174,8 @@
         "name": "Kante Yin",
         "email": "kerthcet@gmail.com",
         "bio": "Building @InftyAI @kubernetes | Cooking @modelspec-ai ",
-        "blog": "ky.dev"
+        "blog": "ky.dev",
+        "orcid": "0009-0006-6563-3345"
     },
     "ianpittwood": {
         "name": "Ian Pittwood",
@@ -192,5 +193,11 @@
         "blog": "www.oneukrainian.com",
         "orcid": "0000-0003-3456-2493",
         "affiliation": "Dartmouth College"
+    },
+    "Shubham-Padkonde": {
+        "name": "Shubham Padkonde",
+        "email": "shubhampadkonde12@gmail.com",
+        "bio": "Engineering student in Pune · Open source across Microsoft, Cloudflare and Intel  pyright, kiota, quiche, rohd · Building HireOnyx, an AI job portal",
+        "blog": "https://shubham-portfolio-gray-kappa.vercel.app/"
     }
 }
