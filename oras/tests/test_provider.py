@@ -89,6 +89,34 @@ def test_push_with_oci_subject(tmp_path, monkeypatch):
     assert hints["subject"] == typing.Optional[oras.oci.Subject]
 
 
+@pytest.mark.with_auth(False)
+def test_push_subject_round_trip(tmp_path, registry, credentials):
+    client = oras.provider.Registry(hostname=registry, insecure=True)
+    artifact = tmp_path / "subject.txt"
+    artifact.write_text("subject content")
+    target = f"{registry}/dinosaur/subject:base"
+    response = client.push(
+        files=[artifact], target=target, disable_path_validation=True
+    )
+    assert response.status_code in (200, 201)
+
+    subject = oras.oci.Subject.from_manifest(client.get_manifest(target))
+    referrer = f"{registry}/dinosaur/subject:referrer"
+    response = client.push(
+        files=[artifact],
+        target=referrer,
+        subject=subject,
+        disable_path_validation=True,
+    )
+    assert response.status_code in (200, 201)
+    manifest = client.get_manifest(referrer)
+    assert manifest["subject"] == {
+        "mediaType": subject.mediaType,
+        "digest": subject.digest,
+        "size": subject.size,
+    }
+
+
 def test_push_quiet_suppresses_completion_message(tmp_path, monkeypatch):
     client = oras.provider.Registry(hostname="registry.example", insecure=True)
     artifact = tmp_path / "artifact.txt"
