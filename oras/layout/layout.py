@@ -366,12 +366,11 @@ class Layout:
             sub_media_type = sub_manifest_ref.get(
                 "mediaType", oras.defaults.default_manifest_media_type
             )
-            headers = {"Accept": sub_media_type}
-            sub_url = f"{provider.prefix}://{container.registry}/v2/{container.api_prefix}/manifests/{sub_digest}"
-            response = provider.do_request(sub_url, "GET", headers=headers)
-            provider._check_200_response(response)
-
-            sub_bytes = response.content
+            sub_bytes, _ = provider.get_manifest_content(
+                container,
+                allowed_media_type=[sub_media_type],
+                reference=sub_digest,
+            )
             sub_data = json.loads(sub_bytes)
             # the Index might have defaulted, so we overwrite with the actual content response
             sub_media_type = sub_data.get("mediaType", "")
@@ -474,23 +473,20 @@ class Layout:
                     content_type = blob_data.get(
                         "mediaType", oras.defaults.default_manifest_media_type
                     )
-                    headers = {"Content-Type": content_type}
 
                     if is_last_blob:
                         # Final manifest/index - upload with tag
                         logger.debug(f"Uploading manifest/index with tag: {digest}")
-                        url = f"{provider.prefix}://{container.manifest_url()}"
-                        response = provider.do_request(
-                            url, "PUT", headers=headers, data=manifest_bytes
+                        response = provider.upload_manifest_content(
+                            manifest_bytes, container, content_type
                         )
                     else:
                         # Intermediate manifest - upload by digest only (no tag yet)
                         logger.debug(
                             f"Uploading intermediate manifest by digest: {digest}"
                         )
-                        url = f"{provider.prefix}://{container.registry}/v2/{container.api_prefix}/manifests/{digest}"
-                        response = provider.do_request(
-                            url, "PUT", headers=headers, data=manifest_bytes
+                        response = provider.upload_manifest_content(
+                            manifest_bytes, container, content_type, reference=digest
                         )
                 else:
                     # It's JSON but not a Image/Index Manifest, upload as blob with layer dict
@@ -549,17 +545,10 @@ class Layout:
         blobs_dir = layout_dir / oras.defaults.oci_blobs_dir / "sha256"
         blobs_dir.mkdir(parents=True, exist_ok=True)
 
-        headers = {
-            "Accept": ", ".join(oras.defaults.default_manifest_accepted_media_types)
-        }
-        manifest_url = f"{provider.prefix}://{container.manifest_url()}"
-        response = provider.do_request(manifest_url, "GET", headers=headers)
-        provider._check_200_response(response)
+        manifest_bytes, digest = provider.get_manifest_content(container)
 
-        manifest_bytes = response.content
-        manifest_digest = response.headers.get(
-            "Docker-Content-Digest", container.digest
-        )
+        # Fall back to the digest from the reference if the registry did not report one
+        manifest_digest = digest if digest is not None else container.digest
         if not manifest_digest:
             raise RuntimeError(
                 "Expected to find Docker-Content-Digest header in manifest response."

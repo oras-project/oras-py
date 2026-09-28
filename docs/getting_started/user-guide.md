@@ -688,6 +688,57 @@ client = oras.client.OrasClient(auth_backend="ecr")
 client.pull(target="123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest")
 ```
 
+## Asynchronous Client
+
+There is an asynchronous client alongside the synchronous one. It needs `httpx`,
+which is an extra, so it is not installed unless you ask for it:
+
+```bash
+$ pip install oras[async]
+```
+
+The two clients are separate classes rather than one class with two modes, so
+whether a call is awaited is clear from the client you created. `AsyncOrasClient`
+owns a connection pool for its lifetime, so use it as a context manager, or call
+`aclose()` when you are done with it:
+
+```python
+import oras.client
+
+async with oras.client.AsyncOrasClient(hostname="localhost:5000", insecure=True) as client:
+    await client.push(files=["artifact.txt"], target="localhost:5000/dinosaur/artifact:v1")
+    files = await client.pull(target="localhost:5000/dinosaur/artifact:v1", outdir="pulled")
+```
+
+```python
+client = oras.client.AsyncOrasClient(hostname="localhost:5000", insecure=True)
+try:
+    manifest = await client.get_manifest("localhost:5000/dinosaur/artifact:v1")
+finally:
+    await client.aclose()
+```
+
+The registry operations are the asynchronous ones: `push`, `pull`, `get_manifest`,
+`get_manifest_content`, `upload_manifest`, `upload_manifest_content`, `upload_blob`,
+`download_blob`, `blob_exists`, `get_tags`, `delete_tag`, `delete_tags` and
+`do_request`. Reading and writing files on disk stays synchronous, because that is
+local work rather than something to wait on.
+
+Because a client holds one connection pool, operations on it can run together:
+
+```python
+import asyncio
+
+async with oras.client.AsyncOrasClient(hostname="localhost:5000", insecure=True) as client:
+    first, second = await asyncio.gather(
+        client.pull(target="localhost:5000/dinosaur/artifact:v1", outdir="one"),
+        client.pull(target="localhost:5000/dinosaur/other:v1", outdir="two"),
+    )
+```
+
+The synchronous client is unchanged and needs nothing new installed, so both APIs
+can be used from the same project.
+
 ## Custom Clients
 
 The benefit of Oras Python is that you can create a subclass that easily implements

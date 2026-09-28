@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 
 import json
 import subprocess
-from typing import Optional
+from typing import Optional, Union
 
 import requests
 
@@ -12,23 +12,82 @@ import oras.auth.utils as auth_utils
 import oras.container
 import oras.decorator as decorator
 from oras.logger import logger
+from oras.transport import Transport
 from oras.types import container_type
 
 
 class AuthBackend:
     """
     Generic (and default) auth backend.
-    """
 
-    session: requests.Session
-    _tls_verify: bool
+    A backend decides how to answer an authentication challenge. It sends its
+    requests, such as fetching a token from a realm, through the same transport
+    the provider uses, so there is one place where requests are sent and one
+    set of connections to the registry.
+    """
 
     def __init__(self, *args, **kwargs):
         self._auth_config: dict = {}
         self.prefix: str = "https"
 
+        # Usually replaced with the provider's transport by get_auth_backend
+        self.transport = Transport()
+
+    @property
+    def session(self) -> requests.Session:
+        """
+        The session used to talk to the registry.
+        """
+        return self.transport.session
+
+    @session.setter
+    def session(self, session: requests.Session):
+        self.transport.session = session
+
+    @property
+    def _tls_verify(self) -> Union[bool, str]:
+        """
+        Whether tls verification is enabled, or the custom CA-Bundle in use.
+        """
+        return self.transport.tls_verify
+
+    @_tls_verify.setter
+    def _tls_verify(self, tls_verify: Union[bool, str]):
+        self.transport.tls_verify = tls_verify
+
     def get_auth_header(self):
         raise NotImplementedError
+
+    def authenticate_request(self, original, headers: dict, refresh: bool = False):
+        """
+        Answer an authentication challenge. Backends decide how.
+
+        :param original: original response carrying the challenge
+        :param headers: headers of the request to retry
+        :type headers: dict
+        :param refresh: discard a cached token first
+        :type refresh: bool
+        """
+        raise NotImplementedError
+
+    async def authenticate_request_async(
+        self, original, headers: dict, refresh: bool = False
+    ):
+        """
+        Answer an authentication challenge for an asynchronous request.
+
+        The default is to reuse the synchronous answer, which is correct for
+        any backend that decides locally and sends no request of its own.
+        Backends that do talk to a token endpoint override this so the call is
+        awaited rather than blocking the event loop.
+
+        :param original: original response carrying the challenge
+        :param headers: headers of the request to retry
+        :type headers: dict
+        :param refresh: discard a cached token first
+        :type refresh: bool
+        """
+        return self.authenticate_request(original, headers, refresh)
 
     def get_container(self, name: container_type) -> oras.container.Container:
         """
@@ -182,7 +241,7 @@ class AuthBackend:
             params["scope"] = h.scope
 
         logger.debug(f"Final params are {params}")
-        response = self.session.request("GET", h.realm, params=params)
+        response = self.transport.request(h.realm, "GET", params=params)  # type: ignore
         if response.status_code != 200:
             logger.debug(f"Response for anon token failed: {response.text}")
             return headers, False

@@ -8,9 +8,8 @@ import sys
 import urllib
 from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
-from http.cookiejar import DefaultCookiePolicy
 from tempfile import TemporaryDirectory
-from typing import Callable, Generator, List, Optional, Tuple, Union
+from typing import Any, Callable, Generator, List, Optional, Tuple, Union
 
 import jsonschema
 import requests
@@ -24,6 +23,7 @@ import oras.oci
 import oras.schemas
 import oras.utils
 from oras.logger import logger
+from oras.transport import Transport, response_reason, successful_response
 from oras.types import container_type
 from oras.utils.fileio import PathAndOptionalContent
 
@@ -36,52 +36,50 @@ def temporary_empty_config() -> Generator[str, None, None]:
         yield config_file
 
 
-class Registry:
+class RegistryBase:
     """
-    Direct interactions with an OCI registry.
+    Registry behaviour that does not depend on how requests are executed.
 
-    This could also be called a "provider" when we add in the "copy" logic
-    and the registry isn't necessarily the "remote" endpoint.
+    This holds the decisions - how a url is built, how a layer is prepared from
+    a file, which media type applies, what a response means - and deliberately
+    holds none of the execution. Subclasses add the calls that talk to the
+    registry, synchronously in :class:`Registry` and asynchronously in
+    :class:`oras.provider_async.AsyncRegistry`.
+
+    The split exists so that changing a registry decision is a change in one
+    place, rather than the same change made once per execution model.
     """
 
     def __init__(
         self,
+        transport: Any,
         hostname: Optional[str] = None,
         insecure: bool = False,
-        tls_verify: Union[bool, str] = True,
         auth_backend: str = "token",
     ):
         """
-        Create an ORAS client.
+        Wire up the pieces that both execution models share.
 
-        The hostname is the remote registry to ping.
+        The transport is required, and is what decides whether this provider
+        talks to the registry synchronously or asynchronously.
 
+        :param transport: the transport used to carry out requests
         :param hostname: the hostname of the registry to ping
         :type hostname: str
         :param insecure: use http instead of https
         :type insecure: bool
-        :param tls_verify: enable/disable tls verification or use a custom CA-Bundle
-        :type tls_verify: bool
         :param auth_backend: name of the auth backend to use
         :type auth_backend: str
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
-        self.session: requests.Session = requests.Session()
         self.prefix: str = "http" if insecure else "https"
-        self._tls_verify = tls_verify
+        self.transport = transport
 
-        if not tls_verify:
-            requests.packages.urllib3.disable_warnings()  # type: ignore
-
-        # Ignore all cookies: some registries try to set one
-        # and take it as a sign they are talking to a browser,
-        # trying to set further CSRF cookies (Harbor is such a case)
-        self.session.cookies.set_policy(DefaultCookiePolicy(allowed_domains=[]))
-
-        # Get custom backend, pass on session to share
+        # The auth backend shares the transport, so a token request and a
+        # registry request reuse the same connections
         self.auth = oras.auth.get_auth_backend(
-            auth_backend, self.session, insecure, tls_verify=tls_verify
+            auth_backend, insecure=insecure, transport=self.transport
         )
 
     def __repr__(self) -> str:
@@ -89,6 +87,15 @@ class Registry:
 
     def __str__(self) -> str:
         return "[oras-client]"
+
+    def _url(self, path: str) -> str:
+        """
+        Prefix a registry path (e.g., from a Container) with the scheme in use.
+
+        :param path: the registry path, without a scheme
+        :type path: str
+        """
+        return f"{self.prefix}://{path}"
 
     def version(self, return_items: bool = False) -> Union[dict, str]:
         """
@@ -113,25 +120,6 @@ class Registry:
         # Otherwise return a string that can be printed
         return "\n".join(["%s: %s" % (k, v) for k, v in versions.items()])
 
-    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
-        """
-        Delete one or more tags for a unique resource identifier.
-
-        Returns those successfully deleted.
-
-        :param name: container URI to parse
-        :type name: str
-        :param tags: single or multiple tags name to delete
-        :type N: string or list
-        """
-        if isinstance(tags, str):
-            tags = [tags]
-        deleted = []
-        for tag in tags:
-            if self.delete_tag(name, tag):
-                deleted.append(tag)
-        return deleted
-
     def logout(self, hostname: str):
         """
         If auths are loaded, remove a hostname.
@@ -152,6 +140,9 @@ class Registry:
     ) -> dict:
         """
         Login to a registry.
+
+        This writes credentials to a docker config, it does not talk to the
+        registry, so it is the same for both execution models.
 
         :param username: the user account name
         :type username: str
@@ -220,6 +211,17 @@ class Registry:
         """
         self.headers.update({name: value})
 
+    def get_container(self, name: container_type) -> oras.container.Container:
+        """
+        Courtesy function to get a container from a URI.
+
+        :param name: unique resource identifier to parse
+        :type name: oras.container.Container or str
+        """
+        if isinstance(name, oras.container.Container):
+            return name
+        return oras.container.Container(name, registry=self.hostname)
+
     def _validate_path(self, path: str) -> bool:
         """
         Ensure a blob path is in the present working directory or below.
@@ -248,6 +250,322 @@ class Registry:
         if not path_content.content:
             path_content.content = oras.defaults.unknown_config_media_type
         return path_content.path, path_content.content
+
+    def _get_location(self, r, container: oras.container.Container) -> str:
+        """
+        Parse the location header and ensure it includes a hostname.
+        This currently assumes if there isn't a hostname, we are pushing to
+        the same registry hostname of the original request.
+
+        :param r: response with headers
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        """
+        session_url = r.headers.get("location", "")
+        if not session_url:
+            return session_url
+
+        # Some registries do not return the full registry hostname.  Check that
+        # the url starts with a protocol scheme, change tracked with:
+        # https://github.com/oras-project/oras-py/issues/78
+        prefix = f"{self.prefix}://{container.registry}"
+
+        if not session_url.startswith("http"):
+            session_url = f"{prefix}{session_url}"
+        return session_url
+
+    def _require_location(self, r, container: oras.container.Container) -> str:
+        """
+        Parse the location header, and require that one was provided.
+
+        :param r: response with headers
+        :param container:  parsed container URI
+        :type container: oras.container.Container
+        """
+        session_url = self._get_location(r, container)
+        if not session_url:
+            raise ValueError(f"Issue retrieving session url: {r.json()}")
+        return session_url
+
+    def _check_200_response(self, response):
+        """
+        Helper function to ensure some flavor of 200
+
+        :param response: request response to inspect
+        """
+        if response.status_code not in [200, 201, 202]:
+            self._parse_response_errors(response)
+            raise ValueError(
+                f"Issue with {response.request.url}: {response_reason(response)}"
+            )
+
+    def _parse_response_errors(self, response):
+        """
+        Given a failed request, look for OCI formatted error messages.
+
+        :param response: request response to inspect
+        """
+        try:
+            msg = response.json()
+            for error in msg.get("errors", []):
+                if isinstance(error, dict) and "message" in error:
+                    logger.error(error["message"])
+        except Exception:
+            pass
+
+    def _iter_push_layers(
+        self,
+        files: List,
+        annotset: oras.oci.Annotations,
+        disable_path_validation: bool,
+    ) -> Generator[Tuple[str, dict, bool], None, None]:
+        """
+        Prepare each file for upload, yielding what push needs to upload it.
+
+        Everything a push decides about a file happens here: splitting an
+        optional media type off the path, validating it, compressing a
+        directory, and building the layer with its annotations. Only the
+        upload itself is left to the caller, which is what differs between
+        synchronous and asynchronous pushes.
+
+        :param files: the files to push
+        :type files: list
+        :param annotset: annotations to apply to blobs
+        :type annotset: oras.oci.Annotations
+        :param disable_path_validation: allow paths outside the working directory
+        :type disable_path_validation: bool
+        :return: a generator of (blob path, layer, whether the blob is temporary)
+        """
+        for blob in files:
+            # You can provide a blob + content type
+            path_content: PathAndOptionalContent = oras.utils.split_path_and_content(
+                str(blob)
+            )
+            blob = path_content.path
+            media_type = path_content.content
+
+            # Must exist
+            if not os.path.exists(blob):
+                raise FileNotFoundError(f"{blob} does not exist.")
+
+            # Path validation means blob must be relative to PWD.
+            if not disable_path_validation:
+                if not self._validate_path(blob):
+                    raise ValueError(
+                        f"Blob {blob} is not in the present working directory context."
+                    )
+
+            # Save directory or blob name before compressing
+            blob_name = os.path.basename(blob)
+
+            # If it's a directory, we need to compress
+            cleanup_blob = False
+            if os.path.isdir(blob):
+                blob = oras.utils.make_targz(blob)
+                cleanup_blob = True
+
+            # Create a new layer from the blob
+            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
+            annotations = annotset.get_annotations(blob)
+
+            # Always strip blob_name of path separator
+            layer["annotations"] = {
+                oras.defaults.annotation_title: blob_name.strip(os.sep)
+            }
+            if annotations:
+                layer["annotations"].update(annotations)
+
+            logger.debug(f"Preparing layer {layer}")
+            yield blob, layer, cleanup_blob
+
+    def _apply_manifest_annotations(
+        self,
+        manifest: dict,
+        annotset: oras.oci.Annotations,
+        manifest_annotations: Optional[dict],
+        subject: Optional[str],
+    ):
+        """
+        Add annotations and a subject to a manifest, if there are any.
+
+        :param manifest: the manifest to update
+        :type manifest: dict
+        :param annotset: annotations parsed from a file
+        :type annotset: oras.oci.Annotations
+        :param manifest_annotations: annotations given by the caller, which win
+        :type manifest_annotations: dict
+        :param subject: optional subject reference
+        :type subject: oras.oci.Subject
+        """
+        manifest_annots = annotset.get_annotations("$manifest") or {}
+
+        # Custom manifest annotations from client key=value pairs
+        # These over-ride any potentially provided from file
+        custom_annots = copy.deepcopy(manifest_annotations)
+        if custom_annots:
+            manifest_annots.update(custom_annots)
+        if manifest_annots:
+            manifest["annotations"] = manifest_annots
+
+        if subject:
+            manifest["subject"] = asdict(subject)
+
+    def _prepare_manifest_config(
+        self, manifest_config: Optional[str], annotset: oras.oci.Annotations
+    ) -> Tuple[dict, Optional[str]]:
+        """
+        Build the manifest config, from a provided one or an empty one.
+
+        :param manifest_config: path and optional media type of a config to use
+        :type manifest_config: str
+        :param annotset: annotations to apply to the config
+        :type annotset: oras.oci.Annotations
+        :return: the config layer, and the file to upload for it if there is one
+        """
+        config_annots = annotset.get_annotations("$config")
+        if manifest_config:
+            ref, media_type = self._parse_manifest_ref(manifest_config)
+            conf, config_file = oras.oci.ManifestConfig(ref, media_type)
+        else:
+            conf, config_file = oras.oci.ManifestConfig()
+
+        # Config annotations?
+        if config_annots:
+            conf["annotations"] = config_annots
+
+        logger.debug(f"Preparing config {conf}")
+        return conf, config_file
+
+    def _iter_pull_targets(
+        self, manifest: dict, outdir: str, overwrite: bool
+    ) -> Generator[Tuple[dict, str], None, None]:
+        """
+        Work out where each layer of a manifest should be written.
+
+        Resolving the output name, guarding against a malicious path and
+        honouring overwrite are all decisions, so they live here and a pull
+        only has to download what is yielded.
+
+        :param manifest: the manifest being pulled
+        :type manifest: dict
+        :param outdir: directory to write to
+        :type outdir: str
+        :param overwrite: overwrite an existing file
+        :type overwrite: bool
+        :return: a generator of (layer, output path)
+        """
+        for layer in manifest.get("layers", []):
+            filename = (layer.get("annotations") or {}).get(
+                oras.defaults.annotation_title
+            )
+
+            # If we don't have a filename, default to digest. Hopefully does not happen
+            if not filename:
+                filename = layer["digest"]
+
+            # This raises an error if there is a malicious path
+            outfile = oras.utils.sanitize_path(outdir, os.path.join(outdir, filename))
+
+            if not overwrite and os.path.exists(outfile):
+                logger.warning(
+                    f"{outfile} already exists and --keep-old-files set, will not overwrite."
+                )
+                continue
+
+            yield layer, outfile
+
+
+class Registry(RegistryBase):
+    """
+    Direct interactions with an OCI registry.
+
+    This could also be called a "provider" when we add in the "copy" logic
+    and the registry isn't necessarily the "remote" endpoint.
+    """
+
+    def __init__(
+        self,
+        hostname: Optional[str] = None,
+        insecure: bool = False,
+        tls_verify: Union[bool, str] = True,
+        auth_backend: str = "token",
+        transport: Optional[Transport] = None,
+    ):
+        """
+        Create an ORAS client.
+
+        The hostname is the remote registry to ping.
+
+        :param hostname: the hostname of the registry to ping
+        :type hostname: str
+        :param insecure: use http instead of https
+        :type insecure: bool
+        :param tls_verify: enable/disable tls verification or use a custom CA-Bundle
+        :type tls_verify: bool
+        :param auth_backend: name of the auth backend to use
+        :type auth_backend: str
+        :param transport: how to send requests, defaults to a new transport
+                          configured with tls_verify. A provided transport is
+                          used as given, so it carries its own tls settings
+        :type transport: oras.transport.Transport
+        """
+        super().__init__(
+            transport=transport or Transport(tls_verify=tls_verify),
+            hostname=hostname,
+            insecure=insecure,
+            auth_backend=auth_backend,
+        )
+
+    @property
+    def session(self) -> requests.Session:
+        """
+        The session used to interact with the registry.
+        """
+        return self.transport.session
+
+    @session.setter
+    def session(self, session: requests.Session):
+        self.transport.session = session
+
+    @property
+    def _tls_verify(self) -> Union[bool, str]:
+        """
+        Whether tls verification is enabled, or the custom CA-Bundle in use.
+        """
+        return self.transport.tls_verify
+
+    @_tls_verify.setter
+    def _tls_verify(self, tls_verify: Union[bool, str]):
+        self.transport.tls_verify = tls_verify
+
+    def close(self):
+        """
+        Release the connections held by the transport.
+
+        Calling this is optional, and a client is not required to be used as a
+        context manager. It is here for callers that create many clients and
+        want the pooled connections closed promptly.
+        """
+        self.transport.close()
+
+    def delete_tags(self, name: str, tags=Union[str, list]) -> List[str]:
+        """
+        Delete one or more tags for a unique resource identifier.
+
+        Returns those successfully deleted.
+
+        :param name: container URI to parse
+        :type name: str
+        :param tags: single or multiple tags name to delete
+        :type N: string or list
+        """
+        if isinstance(tags, str):
+            tags = [tags]
+        deleted = []
+        for tag in tags:
+            if self.delete_tag(name, tag):
+                deleted.append(tag)
+        return deleted
 
     def upload_blob(
         self,
@@ -280,9 +598,7 @@ class Registry:
 
         if self.blob_exists(layer, container):
             logger.debug(f'layer already exists: {layer["digest"]}')
-            response = requests.Response()
-            response.status_code = 200
-            return response
+            return successful_response()
 
         # Chunked for large, otherwise POST and PUT
         # This is currently disabled unless the user asks for it, as
@@ -302,8 +618,7 @@ class Registry:
             response.status_code not in [200, 201, 202]
             and layer["digest"] == oras.defaults.blank_hash
         ):
-            response = requests.Response()
-            response.status_code = 200
+            response = successful_response()
         return response
 
     @decorator.ensure_container
@@ -318,7 +633,7 @@ class Registry:
         """
         logger.debug(f"Deleting tag {tag} for {container}")
 
-        head_url = f"{self.prefix}://{container.manifest_url(tag)}"  # type: ignore
+        head_url = self._url(container.manifest_url(tag))  # type: ignore
 
         # get digest of manifest to delete
         response = self.do_request(
@@ -334,7 +649,7 @@ class Registry:
         if not digest:
             raise RuntimeError("Expected to find Docker-Content-Digest header.")
 
-        delete_url = f"{self.prefix}://{container.manifest_url(digest)}"  # type: ignore
+        delete_url = self._url(container.manifest_url(digest))  # type: ignore
         response = self.do_request(delete_url, "DELETE")
         if response.status_code != 202:
             raise RuntimeError(f"Delete was not successful: {response.json()}")
@@ -351,7 +666,7 @@ class Registry:
         :type N: Optional[int]
         """
         retrieve_all = N is None
-        tags_url = f"{self.prefix}://{container.tags_url(N=N)}"  # type: ignore
+        tags_url = self._url(container.tags_url(N=N))  # type: ignore
         tags: List[str] = []
 
         def extract_tags(response: requests.Response):
@@ -425,19 +740,8 @@ class Registry:
         :type head: bool
         """
         method = "GET" if not head else "HEAD"
-        blob_url = f"{self.prefix}://{container.get_blob_url(digest)}"  # type: ignore
+        blob_url = self._url(container.get_blob_url(digest))  # type: ignore
         return self.do_request(blob_url, method, headers=self.headers, stream=stream)
-
-    def get_container(self, name: container_type) -> oras.container.Container:
-        """
-        Courtesy function to get a container from a URI.
-
-        :param name: unique resource identifier to parse
-        :type name: oras.container.Container or str
-        """
-        if isinstance(name, oras.container.Container):
-            return name
-        return oras.container.Container(name, registry=self.hostname)
 
     # Functions to be deprecated in favor of exposed ones
     @decorator.ensure_container
@@ -533,15 +837,9 @@ class Registry:
         :type layer: dict
         """
         # Start an upload session
-        headers = {"Content-Type": "application/octet-stream"}
-
-        upload_url = f"{self.prefix}://{container.upload_blob_url()}"
-        r = self.do_request(upload_url, "POST", headers=headers)
-
-        # Location should be in the header
-        session_url = self._get_location(r, container)
-        if not session_url:
-            raise ValueError(f"Issue retrieving session url: {r.json()}")
+        session_url = self._start_upload_session(
+            container, {"Content-Type": "application/octet-stream"}
+        )
 
         # PUT to upload blob url
         headers = {
@@ -571,34 +869,25 @@ class Registry:
         :type container: oras.container.Container
         """
         blob_url = container.get_blob_url(layer["digest"])
-        response = self.do_request(f"{self.prefix}://{blob_url}", "HEAD")
+        response = self.do_request(self._url(blob_url), "HEAD")
         return response.status_code == 200
 
-    def _get_location(
-        self, r: requests.Response, container: oras.container.Container
+    def _start_upload_session(
+        self, container: oras.container.Container, headers: dict
     ) -> str:
         """
-        Parse the location header and ensure it includes a hostname.
-        This currently assumes if there isn't a hostname, we are pushing to
-        the same registry hostname of the original request.
+        Open a blob upload session and return the url to upload to.
 
-        :param r: requests response with headers
-        :type r: requests.Response
         :param container:  parsed container URI
-        :type container: oras.container.Container or str
+        :type container: oras.container.Container
+        :param headers: headers to start the session with
+        :type headers: dict
         """
-        session_url = r.headers.get("location", "")
-        if not session_url:
-            return session_url
+        upload_url = self._url(container.upload_blob_url())
+        r = self.do_request(upload_url, "POST", headers=headers)
 
-        # Some registries do not return the full registry hostname.  Check that
-        # the url starts with a protocol scheme, change tracked with:
-        # https://github.com/oras-project/oras-py/issues/78
-        prefix = f"{self.prefix}://{container.registry}"
-
-        if not session_url.startswith("http"):
-            session_url = f"{prefix}{session_url}"
-        return session_url
+        # Location should be in the header
+        return self._require_location(r, container)
 
     def chunked_upload(
         self,
@@ -622,14 +911,7 @@ class Registry:
         # Start an upload session
         headers = {"Content-Type": "application/octet-stream", "Content-Length": "0"}
         headers.update(self.headers)
-
-        upload_url = f"{self.prefix}://{container.upload_blob_url()}"
-        r = self.do_request(upload_url, "POST", headers=headers)
-
-        # Location should be in the header
-        session_url = self._get_location(r, container)
-        if not session_url:
-            raise ValueError(f"Issue retrieving session url: {r.json()}")
+        session_url = self._start_upload_session(container, headers)
 
         # Read the blob in chunks, for each do a patch
         start = 0
@@ -652,41 +934,13 @@ class Registry:
                         session_url, "PATCH", data=chunk, headers=headers
                     )
                 )
-                session_url = self._get_location(r, container)
-                if not session_url:
-                    raise ValueError(f"Issue retrieving session url: {r.json()}")
+                session_url = self._require_location(r, container)
 
         # Finally, issue a PUT request to close blob
         session_url = oras.utils.append_url_params(
             session_url, {"digest": layer["digest"]}
         )
         return self.do_request(session_url, "PUT", headers=self.headers)
-
-    def _check_200_response(self, response: requests.Response):
-        """
-        Helper function to ensure some flavor of 200
-
-        :param response: request response to inspect
-        :type response: requests.Response
-        """
-        if response.status_code not in [200, 201, 202]:
-            self._parse_response_errors(response)
-            raise ValueError(f"Issue with {response.request.url}: {response.reason}")
-
-    def _parse_response_errors(self, response: requests.Response):
-        """
-        Given a failed request, look for OCI formatted error messages.
-
-        :param response: request response to inspect
-        :type response: requests.Response
-        """
-        try:
-            msg = response.json()
-            for error in msg.get("errors", []):
-                if isinstance(error, dict) and "message" in error:
-                    logger.error(error["message"])
-        except Exception:
-            pass
 
     def upload_manifest(
         self,
@@ -706,10 +960,42 @@ class Registry:
             "Content-Type": oras.defaults.default_manifest_media_type,
         }
         return self.do_request(
-            f"{self.prefix}://{container.manifest_url()}",  # noqa
+            self._url(container.manifest_url()),  # noqa
             "PUT",
             headers=headers,
             json=manifest,
+        )
+
+    def upload_manifest_content(
+        self,
+        content: bytes,
+        container: oras.container.Container,
+        media_type: str,
+        reference: Optional[str] = None,
+    ) -> requests.Response:
+        """
+        Upload a manifest from the exact bytes it should be stored as.
+
+        Unlike upload_manifest, the content is sent verbatim rather than being
+        serialized from a dict, so the digest of what the registry stores is the
+        digest of what was handed over. This matters when the manifest was
+        produced elsewhere, for example when copying from an OCI layout.
+
+        :param content: the raw manifest (or index) bytes to upload
+        :type content: bytes
+        :param container:  parsed container URI
+        :type container: oras.container.Container
+        :param media_type: media type of the manifest, used as the Content-Type
+        :type media_type: str
+        :param reference: tag or digest to upload to, defaults to the container reference
+        :type reference: str
+        """
+        headers = {"Content-Type": media_type}
+        return self.do_request(
+            self._url(container.manifest_url(reference)),
+            "PUT",
+            headers=headers,
+            data=content,
         )
 
     def push(
@@ -763,51 +1049,13 @@ class Registry:
 
         # A lookup of annotations we can add (to blobs or manifest)
         annotset = oras.oci.Annotations(annotation_file)
-        media_type = None
 
         # Upload files as blobs
-        for blob in files:
-            # You can provide a blob + content type
-            path_content: PathAndOptionalContent = oras.utils.split_path_and_content(
-                str(blob)
-            )
-            blob = path_content.path
-            media_type = path_content.content
-
-            # Must exist
-            if not os.path.exists(blob):
-                raise FileNotFoundError(f"{blob} does not exist.")
-
-            # Path validation means blob must be relative to PWD.
-            if not disable_path_validation:
-                if not self._validate_path(blob):
-                    raise ValueError(
-                        f"Blob {blob} is not in the present working directory context."
-                    )
-
-            # Save directory or blob name before compressing
-            blob_name = os.path.basename(blob)
-
-            # If it's a directory, we need to compress
-            cleanup_blob = False
-            if os.path.isdir(blob):
-                blob = oras.utils.make_targz(blob)
-                cleanup_blob = True
-
-            # Create a new layer from the blob
-            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
-            annotations = annotset.get_annotations(blob)
-
-            # Always strip blob_name of path separator
-            layer["annotations"] = {
-                oras.defaults.annotation_title: blob_name.strip(os.sep)
-            }
-            if annotations:
-                layer["annotations"].update(annotations)
-
+        for blob, layer, cleanup_blob in self._iter_push_layers(
+            files, annotset, disable_path_validation
+        ):
             # update the manifest with the new layer
             manifest["layers"].append(layer)
-            logger.debug(f"Preparing layer {layer}")
 
             # Upload the blob layer
             response = self.upload_blob(
@@ -823,34 +1071,12 @@ class Registry:
             if cleanup_blob and os.path.exists(blob):
                 os.remove(blob)
 
-        # Add annotations to the manifest, if provided
-        manifest_annots = annotset.get_annotations("$manifest") or {}
-
-        # Custom manifest annotations from client key=value pairs
-        # These over-ride any potentially provided from file
-        custom_annots = copy.deepcopy(manifest_annotations)
-        if custom_annots:
-            manifest_annots.update(custom_annots)
-        if manifest_annots:
-            manifest["annotations"] = manifest_annots
-
-        if subject:
-            manifest["subject"] = asdict(subject)
-
-        # Prepare the manifest config (temporary or one provided)
-        config_annots = annotset.get_annotations("$config")
-        if manifest_config:
-            ref, media_type = self._parse_manifest_ref(manifest_config)
-            conf, config_file = oras.oci.ManifestConfig(ref, media_type)
-        else:
-            conf, config_file = oras.oci.ManifestConfig()
-
-        # Config annotations?
-        if config_annots:
-            conf["annotations"] = config_annots
+        self._apply_manifest_annotations(
+            manifest, annotset, manifest_annotations, subject
+        )
+        conf, config_file = self._prepare_manifest_config(manifest_config, annotset)
 
         # Config is just another layer blob!
-        logger.debug(f"Preparing config {conf}")
         with (
             temporary_empty_config()
             if config_file is None
@@ -903,24 +1129,7 @@ class Registry:
         overwrite = overwrite
 
         files = []
-        for layer in manifest.get("layers", []):
-            filename = (layer.get("annotations") or {}).get(
-                oras.defaults.annotation_title
-            )
-
-            # If we don't have a filename, default to digest. Hopefully does not happen
-            if not filename:
-                filename = layer["digest"]
-
-            # This raises an error if there is a malicious path
-            outfile = oras.utils.sanitize_path(outdir, os.path.join(outdir, filename))
-
-            if not overwrite and os.path.exists(outfile):
-                logger.warning(
-                    f"{outfile} already exists and --keep-old-files set, will not overwrite."
-                )
-                continue
-
+        for layer, outfile in self._iter_pull_targets(manifest, outdir, overwrite):
             # A directory will need to be uncompressed and moved
             if layer["mediaType"] == oras.defaults.default_blob_dir_media_type:
                 targz = oras.utils.get_tmpfile(suffix=".tar.gz")
@@ -935,6 +1144,40 @@ class Registry:
             logger.info(f"Successfully pulled {outfile}.")
             files.append(outfile)
         return files
+
+    @decorator.ensure_container
+    def get_manifest_content(
+        self,
+        container: container_type,
+        allowed_media_type: Optional[list] = None,
+        reference: Optional[str] = None,
+    ) -> Tuple[bytes, Optional[str]]:
+        """
+        Retrieve a manifest as the raw bytes the registry served, with its digest.
+
+        get_manifest parses the manifest into a dict, which is what most callers
+        want. Use this instead when the bytes themselves matter - re-serializing
+        a parsed manifest can change its digest - such as when storing a manifest
+        in an OCI layout.
+
+        :param container:  parsed container URI
+        :type container: oras.container.Container or str
+        :param allowed_media_type: one or more allowed media types
+        :type allowed_media_type: list
+        :param reference: tag or digest to retrieve, defaults to the container reference
+        :type reference: str
+        :return: tuple of the raw manifest bytes, and the digest reported by the
+                 registry in the Docker-Content-Digest header (None if absent)
+        """
+        if not allowed_media_type:
+            allowed_media_type = oras.defaults.default_manifest_accepted_media_types
+        headers = {"Accept": ", ".join(allowed_media_type)}
+
+        manifest_url = self._url(container.manifest_url(reference))  # type: ignore
+        response = self.do_request(manifest_url, "GET", headers=headers)
+
+        self._check_200_response(response)
+        return response.content, response.headers.get("Docker-Content-Digest")
 
     @decorator.ensure_container
     def get_manifest(
@@ -961,7 +1204,7 @@ class Registry:
             allowed_media_type = oras.defaults.default_manifest_accepted_media_types
         headers = {"Accept": ", ".join(allowed_media_type)}
 
-        get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
+        get_manifest = self._url(container.manifest_url())  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
 
         self._check_200_response(response)
@@ -975,7 +1218,7 @@ class Registry:
         self,
         url: str,
         method: str = "GET",
-        data: Optional[Union[dict, bytes]] = None,
+        data: Optional[Union[dict, bytes, Callable]] = None,
         headers: Optional[dict] = None,
         json: Optional[dict] = None,
         stream: bool = False,
@@ -987,8 +1230,10 @@ class Registry:
         :type url: str
         :param method: the method to use (GET, DELETE, POST, PUT, PATCH)
         :type method: str
-        :param data: data for requests
-        :type data: dict or bytes
+        :param data: data for requests. A body that can only be read once
+                     must be given as a callable returning a fresh one,
+                     since the request may be sent again
+        :type data: dict or bytes or callable
         :param headers: headers for the request
         :type headers: dict
         :param json: json data for requests
@@ -1002,14 +1247,13 @@ class Registry:
         # Make the request and return to calling function, but attempt to use auth token if previously obtained
         if isinstance(self.auth, oras.auth.TokenAuth) and self.auth.token is not None:
             headers.update(self.auth.get_auth_header())
-        response = self.session.request(
-            method,
+        response = self.transport.request(
             url,
+            method,
             data=data,
-            json=json,
             headers=headers,
+            json=json,
             stream=stream,
-            verify=self._tls_verify,
         )
 
         # A 401 response is a request for authentication, 404 is not found
@@ -1020,14 +1264,13 @@ class Registry:
         headers, changed = self.auth.authenticate_request(response, headers)
         if not changed:
             raise ValueError("Cannot respond to request for authentication.")
-        response = self.session.request(
-            method,
+        response = self.transport.request(
             url,
+            method,
             data=data,
-            json=json,
             headers=headers,
+            json=json,
             stream=stream,
-            verify=self._tls_verify,
         )
 
         # One retry if 403 denied (need new token?)
@@ -1035,14 +1278,13 @@ class Registry:
             headers, changed = self.auth.authenticate_request(
                 response, headers, refresh=True
             )
-            response = self.session.request(
-                method,
+            response = self.transport.request(
                 url,
+                method,
                 data=data,
-                json=json,
                 headers=headers,
+                json=json,
                 stream=stream,
-                verify=self._tls_verify,
             )
 
         return response
