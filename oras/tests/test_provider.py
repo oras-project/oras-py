@@ -47,50 +47,11 @@ def test_push_quiet_output_does_not_write_stdout(tmp_path, monkeypatch, capsys):
     info.assert_called_once_with(f"Successfully pushed {container}")
 
 
-def test_push_with_oci_subject(tmp_path, monkeypatch):
-    client = oras.provider.Registry(hostname="registry.example", insecure=True)
-    artifact = tmp_path / "artifact.txt"
-    artifact.write_text("content")
-    subject = oras.oci.Subject(
-        mediaType=oras.defaults.default_manifest_media_type,
-        digest="sha256:" + "a" * 64,
-        size=123,
-    )
-
-    class Response:
-        status_code = 201
-
-    uploaded = {}
-
-    def upload_manifest(manifest, *args, **kwargs):
-        uploaded["manifest"] = manifest
-        return Response()
-
-    container = client.get_container("registry.example/repository:tag")
-    monkeypatch.setattr(client, "get_container", lambda target: container)
-    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
-    monkeypatch.setattr(client, "upload_blob", lambda *args, **kwargs: Response())
-    monkeypatch.setattr(client, "upload_manifest", upload_manifest)
-    monkeypatch.setattr(client, "_check_200_response", lambda response: None)
-
-    client.push(
-        files=[artifact],
-        target="registry.example/repository:tag",
-        disable_path_validation=True,
-        subject=subject,
-    )
-
-    assert uploaded["manifest"]["subject"] == {
-        "mediaType": subject.mediaType,
-        "digest": subject.digest,
-        "size": 123,
-    }
+@pytest.mark.with_auth(False)
+def test_push_subject_round_trip(tmp_path, registry, credentials):
     hints = typing.get_type_hints(oras.provider.Registry.push)
     assert hints["subject"] == typing.Optional[oras.oci.Subject]
 
-
-@pytest.mark.with_auth(False)
-def test_push_subject_round_trip(tmp_path, registry, credentials):
     client = oras.provider.Registry(hostname=registry, insecure=True)
     artifact = tmp_path / "subject.txt"
     artifact.write_text("subject content")
