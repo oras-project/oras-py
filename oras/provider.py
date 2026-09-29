@@ -167,6 +167,9 @@ class Registry:
         :param config_path: custom config path to add credentials to
         :type config_path: Optional[str]
         """
+        if password_stdin and not username:
+            raise ValueError("username is required when password_stdin is set")
+
         # Read password from stdin
         if password_stdin:
             password = oras.utils.readline()

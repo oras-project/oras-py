@@ -71,10 +71,15 @@ def test_login_prompts_for_missing_credentials(monkeypatch, backend, password_so
         kwargs["password"] = "secret"
     elif password_source == "stdin":
         kwargs["password_stdin"] = True
+    if password_source == "stdin":
+        kwargs["username"] = "alice"
     result = client.login(hostname="registry.example", **kwargs)
 
     assert result == {"Status": "Login Succeeded"}
-    username_prompt.assert_called_once_with("Username: ")
+    if password_source == "stdin":
+        username_prompt.assert_not_called()
+    else:
+        username_prompt.assert_called_once_with("Username: ")
     if password_source == "prompt":
         password_prompt.assert_called_once_with("Password: ")
     else:
@@ -90,6 +95,24 @@ def test_login_prompts_for_missing_credentials(monkeypatch, backend, password_so
         registry="registry.example",
         dockercfg_path=None,
     )
+
+
+@pytest.mark.parametrize("username", [None, ""])
+def test_login_stdin_requires_username(monkeypatch, username):
+    client = oras.provider.Registry()
+    stdin = Mock()
+    prompt = Mock()
+    get_client = Mock()
+    monkeypatch.setattr(oras.utils, "readline", stdin)
+    monkeypatch.setattr("builtins.input", prompt)
+    monkeypatch.setattr(oras.utils, "get_docker_client", get_client)
+    with pytest.raises(
+        ValueError, match="username is required when password_stdin is set"
+    ):
+        client.login(username=username, password_stdin=True)
+    stdin.assert_not_called()
+    prompt.assert_not_called()
+    get_client.assert_not_called()
 
 
 def test_login_rejects_empty_prompted_username(monkeypatch):
