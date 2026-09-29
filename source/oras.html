@@ -2347,6 +2347,33 @@
                 </a>
                </li>
                <li class="toctree-l3">
+                <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_login_prompts_for_missing_credentials">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   test_login_prompts_for_missing_credentials()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_login_rejects_empty_prompted_username">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   test_login_rejects_empty_prompted_username()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
+                <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_login_stdin_requires_username">
+                 <code class="docutils literal notranslate">
+                  <span class="pre">
+                   test_login_stdin_requires_username()
+                  </span>
+                 </code>
+                </a>
+               </li>
+               <li class="toctree-l3">
                 <a class="reference internal" href="oras.tests.html#oras.tests.test_provider.test_parse_manifest">
                  <code class="docutils literal notranslate">
                   <span class="pre">
@@ -9212,6 +9239,32 @@ and the registry isn’t necessarily the “remote” endpoint.
                <span class="pre">
                 str
                </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
+               </span>
               </span>
              </em>
              ,
@@ -9231,6 +9284,32 @@ and the registry isn’t necessarily the “remote” endpoint.
               <span class="n">
                <span class="pre">
                 str
+               </span>
+               <span class="w">
+               </span>
+               <span class="p">
+                <span class="pre">
+                 |
+                </span>
+               </span>
+               <span class="w">
+               </span>
+               <span class="pre">
+                None
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="o">
+               <span class="pre">
+                =
+               </span>
+              </span>
+              <span class="w">
+              </span>
+              <span class="default_value">
+               <span class="pre">
+                None
                </span>
               </span>
              </em>
@@ -9438,9 +9517,18 @@ and the registry isn’t necessarily the “remote” endpoint.
                   </strong>
                   (
                   <em>
+                   Optional
+                  </em>
+                  <em>
+                   [
+                  </em>
+                  <em>
                    str
                   </em>
-                  ) – the user account name
+                  <em>
+                   ]
+                  </em>
+                  ) – the user account name, prompted for if not provided
                  </p>
                 </li>
                 <li>
@@ -9450,9 +9538,18 @@ and the registry isn’t necessarily the “remote” endpoint.
                   </strong>
                   (
                   <em>
+                   Optional
+                  </em>
+                  <em>
+                   [
+                  </em>
+                  <em>
                    str
                   </em>
-                  ) – the user account password
+                  <em>
+                   ]
+                  </em>
+                  ) – the user account password, prompted for if not provided
                  </p>
                 </li>
                 <li>
@@ -9465,18 +9562,6 @@ and the registry isn’t necessarily the “remote” endpoint.
                    bool
                   </em>
                   ) – get the password from standard input
-                 </p>
-                </li>
-                <li>
-                 <p>
-                  <strong>
-                   insecure
-                  </strong>
-                  (
-                  <em>
-                   bool
-                  </em>
-                  ) – use http instead of https
                  </p>
                 </li>
                 <li>
@@ -9498,7 +9583,16 @@ and the registry isn’t necessarily the “remote” endpoint.
                   </strong>
                   (
                   <em>
+                   Optional
+                  </em>
+                  <em>
+                   [
+                  </em>
+                  <em>
                    str
+                  </em>
+                  <em>
+                   ]
                   </em>
                   ) – the hostname to login to
                  </p>
@@ -9510,7 +9604,16 @@ and the registry isn’t necessarily the “remote” endpoint.
                   </strong>
                   (
                   <em>
+                   Optional
+                  </em>
+                  <em>
+                   [
+                  </em>
+                  <em>
                    str
+                  </em>
+                  <em>
+                   ]
                   </em>
                   ) – custom config path to add credentials to
                  </p>
@@ -11436,7 +11539,7 @@ Set do_chunked=True for chunked upload.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 24, 2026.
+              Sep 29, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

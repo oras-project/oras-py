@@ -344,6 +344,94 @@
 
 
 
+<div class="viewcode-block" id="test_login_prompts_for_missing_credentials">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_login_prompts_for_missing_credentials">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"backend"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docker"</span><span class="p">,</span> <span class="s2">"fallback"</span><span class="p">])</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"password_source"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"prompt"</span><span class="p">,</span> <span class="s2">"argument"</span><span class="p">,</span> <span class="s2">"stdin"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_login_prompts_for_missing_credentials</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">password_source</span><span class="p">):</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">username_prompt</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">"alice"</span><span class="p">)</span>
+    <span class="n">password_prompt</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">)</span>
+    <span class="n">stdin</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">"builtins.input"</span><span class="p">,</span> <span class="n">username_prompt</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">getpass</span><span class="p">,</span> <span class="s2">"getpass"</span><span class="p">,</span> <span class="n">password_prompt</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"readline"</span><span class="p">,</span> <span class="n">stdin</span><span class="p">)</span>
+    <span class="n">set_basic_auth</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="s2">"set_basic_auth"</span><span class="p">,</span> <span class="n">set_basic_auth</span><span class="p">)</span>
+    <span class="n">docker_client</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">docker_client</span><span class="o">.</span><span class="n">login</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span>
+    <span class="n">get_client</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">docker_client</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"fallback"</span><span class="p">:</span>
+        <span class="n">get_client</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Docker unavailable"</span><span class="p">)</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">login</span><span class="p">,</span> <span class="s2">"DockerClient"</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">docker_client</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"get_docker_client"</span><span class="p">,</span> <span class="n">get_client</span><span class="p">)</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"argument"</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"secret"</span>
+    <span class="k">elif</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"stdin"</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"password_stdin"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"stdin"</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"username"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"alice"</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="p">{</span><span class="s2">"Status"</span><span class="p">:</span> <span class="s2">"Login Succeeded"</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"stdin"</span><span class="p">:</span>
+        <span class="n">username_prompt</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">username_prompt</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">"Username: "</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"prompt"</span><span class="p">:</span>
+        <span class="n">password_prompt</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">"Password: "</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">password_prompt</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">password_source</span> <span class="o">==</span> <span class="s2">"stdin"</span><span class="p">:</span>
+        <span class="n">stdin</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stdin</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="n">set_basic_auth</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">)</span>
+    <span class="n">docker_client</span><span class="o">.</span><span class="n">login</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"alice"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">,</span>
+        <span class="n">registry</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span>
+        <span class="n">dockercfg_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_login_stdin_requires_username">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_login_stdin_requires_username">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"username"</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_login_stdin_requires_username</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">()</span>
+    <span class="n">stdin</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">get_client</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"readline"</span><span class="p">,</span> <span class="n">stdin</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">"builtins.input"</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"get_docker_client"</span><span class="p">,</span> <span class="n">get_client</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span>
+        <span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"username is required when password_stdin is set"</span>
+    <span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password_stdin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">stdin</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="n">prompt</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="n">get_client</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="test_login_rejects_empty_prompted_username">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_login_rejects_empty_prompted_username">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_login_rejects_empty_prompted_username</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">"builtins.input"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="p">:</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="n">get_client</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"get_docker_client"</span><span class="p">,</span> <span class="n">get_client</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"username required"</span><span class="p">):</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">)</span>
+    <span class="n">get_client</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></div>
+
+
+
 <div class="viewcode-block" id="test_push_quiet_suppresses_completion_message">
 <a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_push_quiet_suppresses_completion_message">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_push_quiet_suppresses_completion_message</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
@@ -632,7 +720,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 24, 2026.
+              Sep 29, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
