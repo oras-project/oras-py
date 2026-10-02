@@ -2,6 +2,7 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import json
 import os
 import shutil
 import subprocess
@@ -494,3 +495,75 @@ def test_sanitize_path():
         str(e.value)
         == f"Filename {Path(os.path.join(os.getcwd(), '..', '..')).resolve()} is not in {Path('../').resolve()} directory"
     )
+
+
+def test_push_duplicate_layer_titles_raises(tmp_path, monkeypatch):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    first = tmp_path / "src" / "model.py"
+    second = tmp_path / "lib" / "model.py"
+    for path in (first, second):
+        path.parent.mkdir()
+        path.write_text(str(path))
+
+    class Response:
+        status_code = 201
+
+    container = client.get_container("registry.example/repository:tag")
+    monkeypatch.setattr(client, "get_container", lambda target: container)
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    upload_blob = Mock(return_value=Response())
+    upload_manifest = Mock(return_value=Response())
+    monkeypatch.setattr(client, "upload_blob", upload_blob)
+    monkeypatch.setattr(client, "upload_manifest", upload_manifest)
+    monkeypatch.setattr(client, "_check_200_response", lambda response: None)
+
+    with pytest.raises(ValueError, match="model.py"):
+        client.push(
+            files=[first, second],
+            target="registry.example/repository:tag",
+            disable_path_validation=True,
+        )
+    upload_manifest.assert_not_called()
+
+
+def test_push_duplicate_names_with_unique_title_annotations(tmp_path, monkeypatch):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    first = tmp_path / "src" / "model.py"
+    second = tmp_path / "lib" / "model.py"
+    for path in (first, second):
+        path.parent.mkdir()
+        path.write_text(str(path))
+    annotation_file = tmp_path / "annotations.json"
+    annotation_file.write_text(
+        json.dumps(
+            {
+                str(first): {"org.opencontainers.image.title": "src/model.py"},
+                str(second): {"org.opencontainers.image.title": "lib/model.py"},
+            }
+        )
+    )
+
+    class Response:
+        status_code = 201
+
+    container = client.get_container("registry.example/repository:tag")
+    monkeypatch.setattr(client, "get_container", lambda target: container)
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(client, "upload_blob", lambda *args, **kwargs: Response())
+    upload_manifest = Mock(return_value=Response())
+    monkeypatch.setattr(client, "upload_manifest", upload_manifest)
+    monkeypatch.setattr(client, "_check_200_response", lambda response: None)
+
+    client.push(
+        files=[first, second],
+        target="registry.example/repository:tag",
+        disable_path_validation=True,
+        annotation_file=str(annotation_file),
+        quiet=True,
+    )
+    manifest = upload_manifest.call_args[0][0]
+    titles = [
+        layer["annotations"]["org.opencontainers.image.title"]
+        for layer in manifest["layers"]
+    ]
+    assert titles == ["src/model.py", "lib/model.py"]

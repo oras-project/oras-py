@@ -11,7 +11,7 @@ from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
 from http.cookiejar import DefaultCookiePolicy
 from tempfile import TemporaryDirectory
-from typing import Callable, Generator, List, Optional, Tuple, Union
+from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
 
 import jsonschema
 import requests
@@ -772,6 +772,9 @@ class Registry:
         annotset = oras.oci.Annotations(annotation_file)
         media_type = None
 
+        # Layer titles become file names on pull, so they must be unique
+        titles: Dict[str, str] = {}
+
         # Upload files as blobs
         for blob in files:
             # You can provide a blob + content type
@@ -808,6 +811,16 @@ class Registry:
                 }
                 if annotations:
                     layer["annotations"].update(annotations)
+
+                title = layer["annotations"].get(oras.defaults.annotation_title)
+                if title in titles:
+                    raise ValueError(
+                        f"{path_content.path} and {titles[title]} would both be pulled "
+                        f"as '{title}'. Rename one of them or set a unique "
+                        f"{oras.defaults.annotation_title} annotation for it."
+                    )
+                if title:
+                    titles[title] = path_content.path
 
                 # update the manifest with the new layer
                 manifest["layers"].append(layer)
