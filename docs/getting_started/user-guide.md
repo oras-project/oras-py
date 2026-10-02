@@ -497,7 +497,7 @@ import oras.oci
 
 client = oras.client.OrasClient(insecure=True)
 
-manifest = client.remote.get_manifest("localhost:5000/dinosaur/artifact:v1")
+manifest = client.get_manifest("localhost:5000/dinosaur/artifact:v1")
 subject = oras.oci.Subject.from_manifest(manifest)
 
 client.push(files=["derived-artifact.txt"], target="localhost:5000/dinosaur/artifact:v1-derived", subject=subject)
