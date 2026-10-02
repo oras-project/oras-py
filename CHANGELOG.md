@@ -16,6 +16,7 @@ The versions coincide with releases on pip. Only major versions will be released
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
  - clean up temporary directory archives after push and pull, including failed transfers (0.2.44)
  - make `username` and `password` optional in `login()` so the interactive prompts can be used, hide password entry and reject empty usernames, closes issue [235](https://github.com/oras-project/oras-py/issues/235) (0.2.44)
+ - fix `subject` type annotation of `push()` to `oras.oci.Subject`, closes issue [253](https://github.com/oras-project/oras-py/issues/253) (0.2.44)
  - route push completion output through the logger and support the documented `quiet` option, closes issue [229](https://github.com/oras-project/oras-py/issues/229) (0.2.43)
  - add Layout `copy` for pull_from_registry capability (0.2.42)
  - make `get_manifest()` validation optional, fix `Accept` header join, and expand default `Accept` header types to cover all supported response types for the `/v2/<name>/manifests/<reference>` endpoint (0.2.41)
