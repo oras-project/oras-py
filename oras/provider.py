@@ -3,6 +3,7 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import copy
+import getpass
 import os
 import sys
 import urllib
@@ -34,6 +35,13 @@ def temporary_empty_config() -> Generator[str, None, None]:
         config_file = oras.utils.get_tmpfile(tmpdir=tmpdir, suffix=".json")
         oras.utils.write_file(config_file, "{}")
         yield config_file
+
+
+@contextmanager
+def temporary_archive(source: str) -> Generator[str, None, None]:
+    with TemporaryDirectory() as tmpdir:
+        archive = os.path.join(tmpdir, "archive.tar.gz")
+        yield oras.utils.make_targz(source, archive)
 
 
 class Registry:
@@ -143,8 +151,8 @@ class Registry:
 
     def login(
         self,
-        username: str,
-        password: str,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
         password_stdin: bool = False,
         tls_verify: bool = True,
         hostname: Optional[str] = None,
@@ -153,21 +161,22 @@ class Registry:
         """
         Login to a registry.
 
-        :param username: the user account name
-        :type username: str
-        :param password: the user account password
-        :type password: str
+        :param username: the user account name, prompted for if not provided
+        :type username: Optional[str]
+        :param password: the user account password, prompted for if not provided
+        :type password: Optional[str]
         :param password_stdin: get the password from standard input
         :type password_stdin: bool
-        :param insecure: use http instead of https
-        :type insecure: bool
         :param tls_verify: verify tls
         :type tls_verify: bool
         :param hostname: the hostname to login to
-        :type hostname: str
+        :type hostname: Optional[str]
         :param config_path: custom config path to add credentials to
-        :type config_path: str
+        :type config_path: Optional[str]
         """
+        if password_stdin and not username:
+            raise ValueError("username is required when password_stdin is set")
+
         # Read password from stdin
         if password_stdin:
             password = oras.utils.readline()
@@ -175,16 +184,14 @@ class Registry:
         # No username, try to get from stdin
         if not username:
             username = input("Username: ")
+            if not username:
+                raise ValueError("username required")
 
         # No password provided
         if not password:
-            password = input("Password: ")
+            password = getpass.getpass("Password: ")
             if not password:
                 raise ValueError("password required")
-
-        # Cut out early if we didn't get what we need
-        if not password or not username:
-            return {"Login": "Not successful"}
 
         # Set basic auth for the auth client
         self.auth.set_basic_auth(username, password)
@@ -789,39 +796,32 @@ class Registry:
             blob_name = os.path.basename(blob)
 
             # If it's a directory, we need to compress
-            cleanup_blob = False
-            if os.path.isdir(blob):
-                blob = oras.utils.make_targz(blob)
-                cleanup_blob = True
+            is_dir = os.path.isdir(blob)
+            with temporary_archive(blob) if is_dir else nullcontext(blob) as blob:
+                # Create a new layer from the blob
+                layer = oras.oci.NewLayer(blob, is_dir=is_dir, media_type=media_type)
+                annotations = annotset.get_annotations(blob)
 
-            # Create a new layer from the blob
-            layer = oras.oci.NewLayer(blob, is_dir=cleanup_blob, media_type=media_type)
-            annotations = annotset.get_annotations(blob)
+                # Always strip blob_name of path separator
+                layer["annotations"] = {
+                    oras.defaults.annotation_title: blob_name.strip(os.sep)
+                }
+                if annotations:
+                    layer["annotations"].update(annotations)
 
-            # Always strip blob_name of path separator
-            layer["annotations"] = {
-                oras.defaults.annotation_title: blob_name.strip(os.sep)
-            }
-            if annotations:
-                layer["annotations"].update(annotations)
+                # update the manifest with the new layer
+                manifest["layers"].append(layer)
+                logger.debug(f"Preparing layer {layer}")
 
-            # update the manifest with the new layer
-            manifest["layers"].append(layer)
-            logger.debug(f"Preparing layer {layer}")
-
-            # Upload the blob layer
-            response = self.upload_blob(
-                blob,
-                container,
-                layer,
-                do_chunked=do_chunked,
-                chunk_size=chunk_size,
-            )
-            self._check_200_response(response)
-
-            # Do we need to cleanup a temporary targz?
-            if cleanup_blob and os.path.exists(blob):
-                os.remove(blob)
+                # Upload the blob layer
+                response = self.upload_blob(
+                    blob,
+                    container,
+                    layer,
+                    do_chunked=do_chunked,
+                    chunk_size=chunk_size,
+                )
+                self._check_200_response(response)
 
         # Add annotations to the manifest, if provided
         manifest_annots = annotset.get_annotations("$manifest") or {}
