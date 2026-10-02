@@ -49,17 +49,43 @@ class AuthBackend:
         :type hostname: str
         """
         self._logout()
-        if not self._auth_config or not self._auth_config.get("auths"):
-            logger.info(f"You are not logged in to {hostname}")
-            return
-
+        logged_out = False
+        auths = (self._auth_config or {}).get("auths") or {}
         for host in oras.utils.iter_localhosts(hostname):
-            auths = self._auth_config.get("auths", {})
             if host in auths:
                 del auths[host]
-                logger.info(f"You have successfully logged out of {hostname}")
-                return
-        logger.info(f"You are not logged in to {hostname}")
+                logged_out = True
+                break
+
+        if self._remove_from_docker_config(hostname):
+            logged_out = True
+
+        if logged_out:
+            logger.info(f"You have successfully logged out of {hostname}")
+        else:
+            logger.info(f"You are not logged in to {hostname}")
+
+    def _remove_from_docker_config(self, hostname: str) -> bool:
+        """
+        Remove a hostname from the default Docker config file, where login
+        stores credentials, so the logout persists across processes.
+
+        :param hostname: the registry hostname to remove
+        :type hostname: str
+        """
+        config_path = oras.utils.find_docker_config()
+        if not config_path:
+            return False
+        cfg = oras.utils.read_json(config_path)
+        auths = cfg.get("auths") or {}
+        removed = False
+        for host in oras.utils.iter_localhosts(hostname):
+            if host in auths:
+                del auths[host]
+                removed = True
+        if removed:
+            oras.utils.write_json(cfg, config_path)
+        return removed
 
     def _logout(self):
         pass
