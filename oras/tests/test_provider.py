@@ -3,7 +3,10 @@ __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
 import os
+import shutil
 import subprocess
+import tarfile
+import tempfile
 import typing
 from pathlib import Path
 from unittest.mock import Mock
@@ -17,6 +20,121 @@ import oras.provider
 import oras.utils
 
 here = Path(__file__).resolve().parent
+
+
+@pytest.mark.parametrize(
+    "outcome", ["success", "compression_error", "upload_error", "http_error"]
+)
+def test_push_cleans_temporary_archive(tmp_path, monkeypatch, outcome):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    artifact = tmp_path / "artifact"
+    artifact.mkdir()
+    (artifact / "content.txt").write_text("artifact contents")
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(temporary_root))
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    archives = []
+    make_targz = oras.utils.make_targz
+
+    def compress(source, destination=None):
+        archive = make_targz(source, destination)
+        archives.append(Path(archive))
+        if outcome == "compression_error":
+            raise OSError("compression interrupted")
+        return archive
+
+    def upload_blob(path, container, layer, **kwargs):
+        if (
+            layer.get("annotations", {}).get(oras.defaults.annotation_title)
+            == artifact.name
+        ):
+            with tarfile.open(path) as archive:
+                assert (
+                    archive.extractfile("artifact/content.txt").read()
+                    == b"artifact contents"
+                )
+            if outcome == "upload_error":
+                raise OSError("upload interrupted")
+            if outcome == "http_error":
+                return Mock(status_code=500)
+        return Mock(status_code=201)
+
+    monkeypatch.setattr(oras.utils, "make_targz", compress)
+    monkeypatch.setattr(client, "upload_blob", upload_blob)
+    monkeypatch.setattr(client, "upload_manifest", lambda *args: Mock(status_code=201))
+    if outcome == "success":
+        client.push(
+            "registry.example/repository:tag",
+            files=[artifact],
+            disable_path_validation=True,
+        )
+    else:
+        error = ValueError if outcome == "http_error" else OSError
+        with pytest.raises(error):
+            client.push(
+                "registry.example/repository:tag",
+                files=[artifact],
+                disable_path_validation=True,
+            )
+    assert len(archives) == 1
+    assert not archives[0].exists()
+    assert list(temporary_root.iterdir()) == []
+    assert (artifact / "content.txt").read_text() == "artifact contents"
+
+
+@pytest.mark.parametrize("use_default_outdir", [False, True])
+@pytest.mark.parametrize("outcome", ["success", "download_error", "invalid_archive"])
+def test_pull_cleans_temporary_archive(
+    tmp_path, monkeypatch, use_default_outdir, outcome
+):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+
+    # Archive and describe a directory the same way push does.
+    target = "registry.example/repository:tag"
+    content_name = "content.txt"
+    content = "artifact contents"
+    artifact = tmp_path / "source" / "artifact"
+    artifact.mkdir(parents=True)
+    (artifact / content_name).write_text(content)
+    archive = oras.utils.make_targz(str(artifact), str(tmp_path / "artifact.tar.gz"))
+    layer = oras.oci.NewLayer(archive, is_dir=True)
+    layer["annotations"] = {oras.defaults.annotation_title: artifact.name}
+
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(temporary_root))
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(client, "get_manifest", lambda *args: {"layers": [layer]})
+    downloads = []
+
+    def download_blob(container, digest, destination):
+        assert digest == layer["digest"]
+        downloads.append(Path(destination))
+        if outcome == "download_error":
+            Path(destination).write_bytes(b"partial download")
+            raise OSError("download interrupted")
+        if outcome == "invalid_archive":
+            Path(destination).write_bytes(b"invalid archive")
+            return
+        shutil.copyfile(archive, destination)
+
+    monkeypatch.setattr(client, "download_blob", download_blob)
+    outdir = None if use_default_outdir else str(tmp_path / "output")
+    if outcome == "success":
+        files = client.pull(target, outdir=outdir)
+        assert len(files) == 1
+        assert (Path(files[0]) / content_name).read_text() == content
+    else:
+        error = OSError if outcome == "download_error" else tarfile.ReadError
+        with pytest.raises(error):
+            client.pull(target, outdir=outdir)
+
+    assert len(downloads) == 1
+    assert not downloads[0].exists()
+    assert not downloads[0].parent.exists()
+    # Only the caller's implicit output directory should survive the pull.
+    assert len(list(temporary_root.iterdir())) == int(use_default_outdir)
 
 
 def test_push_quiet_output_does_not_write_stdout(tmp_path, monkeypatch, capsys):
