@@ -416,6 +416,17 @@
             "avatar_url": [
                 "https://avatars.githubusercontent.com/u/39889?v=4"
             ]
+        },
+        {
+            "login": "Shubham-Padkonde",
+            "name": "Shubham Padkonde",
+            "contributions": [
+                "code"
+            ],
+            "profile": "https://shubham-portfolio-gray-kappa.vercel.app/",
+            "avatar_url": [
+                "https://avatars.githubusercontent.com/u/177908686?v=4"
+            ]
         }
     ],
     "contributorsPerLine": 7
