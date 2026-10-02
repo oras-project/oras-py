@@ -47,6 +47,85 @@ def test_push_quiet_output_does_not_write_stdout(tmp_path, monkeypatch, capsys):
     info.assert_called_once_with(f"Successfully pushed {container}")
 
 
+@pytest.mark.parametrize("backend", ["docker", "fallback"])
+@pytest.mark.parametrize("password_source", ["prompt", "argument", "stdin"])
+def test_login_prompts_for_missing_credentials(monkeypatch, backend, password_source):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    username_prompt = Mock(return_value="alice")
+    password_prompt = Mock(return_value="secret")
+    stdin = Mock(return_value="secret")
+    monkeypatch.setattr("builtins.input", username_prompt)
+    monkeypatch.setattr(oras.provider.getpass, "getpass", password_prompt)
+    monkeypatch.setattr(oras.utils, "readline", stdin)
+    set_basic_auth = Mock()
+    monkeypatch.setattr(client.auth, "set_basic_auth", set_basic_auth)
+    docker_client = Mock()
+    docker_client.login.return_value = {"Status": "Login Succeeded"}
+    get_client = Mock(return_value=docker_client)
+    if backend == "fallback":
+        get_client.side_effect = RuntimeError("Docker unavailable")
+        monkeypatch.setattr(oras.provider.login, "DockerClient", lambda: docker_client)
+    monkeypatch.setattr(oras.utils, "get_docker_client", get_client)
+
+    kwargs = {}
+    if password_source == "argument":
+        kwargs["password"] = "secret"
+    elif password_source == "stdin":
+        kwargs["password_stdin"] = True
+    if password_source == "stdin":
+        kwargs["username"] = "alice"
+    result = client.login(hostname="registry.example", **kwargs)
+
+    assert result == {"Status": "Login Succeeded"}
+    if password_source == "stdin":
+        username_prompt.assert_not_called()
+    else:
+        username_prompt.assert_called_once_with("Username: ")
+    if password_source == "prompt":
+        password_prompt.assert_called_once_with("Password: ")
+    else:
+        password_prompt.assert_not_called()
+    if password_source == "stdin":
+        stdin.assert_called_once_with()
+    else:
+        stdin.assert_not_called()
+    set_basic_auth.assert_called_once_with("alice", "secret")
+    docker_client.login.assert_called_once_with(
+        username="alice",
+        password="secret",
+        registry="registry.example",
+        dockercfg_path=None,
+    )
+
+
+@pytest.mark.parametrize("username", [None, ""])
+def test_login_stdin_requires_username(monkeypatch, username):
+    client = oras.provider.Registry()
+    stdin = Mock()
+    prompt = Mock()
+    get_client = Mock()
+    monkeypatch.setattr(oras.utils, "readline", stdin)
+    monkeypatch.setattr("builtins.input", prompt)
+    monkeypatch.setattr(oras.utils, "get_docker_client", get_client)
+    with pytest.raises(
+        ValueError, match="username is required when password_stdin is set"
+    ):
+        client.login(username=username, password_stdin=True)
+    stdin.assert_not_called()
+    prompt.assert_not_called()
+    get_client.assert_not_called()
+
+
+def test_login_rejects_empty_prompted_username(monkeypatch):
+    client = oras.provider.Registry()
+    monkeypatch.setattr("builtins.input", lambda prompt: "")
+    get_client = Mock()
+    monkeypatch.setattr(oras.utils, "get_docker_client", get_client)
+    with pytest.raises(ValueError, match="username required"):
+        client.login(password="secret", hostname="registry.example")
+    get_client.assert_not_called()
+
+
 def test_push_quiet_suppresses_completion_message(tmp_path, monkeypatch):
     client = oras.provider.Registry(hostname="registry.example", insecure=True)
     artifact = tmp_path / "artifact.txt"
