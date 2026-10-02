@@ -335,6 +335,16 @@
 
 
 
+<div class="viewcode-block" id="temporary_archive">
+<a class="viewcode-back" href="../../source/oras.html#oras.provider.temporary_archive">[docs]</a>
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">temporary_archive</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+        <span class="n">archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">"archive.tar.gz"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">archive</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="Registry">
 <a class="viewcode-back" href="../../source/oras.html#oras.provider.Registry">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Registry</span><span class="p">:</span>
@@ -1136,39 +1146,32 @@
             <span class="n">blob_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
 
             <span class="c1"># If it's a directory, we need to compress</span>
-            <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                <span class="n">blob</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
-                <span class="n">cleanup_blob</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">is_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">temporary_archive</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_dir</span> <span class="k">else</span> <span class="n">nullcontext</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span> <span class="k">as</span> <span class="n">blob</span><span class="p">:</span>
+                <span class="c1"># Create a new layer from the blob</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">is_dir</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="n">media_type</span><span class="p">)</span>
+                <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
 
-            <span class="c1"># Create a new layer from the blob</span>
-            <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="n">cleanup_blob</span><span class="p">,</span> <span class="n">media_type</span><span class="o">=</span><span class="n">media_type</span><span class="p">)</span>
-            <span class="n">annotations</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+                <span class="c1"># Always strip blob_name of path separator</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
+                    <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
 
-            <span class="c1"># Always strip blob_name of path separator</span>
-            <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">blob_name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">annotations</span><span class="p">:</span>
-                <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
+                <span class="c1"># update the manifest with the new layer</span>
+                <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-            <span class="c1"># update the manifest with the new layer</span>
-            <span class="n">manifest</span><span class="p">[</span><span class="s2">"layers"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Preparing layer </span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-            <span class="c1"># Upload the blob layer</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span>
-                <span class="n">blob</span><span class="p">,</span>
-                <span class="n">container</span><span class="p">,</span>
-                <span class="n">layer</span><span class="p">,</span>
-                <span class="n">do_chunked</span><span class="o">=</span><span class="n">do_chunked</span><span class="p">,</span>
-                <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-
-            <span class="c1"># Do we need to cleanup a temporary targz?</span>
-            <span class="k">if</span> <span class="n">cleanup_blob</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">blob</span><span class="p">)</span>
+                <span class="c1"># Upload the blob layer</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span>
+                    <span class="n">blob</span><span class="p">,</span>
+                    <span class="n">container</span><span class="p">,</span>
+                    <span class="n">layer</span><span class="p">,</span>
+                    <span class="n">do_chunked</span><span class="o">=</span><span class="n">do_chunked</span><span class="p">,</span>
+                    <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
         <span class="c1"># Add annotations to the manifest, if provided</span>
         <span class="n">manifest_annots</span> <span class="o">=</span> <span class="n">annotset</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="s2">"$manifest"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
@@ -1273,11 +1276,12 @@
 
             <span class="c1"># A directory will need to be uncompressed and moved</span>
             <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"mediaType"</span><span class="p">]</span> <span class="o">==</span> <span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">default_blob_dir_media_type</span><span class="p">:</span>
-                <span class="n">targz</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".tar.gz"</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">targz</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+                    <span class="n">targz</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_tmpfile</span><span class="p">(</span><span class="n">tmpdir</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".tar.gz"</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">],</span> <span class="n">targz</span><span class="p">)</span>
 
-                <span class="c1"># The artifact will be extracted to the correct name</span>
-                <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
+                    <span class="c1"># The artifact will be extracted to the correct name</span>
+                    <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">extract_targz</span><span class="p">(</span><span class="n">targz</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
 
             <span class="c1"># Anything else just extracted directly</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1423,7 +1427,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 29, 2026.
+              Oct 02, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

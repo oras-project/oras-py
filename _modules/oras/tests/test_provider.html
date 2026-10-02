@@ -298,7 +298,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
 
@@ -311,6 +314,127 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">oras.utils</span>
 
 <span class="n">here</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
+
+
+<div class="viewcode-block" id="test_push_cleans_temporary_archive">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_push_cleans_temporary_archive">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">"outcome"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"success"</span><span class="p">,</span> <span class="s2">"compression_error"</span><span class="p">,</span> <span class="s2">"upload_error"</span><span class="p">,</span> <span class="s2">"http_error"</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_push_cleans_temporary_archive</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">outcome</span><span class="p">):</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">artifact</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"artifact"</span>
+    <span class="n">artifact</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">artifact</span> <span class="o">/</span> <span class="s2">"content.txt"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"artifact contents"</span><span class="p">)</span>
+    <span class="n">temporary_root</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"temporary"</span>
+    <span class="n">temporary_root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">tempfile</span><span class="p">,</span> <span class="s2">"tempdir"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">temporary_root</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="s2">"load_configs"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">make_targz</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compress</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">archive</span> <span class="o">=</span> <span class="n">make_targz</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="n">archives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">archive</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"compression_error"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">"compression interrupted"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">archive</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_blob</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">)</span>
+            <span class="o">==</span> <span class="n">artifact</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">):</span>
+            <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="n">archive</span><span class="o">.</span><span class="n">extractfile</span><span class="p">(</span><span class="s2">"artifact/content.txt"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="o">==</span> <span class="sa">b</span><span class="s2">"artifact contents"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"upload_error"</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">"upload interrupted"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"http_error"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Mock</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Mock</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="p">,</span> <span class="s2">"make_targz"</span><span class="p">,</span> <span class="n">compress</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">"upload_blob"</span><span class="p">,</span> <span class="n">upload_blob</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">"upload_manifest"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Mock</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span>
+            <span class="s2">"registry.example/repository:tag"</span><span class="p">,</span>
+            <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span>
+            <span class="n">disable_path_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="ne">ValueError</span> <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"http_error"</span> <span class="k">else</span> <span class="ne">OSError</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">push</span><span class="p">(</span>
+                <span class="s2">"registry.example/repository:tag"</span><span class="p">,</span>
+                <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">artifact</span><span class="p">],</span>
+                <span class="n">disable_path_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">archives</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">archives</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">temporary_root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">artifact</span> <span class="o">/</span> <span class="s2">"content.txt"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"artifact contents"</span></div>
+
+
+
+<div class="viewcode-block" id="test_pull_cleans_temporary_archive">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_pull_cleans_temporary_archive">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"use_default_outdir"</span><span class="p">,</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"success"</span><span class="p">,</span> <span class="s2">"download_error"</span><span class="p">,</span> <span class="s2">"invalid_archive"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_pull_cleans_temporary_archive</span><span class="p">(</span>
+    <span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">use_default_outdir</span><span class="p">,</span> <span class="n">outcome</span>
+<span class="p">):</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Archive and describe a directory the same way push does.</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="s2">"registry.example/repository:tag"</span>
+    <span class="n">content_name</span> <span class="o">=</span> <span class="s2">"content.txt"</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s2">"artifact contents"</span>
+    <span class="n">artifact</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"source"</span> <span class="o">/</span> <span class="s2">"artifact"</span>
+    <span class="n">artifact</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">artifact</span> <span class="o">/</span> <span class="n">content_name</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+    <span class="n">archive</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_targz</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">artifact</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"artifact.tar.gz"</span><span class="p">))</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">oci</span><span class="o">.</span><span class="n">NewLayer</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">is_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">layer</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">oras</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">annotation_title</span><span class="p">:</span> <span class="n">artifact</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+
+    <span class="n">temporary_root</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"temporary"</span>
+    <span class="n">temporary_root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">tempfile</span><span class="p">,</span> <span class="s2">"tempdir"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">temporary_root</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="s2">"load_configs"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">"get_manifest"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="p">{</span><span class="s2">"layers"</span><span class="p">:</span> <span class="p">[</span><span class="n">layer</span><span class="p">]})</span>
+    <span class="n">downloads</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">download_blob</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">digest</span> <span class="o">==</span> <span class="n">layer</span><span class="p">[</span><span class="s2">"digest"</span><span class="p">]</span>
+        <span class="n">downloads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"download_error"</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">"partial download"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">"download interrupted"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"invalid_archive"</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">"invalid archive"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">archive</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">"download_blob"</span><span class="p">,</span> <span class="n">download_blob</span><span class="p">)</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">use_default_outdir</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">"output"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"success"</span><span class="p">:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">outdir</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">content_name</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="o">==</span> <span class="n">content</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="ne">OSError</span> <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"download_error"</span> <span class="k">else</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">ReadError</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">outdir</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">downloads</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">downloads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">downloads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="c1"># Only the caller's implicit output directory should survive the pull.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">temporary_root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()))</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">use_default_outdir</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="test_push_quiet_output_does_not_write_stdout">
@@ -720,7 +844,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Sep 29, 2026.
+              Oct 02, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
