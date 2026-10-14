@@ -124,7 +124,7 @@ $ pip install -e .
 
 # Now docs dependencies
 cd docs
-pip install -r requrements.txt
+pip install -r requirements.txt
 
 # Build the docs into _build/html
 make html

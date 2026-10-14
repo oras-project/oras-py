@@ -255,7 +255,7 @@ def write_file(
     """
     Write content to a filename
 
-    :param filename: filname to write
+    :param filename: filename to write
     :type filename: str
     :param content: content to write
     :type content: str

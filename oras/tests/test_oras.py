@@ -95,7 +95,7 @@ def test_basic_push_pul_via_sha_ref(tmp_path, registry, credentials, target):
 @pytest.mark.with_auth(False)
 def test_get_delete_tags(tmp_path, registry, credentials, target):
     """
-    Test creationg, getting, and deleting tags.
+    Test creating, getting, and deleting tags.
     """
     client = oras.client.OrasClient(hostname=registry, insecure=True)
     artifact = os.path.join(here, "artifact.txt")
