@@ -372,6 +372,7 @@ class Layout:
             provider._check_200_response(response)
 
             sub_bytes = response.content
+            provider._check_digest(sub_bytes, sub_digest)
             sub_data = json.loads(sub_bytes)
             # the Index might have defaulted, so we overwrite with the actual content response
             sub_media_type = sub_data.get("mediaType", "")
@@ -564,6 +565,9 @@ class Layout:
             raise RuntimeError(
                 "Expected to find Docker-Content-Digest header in manifest response."
             )
+        provider._check_digest(manifest_bytes, manifest_digest)
+        if container.digest:
+            provider._check_digest(manifest_bytes, container.digest)
         manifest_data = json.loads(manifest_bytes)
         media_type = manifest_data.get("mediaType", "")
 

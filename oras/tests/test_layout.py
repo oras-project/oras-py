@@ -2,11 +2,15 @@ __author__ = "Matteo Mortari"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import hashlib
+import json
 import pathlib
 
 import pytest
+import requests
 
 import oras.client
+import oras.defaults
 import oras.provider
 import oras.utils as utils
 from oras.layout import Layout, NewLayout, NewLayoutFromRegistry
@@ -912,3 +916,65 @@ def test_pull_to_layout_by_digest(
         source_path = source_layout.digest_to_blob_path(d)
         pulled_path = pulled_layout.digest_to_blob_path(d)
         assert source_path.read_bytes() == pulled_path.read_bytes()
+
+
+def _digest(content):
+    return "sha256:" + hashlib.sha256(content).hexdigest()
+
+
+_manifest = json.dumps(
+    {"mediaType": oras.defaults.default_manifest_media_type, "layers": []}
+).encode()
+_tampered = json.dumps(
+    {"mediaType": oras.defaults.default_manifest_media_type, "layers": [], "x": 1}
+).encode()
+_index = json.dumps(
+    {
+        "mediaType": oras.defaults.default_index_media_type,
+        "manifests": [{"digest": _digest(_manifest)}],
+    }
+).encode()
+
+
+@pytest.mark.parametrize(
+    "target,served",
+    [
+        (":tag", {"tag": (_tampered, _digest(_manifest))}),
+        ("@" + _digest(_manifest), {_digest(_manifest): (_tampered, None)}),
+        (
+            "@" + _digest(_manifest),
+            {_digest(_manifest): (_tampered, _digest(_tampered))},
+        ),
+        (
+            ":tag",
+            {"tag": (_index, _digest(_index)), _digest(_manifest): (_tampered, None)},
+        ),
+    ],
+    ids=["header-mismatch", "digest-mismatch", "header-not-requested", "index-child"],
+)
+def test_pull_from_registry_verifies_manifest_digests(
+    tmp_path, monkeypatch, target, served
+):
+    """
+    Manifests whose content does not match the digest they are addressed by,
+    or the Docker-Content-Digest header, are rejected and not stored.
+    """
+    provider = oras.provider.Registry(hostname="registry.example", insecure=True)
+
+    def do_request(url, method="GET", headers=None, **kwargs):
+        content, digest = served[url.rsplit("/", 1)[-1]]
+        response = requests.Response()
+        response.status_code = 200
+        response._content = content
+        if digest:
+            response.headers["Docker-Content-Digest"] = digest
+        return response
+
+    monkeypatch.setattr(provider, "do_request", do_request)
+    layout = Layout(str(tmp_path), validate=False)
+
+    with pytest.raises(ValueError, match="does not match"):
+        layout.pull_from_registry(
+            provider=provider, target=f"registry.example/repository{target}"
+        )
+    assert not layout.blob_exists(_digest(_manifest))

@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 
 import copy
 import getpass
+import hashlib
 import os
 import sys
 import urllib
@@ -504,17 +505,31 @@ class Registry:
         :param container:  parsed container URI
         :type container: oras.container.Container or str
         """
+        algorithm = digest.split(":", 1)[0]
+        hasher = hashlib.new(algorithm)
         try:
             # Ensure output directory exists first
             outdir = os.path.dirname(outfile)
             if outdir and not os.path.exists(outdir):
                 oras.utils.mkdir_p(outdir)
-            with self.get_blob(container, digest, stream=True) as r:
-                r.raise_for_status()
-                with open(outfile, "wb") as f:
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            f.write(chunk)
+            # Write beside the target and move it into place only once it
+            # matches, so a failed download never leaves a file under its name.
+            partial = f"{outfile}.partial"
+            try:
+                with self.get_blob(container, digest, stream=True) as r:
+                    r.raise_for_status()
+                    with open(partial, "wb") as f:
+                        for chunk in r.iter_content(chunk_size=8192):
+                            if chunk:
+                                hasher.update(chunk)
+                                f.write(chunk)
+                found = f"{algorithm}:{hasher.hexdigest()}"
+                if found != digest:
+                    raise ValueError(f"Blob content {found} does not match {digest}")
+                os.replace(partial, outfile)
+            finally:
+                if os.path.exists(partial):
+                    os.remove(partial)
 
         # Allow an empty layer to fail and return /dev/null
         except Exception as e:
@@ -679,6 +694,20 @@ class Registry:
         if response.status_code not in [200, 201, 202]:
             self._parse_response_errors(response)
             raise ValueError(f"Issue with {response.request.url}: {response.reason}")
+
+    def _check_digest(self, content: bytes, digest: str):
+        """
+        Helper function to ensure content received matches its digest
+
+        :param content: content received from the registry
+        :type content: bytes
+        :param digest: digest the content is expected to have
+        :type digest: str
+        """
+        algorithm = digest.split(":", 1)[0]
+        found = f"{algorithm}:{hashlib.new(algorithm, content).hexdigest()}"
+        if found != digest:
+            raise ValueError(f"Content {found} does not match {digest}")
 
     def _parse_response_errors(self, response: requests.Response):
         """
@@ -966,6 +995,8 @@ class Registry:
         response = self.do_request(get_manifest, "GET", headers=headers)
 
         self._check_200_response(response)
+        if container.digest:  # type: ignore
+            self._check_digest(response.content, container.digest)  # type: ignore
         manifest = response.json()
         if validation_schema:
             jsonschema.validate(manifest, schema=validation_schema)

@@ -2,6 +2,9 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import hashlib
+import io
+import json
 import os
 import shutil
 import subprocess
@@ -11,6 +14,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+import requests
 
 import oras.client
 import oras.defaults
@@ -134,6 +138,66 @@ def test_pull_cleans_temporary_archive(
     assert not downloads[0].parent.exists()
     # Only the caller's implicit output directory should survive the pull.
     assert len(list(temporary_root.iterdir())) == int(use_default_outdir)
+
+
+@pytest.mark.parametrize("served", [b"blob contents", b"other contents"])
+def test_download_blob_verifies_digest(tmp_path, monkeypatch, served):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    digest = "sha256:" + hashlib.sha256(b"blob contents").hexdigest()
+    response = requests.Response()
+    response.status_code = 200
+    response.raw = io.BytesIO(served)
+    monkeypatch.setattr(client, "get_blob", lambda *args, **kwargs: response)
+    outfile = tmp_path / "blob"
+
+    if served == b"blob contents":
+        client.download_blob("registry.example/repository:tag", digest, str(outfile))
+        assert outfile.read_bytes() == served
+    else:
+        with pytest.raises(ValueError, match=digest):
+            client.download_blob(
+                "registry.example/repository:tag", digest, str(outfile)
+            )
+        assert not outfile.exists()
+    assert list(tmp_path.iterdir()) == ([outfile] if outfile.exists() else [])
+
+
+def test_download_blob_interrupted_leaves_no_file(tmp_path, monkeypatch):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    digest = "sha256:" + hashlib.sha256(b"blob contents").hexdigest()
+    response = requests.Response()
+    response.status_code = 200
+    response.raw = io.BytesIO(b"")
+
+    def broken_stream(*args, **kwargs):
+        yield b"blob "
+        raise requests.exceptions.ChunkedEncodingError("connection reset")
+
+    response.iter_content = broken_stream
+    monkeypatch.setattr(client, "get_blob", lambda *args, **kwargs: response)
+    outfile = tmp_path / "blob"
+
+    with pytest.raises(requests.exceptions.ChunkedEncodingError):
+        client.download_blob("registry.example/repository:tag", digest, str(outfile))
+    assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize("served", [{"layers": []}, {"layers": [{}]}])
+def test_get_manifest_verifies_requested_digest(monkeypatch, served):
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    digest = "sha256:" + hashlib.sha256(b'{"layers": []}').hexdigest()
+    response = requests.Response()
+    response.status_code = 200
+    response._content = json.dumps(served).encode()
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+    monkeypatch.setattr(client, "do_request", lambda *args, **kwargs: response)
+    target = f"registry.example/repository@{digest}"
+
+    if served == {"layers": []}:
+        assert client.get_manifest(target) == served
+    else:
+        with pytest.raises(ValueError, match=digest):
+            client.get_manifest(target)
 
 
 def test_push_quiet_output_does_not_write_stdout(tmp_path, monkeypatch, capsys):
