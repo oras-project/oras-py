@@ -1,3 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oras"
+dynamic = [
+    "version",
+    "authors",
+    "maintainers",
+    "description",
+    "readme",
+    "license",
+    "keywords",
+    "classifiers",
+    "urls",
+]
+dependencies = [
+    "jsonschema",
+    "requests",
+]
+
+[project.optional-dependencies]
+all = [
+    "docker==5.0.1",
+    "boto3>=1.33.0",
+]
+docker = ["docker==5.0.1"]
+ecr = ["boto3>=1.33.0"]
+
+[dependency-groups]
+tests = [
+    "pytest>=4.6.2",
+    "boto3>=1.33.0",
+]
+
 [tool.black]
 profile = "black"
 exclude = '^env/'

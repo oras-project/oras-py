@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/oras-project/oras-py/tree/main) (0.0.x)
+ - declare install requirements and extras in `pyproject.toml` (PEP 621) instead of `oras/version.py`, and move test dependencies (now including `boto3`) from the `tests` extra and `all` to a `tests` dependency group (PEP 735) (0.2.44)
  - clean up temporary directory archives after push and pull, including failed transfers (0.2.44)
  - make `username` and `password` optional in `login()` so the interactive prompts can be used, hide password entry and reject empty usernames, closes issue [235](https://github.com/oras-project/oras-py/issues/235) (0.2.44)
  - route push completion output through the logger and support the documented `quiet` option, closes issue [229](https://github.com/oras-project/oras-py/issues/229) (0.2.43)

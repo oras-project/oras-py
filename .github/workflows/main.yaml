@@ -19,6 +19,7 @@ jobs:
       - name: Lint Oras Python
         run: |
           python --version
+          python3 -m pip install --upgrade pip
           python3 -m pip install pre-commit
           python3 -m pip install black
           make develop
@@ -78,5 +79,6 @@ jobs:
           registry_port: ${{ job.services.registry.ports[5000] }}
           REGISTRY_STORAGE_DELETE_ENABLED: "true"
         run: |
+          python3 -m pip install --upgrade pip
           make install
           make test
