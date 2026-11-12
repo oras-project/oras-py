@@ -7,6 +7,7 @@ name = "oras"
 dynamic = ["version"]
 description = "OCI Registry as Storage Python SDK"
 readme = "README.md"
+requires-python = ">=3.9"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{ name = "Vanessa Sochat", email = "vsoch@users.noreply.github.com" }]
@@ -20,7 +21,11 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Operating System :: Unix",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
     "jsonschema",
