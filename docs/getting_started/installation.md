@@ -23,8 +23,8 @@ Note that we have several extra modes for installation:
 # Interactions are done via the docker client instead of manual
 $ pip install oras[docker]
 
-# Install dependencies for linting and tests
-$ pip install oras[tests]
+# From a clone, install dependencies for tests (requires pip>=25.1)
+$ pip install --group tests
 
 # Install everything
 $ pip install oras[all]

@@ -1,3 +1,60 @@
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oras"
+dynamic = ["version"]
+description = "OCI Registry as Storage Python SDK"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Vanessa Sochat", email = "vsoch@users.noreply.github.com" }]
+maintainers = [{ name = "Vanessa Sochat" }]
+keywords = ["oci", "registry", "storage"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "jsonschema",
+    "requests",
+]
+
+[project.optional-dependencies]
+all = [
+    "docker==5.0.1",
+    "boto3>=1.33.0",
+]
+docker = ["docker==5.0.1"]
+ecr = ["boto3>=1.33.0"]
+
+[project.urls]
+Homepage = "https://github.com/oras-project/oras-py"
+
+[dependency-groups]
+tests = [
+    "pytest>=4.6.2",
+    "boto3>=1.33.0",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "oras.version.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["oras*"]
+
 [tool.black]
 profile = "black"
 exclude = '^env/'

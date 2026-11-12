@@ -4,7 +4,7 @@ test:
 
 .PHONY: install
 install:
-	pip install -e .[all]
+	pip install -e .[all] --group tests
 
 .PHONY: lint
 lint:
@@ -12,9 +12,9 @@ lint:
 
 .PHONY: testreqs
 testreqs:
-	pip install -e .[tests]
+	pip install -e . --group tests
 
 .PHONY: develop
 develop:
-	pip install -e .[all]
+	pip install -e .[all] --group tests
 	pip install -r .github/dev-requirements.txt
