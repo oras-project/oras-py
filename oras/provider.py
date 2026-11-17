@@ -966,7 +966,17 @@ class Registry:
         response = self.do_request(get_manifest, "GET", headers=headers)
 
         self._check_200_response(response)
-        manifest = response.json()
+        try:
+            manifest = response.json()
+        # json()'s decode error subclasses ValueError across the requests,
+        # simplejson and stdlib json variants, so catch the common base.
+        except ValueError as e:
+            raise ValueError(
+                f"Could not parse the manifest from {get_manifest} as JSON "
+                f"(status {response.status_code}, Content-Type "
+                f"{response.headers.get('Content-Type', 'unknown')}). "
+                f"Response body starts with: {response.text[:200]!r}"
+            ) from e
         if validation_schema:
             jsonschema.validate(manifest, schema=validation_schema)
         return manifest
