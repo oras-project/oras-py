@@ -2,6 +2,7 @@ __author__ = "Vanessa Sochat"
 __copyright__ = "Copyright The ORAS Authors."
 __license__ = "Apache-2.0"
 
+import json
 import os
 import shutil
 import subprocess
@@ -11,6 +12,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+import requests
 
 import oras.client
 import oras.defaults
@@ -494,3 +496,37 @@ def test_sanitize_path():
         str(e.value)
         == f"Filename {Path(os.path.join(os.getcwd(), '..', '..')).resolve()} is not in {Path('../').resolve()} directory"
     )
+
+
+@pytest.mark.parametrize(
+    "decode_error",
+    [
+        # requests >= 2.27 raises its own subclass; older requests (and
+        # simplejson) raise the stdlib one. Both must be handled.
+        requests.exceptions.JSONDecodeError("Expecting value", "", 0),
+        json.JSONDecodeError("Expecting value", "", 0),
+    ],
+)
+def test_get_manifest_non_json_response(monkeypatch, decode_error):
+    """A non-JSON manifest body raises an informative error, not a raw
+    JSONDecodeError (#223)."""
+    client = oras.provider.Registry(hostname="registry.example", insecure=True)
+    monkeypatch.setattr(client.auth, "load_configs", lambda *args, **kwargs: None)
+
+    response = Mock(spec=requests.Response)
+    response.status_code = 200
+    response.headers = {"Content-Type": "text/html"}
+    response.text = "<html><body>502 Bad Gateway</body></html>"
+    response.json.side_effect = decode_error
+    monkeypatch.setattr(client, "do_request", lambda *args, **kwargs: response)
+
+    with pytest.raises(ValueError) as exc:
+        client.get_manifest("registry.example/repository:tag")
+
+    # Not the raw, non-informative JSONDecodeError the user saw (the requests
+    # subclass derives from the stdlib one, so this covers both).
+    assert not isinstance(exc.value, json.JSONDecodeError)
+    message = str(exc.value)
+    # Names the request that failed and shows what came back instead.
+    assert "registry.example/v2/repository/manifests/tag" in message
+    assert "502 Bad Gateway" in message
