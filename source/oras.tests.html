@@ -468,6 +468,15 @@
                  </a>
                 </li>
                 <li class="md-nav__item">
+                 <a class="md-nav__link" href="#oras.tests.test_provider.test_get_manifest_non_json_response">
+                  <code class="docutils literal notranslate">
+                   <span class="pre">
+                    test_get_manifest_non_json_response()
+                   </span>
+                  </code>
+                 </a>
+                </li>
+                <li class="md-nav__item">
                  <a class="md-nav__link" href="#oras.tests.test_provider.test_login_prompts_for_missing_credentials">
                   <code class="docutils literal notranslate">
                    <span class="pre">
@@ -1594,6 +1603,57 @@
           </dd>
          </dl>
          <dl class="py function">
+          <dt class="sig sig-object py" id="oras.tests.test_provider.test_get_manifest_non_json_response">
+           <span class="sig-prename descclassname">
+            <span class="pre">
+             oras.tests.test_provider.
+            </span>
+           </span>
+           <span class="sig-name descname">
+            <span class="pre">
+             test_get_manifest_non_json_response
+            </span>
+           </span>
+           <span class="sig-paren">
+            (
+           </span>
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              monkeypatch
+             </span>
+            </span>
+           </em>
+           ,
+           <em class="sig-param">
+            <span class="n">
+             <span class="pre">
+              decode_error
+             </span>
+            </span>
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../_modules/oras/tests/test_provider.html#test_get_manifest_non_json_response">
+            <span class="viewcode-link">
+             <span class="pre">
+              [source]
+             </span>
+            </span>
+           </a>
+           <a class="headerlink" href="#oras.tests.test_provider.test_get_manifest_non_json_response" title="Link to this definition">
+            ¶
+           </a>
+          </dt>
+          <dd>
+           <p>
+            A non-JSON manifest body raises an informative error, not a raw
+JSONDecodeError (#223).
+           </p>
+          </dd>
+         </dl>
+         <dl class="py function">
           <dt class="sig sig-object py" id="oras.tests.test_provider.test_login_prompts_for_missing_credentials">
            <span class="sig-prename descclassname">
             <span class="pre">
@@ -2475,7 +2535,7 @@ they don’t usually run on Windows.
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 02, 2026.
+              Nov 18, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

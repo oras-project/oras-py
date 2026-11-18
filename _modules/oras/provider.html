@@ -1322,7 +1322,17 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_request</span><span class="p">(</span><span class="n">get_manifest</span><span class="p">,</span> <span class="s2">"GET"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_200_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">manifest</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">manifest</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="c1"># json()'s decode error subclasses ValueError across the requests,</span>
+        <span class="c1"># simplejson and stdlib json variants, so catch the common base.</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Could not parse the manifest from </span><span class="si">{</span><span class="n">get_manifest</span><span class="si">}</span><span class="s2"> as JSON "</span>
+                <span class="sa">f</span><span class="s2">"(status </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">, Content-Type "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'Content-Type'</span><span class="p">,</span><span class="w"> </span><span class="s1">'unknown'</span><span class="p">)</span><span class="si">}</span><span class="s2">). "</span>
+                <span class="sa">f</span><span class="s2">"Response body starts with: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">if</span> <span class="n">validation_schema</span><span class="p">:</span>
             <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">validation_schema</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">manifest</span></div>
@@ -1427,7 +1437,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 02, 2026.
+              Nov 18, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">

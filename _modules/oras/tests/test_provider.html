@@ -297,6 +297,7 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">"Copyright The ORAS Authors."</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">"Apache-2.0"</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
@@ -306,6 +307,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">oras.client</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">oras.defaults</span>
@@ -825,6 +827,43 @@
         <span class="o">==</span> <span class="sa">f</span><span class="s2">"Filename </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="w"> </span><span class="s1">'..'</span><span class="p">,</span><span class="w"> </span><span class="s1">'..'</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="si">}</span><span class="s2"> is not in </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="s1">'../'</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="si">}</span><span class="s2"> directory"</span>
     <span class="p">)</span></div>
 
+
+
+<div class="viewcode-block" id="test_get_manifest_non_json_response">
+<a class="viewcode-back" href="../../../source/oras.tests.html#oras.tests.test_provider.test_get_manifest_non_json_response">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">"decode_error"</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="c1"># requests &gt;= 2.27 raises its own subclass; older requests (and</span>
+        <span class="c1"># simplejson) raise the stdlib one. Both must be handled.</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">(</span><span class="s2">"Expecting value"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">(</span><span class="s2">"Expecting value"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_get_manifest_non_json_response</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">decode_error</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A non-JSON manifest body raises an informative error, not a raw</span>
+<span class="sd">    JSONDecodeError (#223)."""</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">oras</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">Registry</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s2">"registry.example"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="s2">"load_configs"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"text/html"</span><span class="p">}</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"&lt;html&gt;&lt;body&gt;502 Bad Gateway&lt;/body&gt;&lt;/html&gt;"</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">decode_error</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">"do_request"</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">response</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">get_manifest</span><span class="p">(</span><span class="s2">"registry.example/repository:tag"</span><span class="p">)</span>
+
+    <span class="c1"># Not the raw, non-informative JSONDecodeError the user saw (the requests</span>
+    <span class="c1"># subclass derives from the stdlib one, so this covers both).</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="c1"># Names the request that failed and shows what came back instead.</span>
+    <span class="k">assert</span> <span class="s2">"registry.example/v2/repository/manifests/tag"</span> <span class="ow">in</span> <span class="n">message</span>
+    <span class="k">assert</span> <span class="s2">"502 Bad Gateway"</span> <span class="ow">in</span> <span class="n">message</span></div>
+
 </pre>
        </div>
       </article>
@@ -844,7 +883,7 @@
        © Copyright 2023, Oras Python Developers.
       </div>
       Last updated on
-              Oct 02, 2026.
+              Nov 18, 2026.
       <br/>
       Created using
       <a href="http://www.sphinx-doc.org/">
