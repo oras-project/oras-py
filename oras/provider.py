@@ -728,7 +728,7 @@ class Registry:
         manifest_config: Optional[str] = None,
         annotation_file: Optional[str] = None,
         manifest_annotations: Optional[dict] = None,
-        subject: Optional[str] = None,
+        subject: Optional[oras.oci.Subject] = None,
         do_chunked: bool = False,
         chunk_size: int = oras.defaults.default_chunksize,
         quiet: bool = False,
