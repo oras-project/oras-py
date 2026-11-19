@@ -6,6 +6,7 @@ import json
 import os
 import pathlib
 import shutil
+import tarfile
 
 import pytest
 
@@ -146,3 +147,20 @@ def test_make_targz_files_with_same_content_generates_same_hash(tmp_path):
     hash_tar_2 = utils.get_file_hash(tmp_tar_2)
 
     assert hash_tar_1 == hash_tar_2
+
+
+def test_make_targz_overwrites_existing_destination(tmp_path):
+    tmp_file = str(tmp_path / "written_file.txt")
+    utils.write_file(tmp_file, "hello!")
+
+    expected = str(tmp_path / "expected.tar.gz")
+    utils.make_targz(tmp_file, expected)
+
+    # a larger, unrelated file already exists at the destination
+    dest = str(tmp_path / "existing.tar.gz")
+    utils.write_file(dest, "x" * 100000)
+    utils.make_targz(tmp_file, dest)
+
+    assert utils.get_file_hash(dest) == utils.get_file_hash(expected)
+    with tarfile.open(dest, "r:gz") as tar:
+        assert tar.getnames() == ["written_file.txt"]
