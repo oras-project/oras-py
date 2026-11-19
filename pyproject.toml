@@ -11,3 +11,10 @@ mypy_path = ["oras", "examples"]
 
 [tool.pytest.ini_options]
 markers = ["with_auth: mark for tests requiring authenticated registry access (or not)"]
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = '.git*,*.css'
+check-hidden = true
+# ignore-regex = ''
+ignore-words-list = 'pakages'
