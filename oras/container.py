@@ -8,8 +8,10 @@ from typing import Optional
 
 import oras.defaults
 
+# As in the OCI distribution reference grammar, the first path component is a
+# registry if it contains "." or ":" or is exactly "localhost".
 docker_regex = re.compile(
-    "(?:(?P<registry>[^/@]+[.:][^/@]*)/)?"
+    "(?:(?P<registry>localhost|[^/@]+[.:][^/@]*)/)?"
     "(?P<namespace>(?:[^:@/]+/)+)?"
     "(?P<repository>[^:@/]+)"
     "(?::(?P<tag>[^:@]+))?"
